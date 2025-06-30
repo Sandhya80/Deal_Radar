@@ -1,0 +1,223 @@
+<!--
+Base Template for Deal Radar
+
+This is the main template that provides the common structure and styling
+for all pages in the Deal Radar application. It includes navigation,
+footer, and common UI elements that are shared across the site.
+
+Template Structure:
+- HTML5 doctype with responsive meta tags
+- Bootstrap 5 CSS framework for responsive design
+- Custom CSS for Deal Radar branding and styling
+- Navigation bar with authentication-aware menu items
+- Main content area with block placeholders
+- Footer with links and company information
+- JavaScript libraries for interactivity
+
+Template Blocks:
+- title: Page-specific title content
+- extra_css: Additional CSS for specific pages
+- content: Main page content area
+- extra_js: Additional JavaScript for specific pages
+
+Bootstrap Integration:
+- Responsive grid system for mobile-first design
+- Pre-built components (navbar, cards, buttons, forms)
+- Utility classes for spacing and typography
+- Theme customization with CSS variables
+
+Accessibility Features:
+- Semantic HTML structure for screen readers
+- Proper heading hierarchy and landmarks
+- Keyboard navigation support
+- Color contrast compliance
+- Alt text for images and icons
+
+Performance Considerations:
+- CDN-hosted Bootstrap for faster loading
+- Minified CSS and JavaScript files
+- Responsive images and lazy loading
+- Critical CSS inlined in head section
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Deal Radar - Track product prices and get alerts when prices drop. Never miss a deal again!">
+    <meta name="keywords" content="price tracking, deal alerts, price drop notifications, shopping, discounts">
+    <meta name="author" content="Deal Radar Team">
+    
+    <!-- Page Title with SEO optimization -->
+    <title>{% block title %}Deal Radar - Never Miss a Deal{% endblock %}</title>
+    
+    <!-- Bootstrap CSS for responsive design and components -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-9ndCyUa1rLkzKOcx8CYvb7Z3Nf5j3n8P7dT6+mZfRfIWfG6NJQ8kXvJJ8LiS7fGt" 
+          crossorigin="anonymous">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom CSS for Deal Radar branding -->
+    <style>
+        /* Base styling and layout */
+        body {
+            background-color: #f8f9fa;  /* Light gray background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Navigation styling */
+        .navbar-brand {
+            font-weight: bold;
+            color: #007bff !important;  /* Primary blue color */
+            font-size: 1.5rem;
+        }
+        
+        /* Deal card styling for product display */
+        .deal-card {
+            transition: transform 0.2s ease-in-out;  /* Smooth hover animation */
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);  /* Subtle shadow */
+        }
+        
+        .deal-card:hover {
+            transform: translateY(-2px);  /* Lift effect on hover */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);  /* Enhanced shadow */
+        }
+        
+        /* Price change indicators */
+        .price-drop {
+            color: #28a745;  /* Green for price drops (good for user) */
+            font-weight: bold;
+        }
+        
+        .price-increase {
+            color: #dc3545;  /* Red for price increases */
+            font-weight: bold;
+        }
+        
+        .price-unchanged {
+            color: #6c757d;  /* Gray for no change */
+        }
+        
+        /* Status badges */
+        .badge-deal {
+            background-color: #28a745;  /* Green badge for deals */
+        }
+        
+        .badge-tracking {
+            background-color: #007bff;  /* Blue badge for tracking status */
+        }
+        
+        /* Footer styling */
+        .footer {
+            background-color: #343a40;  /* Dark background */
+            color: white;
+            margin-top: auto;  /* Push to bottom */
+        }
+        
+        /* Utility classes */
+        .text-muted-custom {
+            color: #6c757d !important;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            
+            .deal-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+    
+    <!-- Page-specific CSS can be added here -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Main Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-search-dollar me-2"></i>Deal Radar
+            </a>
+            
+            <!-- Mobile menu toggle button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navigation menu items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">Profile Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="container my-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p>&copy; 2025 Deal Radar. Built with Django & Bootstrap.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

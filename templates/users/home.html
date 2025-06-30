@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to Deal Radar{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Hero Section -->
+    <div class="col-12">
+        <div class="jumbotron bg-primary text-white p-5 rounded">
+            <div class="container text-center">
+                <h1 class="display-4">🎯 Never Miss a Deal Again!</h1>
+                <p class="lead">Track your favorite products and get instant alerts when prices drop.</p>
+                {% if not user.is_authenticated %}
+                    <a class="btn btn-light btn-lg" href="{% url 'register' %}" role="button">
+                        Get Started Free
+                    </a>
+                    <a class="btn btn-outline-light btn-lg ms-2" href="{% url 'login' %}" role="button">
+                        Login
+                    </a>
+                {% else %}
+                    <a class="btn btn-light btn-lg" href="{% url 'dashboard' %}" role="button">
+                        Go to Dashboard
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">Why Choose Deal Radar?</h2>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-search fa-3x text-primary"></i>
+                </div>
+                <h5 class="card-title">🔍 Smart Tracking</h5>
+                <p class="card-text">Automatically monitors prices across multiple e-commerce platforms.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-bell fa-3x text-primary"></i>
+                </div>
+                <h5 class="card-title">🔔 Instant Alerts</h5>
+                <p class="card-text">Get notified via email, SMS, or WhatsApp when deals are available.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-chart-line fa-3x text-primary"></i>
+                </div>
+                <h5 class="card-title">📊 Price History</h5>
+                <p class="card-text">View detailed price trends and make informed purchasing decisions.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+{% if not user.is_authenticated %}
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body text-center">
+                <h3>Ready to Start Saving?</h3>
+                <p class="lead">Join thousands of smart shoppers who never overpay again.</p>
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                    Create Free Account
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

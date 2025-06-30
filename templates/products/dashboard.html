@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Deal Radar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    My Product Dashboard
+                </h1>
+                {% if can_add_more %}
+                <a href="{% url 'add_product' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Track New Product
+                </a>
+                {% else %}
+                <span class="badge bg-warning">Tracking Limit Reached</span>
+                {% endif %}
+            </div>
+
+            <!-- Subscription Status -->
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Current Plan:</strong> 
+                {% if user.profile.is_premium %}
+                    Premium (Unlimited tracking)
+                {% else %}
+                    Free ({{ total_tracked }}/3 products tracked)
+                    <a href="{% url 'subscription_plans' %}" class="alert-link ms-2">Upgrade to Premium</a>
+                {% endif %}
+            </div>
+
+            <!-- Tracked Products -->
+            {% if tracked_products %}
+            <div class="row">
+                {% for tracked_product in tracked_products %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card deal-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ tracked_product.product.name }}</h5>
+                            <p class="card-text text-muted">
+                                <small>{{ tracked_product.product.site_name|default:"Manual Entry" }}</small>
+                            </p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <strong>Current Price:</strong><br>
+                                    <span class="h5 text-primary">£{{ tracked_product.product.current_price }}</span>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Target Price:</strong><br>
+                                    <span class="h6">£{{ tracked_product.desired_price }}</span>
+                                </div>
+                            </div>
+
+                            {% if tracked_product.is_deal_available %}
+                            <div class="alert alert-success py-2">
+                                <i class="fas fa-tags me-2"></i>Deal Available!
+                            </div>
+                            {% endif %}
+
+                            <div class="btn-group w-100" role="group">
+                                <a href="{{ tracked_product.product.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-external-link-alt me-1"></i>View
+                                </a>
+                                <a href="{% url 'edit_product' tracked_product.id %}" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-edit me-1"></i>Edit
+                                </a>
+                                <a href="{% url 'delete_product' tracked_product.id %}" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash me-1"></i>Remove
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small>Added {{ tracked_product.created_at|date:"M d, Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-search-dollar fa-4x text-muted mb-3"></i>
+                <h4>No Products Tracked Yet</h4>
+                <p class="text-muted">Start tracking products to get price drop alerts!</p>
+                {% if can_add_more %}
+                <a href="{% url 'add_product' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Track Your First Product
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

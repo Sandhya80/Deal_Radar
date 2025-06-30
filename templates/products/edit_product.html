@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Product - Deal Radar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-edit me-2"></i>Edit Product Tracking</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h5>{{ tracked_product.product.name }}</h5>
+                        <p class="text-muted">
+                            <i class="fas fa-link me-1"></i>
+                            <a href="{{ tracked_product.product.url }}" target="_blank">View Product Page</a>
+                        </p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="desired_price" class="form-label">Desired Price (£)</label>
+                            <input type="number" step="0.01" class="form-control" id="desired_price" 
+                                   name="desired_price" value="{{ tracked_product.desired_price }}" required>
+                            <div class="form-text">
+                                Current price: <strong>£{{ tracked_product.product.current_price }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            You'll receive an alert when the price drops to or below your desired price.
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Update Tracking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
