@@ -15,52 +15,12 @@
 
 **REQUIRED**: Create `.env` file from `.env.example` and update these values:
 
-```bash
-# STEP 1: Copy the template
-copy .env.example .env
-
-# STEP 2: Edit .env file with these exact values:
-SECRET_KEY=vq8)+*rc$ji(p^!@w=&h#*wva0w6n_ch2oqhpzkphduw#(0658
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-
-# Keep empty for SQLite (automatic)
-DATABASE_URL=
-
-# Console email for testing
-EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-EMAIL_HOST=
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER=
-EMAIL_HOST_PASSWORD=
-
-# Optional Redis for Celery testing
-REDIS_URL=redis://localhost:6379/0
-
-# Leave empty for Phase 1
-TWILIO_ACCOUNT_SID=
-TWILIO_AUTH_TOKEN=
-TWILIO_PHONE_NUMBER=
-STRIPE_PUBLIC_KEY=
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
-
-# Development settings
-SECURE_SSL_REDIRECT=False
-SECURE_HSTS_SECONDS=0
-```
-
-### 2. Database Setup (If Not Done)
-
-```bash
 # Apply migrations
+
 python manage.py migrate
 
 # Create admin user (if needed)
+
 python manage.py createsuperuser
 ```
 
