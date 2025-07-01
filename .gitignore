@@ -73,9 +73,50 @@ coverage.xml
 # Pytest
 .pytest_cache/
 
-# Celery
+# Celery - CRITICAL SECURITY
 celerybeat-schedule
 celerybeat.pid
+celerybeat-schedule.db
+celerybeat.db
+
+# Redis - CRITICAL SECURITY (Phase 2)
+dump.rdb
+redis.conf
+redis.log
+redis/
+redis.zip
+*.rdb
+
+# Phase 2 Scraping Data - SENSITIVE
+scraping_cache/
+scraped_data/
+user_sessions/
+price_history_exports/
+scraping_logs/
+*.scraping.log
+
+# Testing Files - MAY CONTAIN SENSITIVE DATA
+test_*.py
+*_test.py
+tests/local_*
+test_data/
+mock_responses/
+debug_scraped_data/
+
+# Phase 2 Implementation Files - SENSITIVE LOGIC
+phase2_scraping_implementation.py
+PHASE2_SCRAPING_PLAN.md
+scraper_configs/
+site_selectors/
+scraping_strategies/
+selector_mappings.json
+scraping_instructions.md
+
+# Task Queue and Background Jobs
+celery_tasks.log
+worker.log
+beat.log
+task_results/
 
 # Static files (uncomment if using whitenoise)
 # staticfiles/
@@ -86,12 +127,34 @@ node_modules/
 # Heroku
 .env.local
 
-# Security and API Keys
+# Security and API Keys - CRITICAL SECURITY
 *.pem
 *.key
 *.crt
 *.p12
 *.pfx
+api_keys.json
+webhooks.json
+scraping_headers.json
+
+# Phase 2 Configuration - SENSITIVE
+scraper_settings.json
+user_agents.txt
+proxy_configs.json
+rate_limits.json
+
+# Third-party Service Credentials
+twilio_credentials.json
+sendgrid_credentials.json
+stripe_credentials.json
+heroku_credentials.json
+
+# Production Deployment Files - SENSITIVE
+docker-compose.override.yml
+deployment_keys/
+ssl_certificates/
+nginx_configs/
+supervisor_configs/
 
 # Cloud Provider Configs
 .aws/
@@ -109,10 +172,47 @@ tmp/
 temp/
 *.tmp
 
-# Logs and monitoring
+# Logs and monitoring - CONTAINS USER DATA
 logs/
 *.log.*
 audit.log
+access.log
+error.log
+scraping.log
+celery.log
+django.log
+security.log
+
+# Analytics and Metrics - USER BEHAVIOR DATA
+analytics/
+metrics/
+user_analytics/
+scraping_metrics/
+performance_data/
+monitoring_data/
+
+# Phase 2 User Data - GDPR SENSITIVE
+user_exports/
+data_requests/
+privacy_exports/
+user_profiles_backup/
+tracked_products_backup/
 
 # End of .gitignore
-/PHASE1_CHECKLIST.md
+
+# SECURITY AUDIT SUMMARY (Phase 2)
+# ===================================
+# ✅ Environment variables (.env, .env.*)  
+# ✅ Database files (db.sqlite3, *.db)
+# ✅ Redis data (dump.rdb, redis/)
+# ✅ Virtual environment (deal_radar_env/)
+# ✅ Python cache (__pycache__/)
+# ✅ Logs and monitoring data (logs/, *.log)
+# ✅ User data and exports (user_exports/, analytics/)
+# ✅ API keys and credentials (*.json, *.key)
+# ✅ Scraping implementation details (phase2_*.py, PHASE2_*.md)
+# ✅ Testing files with potential sensitive data (test_*.py)
+# ✅ Task queue data (celerybeat-*, *.rdb)
+# ===================================
+# CRITICAL: Never commit .env, credentials, or user data!
+# REMINDER: Run 'git status --ignored' to verify protection
