@@ -11,15 +11,18 @@
 
 ## Manual Configuration Required
 
+- Sensitive details removed(due to security concewrns)
+
+
 ### 1. Environment Variables (.env file)
 
 **REQUIRED**: Create `.env` file from `.env.example` and update these values:
 
-# Apply migrations
+## Apply migrations
 
 python manage.py migrate
 
-# Create admin user (if needed)
+## Create admin user (if needed)
 
 python manage.py createsuperuser
 ```
@@ -120,7 +123,7 @@ python manage.py runserver
 
 ## Ready for Assessment
 
-Your Phase 1 Deal Radar application is now complete with:
+Phase 1 Deal Radar application is now complete with:
 
 1. **Full authentication system** with registration, login, logout
 2. **Complete CRUD operations** for product tracking
@@ -140,7 +143,7 @@ Once Phase 1 is approved, Phase 2 will add:
 
 ## Support
 
-If you encounter any issues:
+If encountered any issues:
 
 1. Check the terminal for error messages
 2. Verify .env file configuration
