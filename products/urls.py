@@ -23,4 +23,9 @@ urlpatterns = [
     # API endpoints
     path('api/', include(router.urls)),
     path('api/list/', views.product_list_api, name='product_list_api'),
+
+    # Phase 2: Manual testing and API endpoints
+    path('test-scraping/', views.test_scraping, name='test_scraping'),
+    path('trigger-scraping/<int:product_id>/', views.trigger_scraping, name='trigger_scraping'),
+    path('api/product/<int:product_id>/price-history/', views.product_price_history, name='product_price_history'),
 ]

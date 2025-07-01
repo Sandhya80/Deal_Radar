@@ -48,11 +48,12 @@ def dashboard(request):
     - can_add_more: Boolean indicating if user can track more products
     - total_tracked: Count of currently tracked products
     
-    Future Enhancements (Phase 2):
+    Phase 2 Enhancements:
     - Price history charts using Chart.js
     - Recent deal alerts and notifications
     - Bulk actions for managing multiple products
     - Filter and search functionality
+    - Auto-scraping status and last check times
     """
     # Optimize database queries with select_related for efficiency
     # This prevents N+1 query problems when accessing product data
@@ -66,13 +67,31 @@ def dashboard(request):
     profile = getattr(request.user, 'profile', None)
     can_add_more = profile.can_track_more_products if profile else False
     
+    # Phase 2: Get recent scraping activity
+    from django.utils import timezone
+    from datetime import timedelta
+    
+    recent_checks = Product.objects.filter(
+        trackedproduct__user=request.user,
+        last_checked__isnull=False
+    ).order_by('-last_checked')
+    
+    last_scrape_time = recent_checks.first().last_checked if recent_checks.exists() else None
+    
+    # Get recent deal alerts (if any)
+    recent_alerts = DealAlert.objects.filter(
+        user=request.user,
+        created_at__gte=timezone.now() - timedelta(days=7)
+    ).order_by('-created_at')[:5]
+    
     context = {
         'tracked_products': tracked_products,
         'can_add_more': can_add_more,
         'total_tracked': tracked_products.count(),
-        # Additional context for Phase 2:
-        # 'recent_alerts': recent deal alerts
-        # 'price_changes': products with recent price changes
+        # Phase 2 context additions:
+        'last_scrape_time': last_scrape_time,
+        'recent_alerts': recent_alerts,
+        'scraping_active': True,  # Will be dynamic based on Celery status
     }
     return render(request, 'products/dashboard.html', context)
 
@@ -352,3 +371,96 @@ def product_list_api(request):
         'total_count': len(data),
         'can_add_more': request.user.profile.can_track_more_products if hasattr(request.user, 'profile') else False
     })
+
+# Phase 2: Manual Scraping Test Endpoints (for development/testing)
+
+@login_required
+def test_scraping(request):
+    """
+    Manual scraping test view - useful for development and debugging
+    Allows admin users to manually trigger scraping for testing
+    """
+    if not request.user.is_superuser:
+        messages.error(request, "Admin access required for scraping tests.")
+        return redirect('dashboard')
+    
+    if request.method == 'POST':
+        url = request.POST.get('url')
+        if url:
+            from .tasks import PriceScraper
+            scraper = PriceScraper()
+            result = scraper.scrape_price(url)
+            
+            if result.get('success'):
+                messages.success(
+                    request, 
+                    f"Scraping successful! Price: £{result['price']} from {result['source']}"
+                )
+            else:
+                messages.error(request, f"Scraping failed: {result.get('error', 'Unknown error')}")
+        else:
+            messages.error(request, "Please provide a URL to test.")
+    
+    return render(request, 'products/test_scraping.html')
+
+@login_required  
+def trigger_scraping(request, product_id):
+    """
+    Manually trigger scraping for a specific product
+    Useful for testing and immediate price updates
+    """
+    tracked_product = get_object_or_404(
+        TrackedProduct, 
+        id=product_id, 
+        user=request.user
+    )
+    
+    try:
+        from .tasks import scrape_product_price
+        
+        # Trigger immediate scraping task
+        task_result = scrape_product_price.delay(tracked_product.id)
+        
+        messages.info(
+            request, 
+            f"Price check initiated for {tracked_product.product.name}. "
+            f"Task ID: {task_result.id}"
+        )
+    except Exception as e:
+        messages.error(request, f"Failed to start price check: {e}")
+    
+    return redirect('dashboard')
+
+@api_view(['GET'])
+def product_price_history(request, product_id):
+    """
+    API endpoint to get price history for charts
+    Returns JSON data suitable for Chart.js
+    """
+    try:
+        product = get_object_or_404(Product, id=product_id)
+        
+        # Check if user has access to this product
+        if not TrackedProduct.objects.filter(product=product, user=request.user).exists():
+            return Response({'error': 'Access denied'}, status=403)
+        
+        # Get recent price history (last 30 days)
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        history = PriceHistory.objects.filter(
+            product=product,
+            timestamp__gte=timezone.now() - timedelta(days=30)
+        ).order_by('timestamp')
+        
+        data = {
+            'labels': [h.timestamp.strftime('%Y-%m-%d') for h in history],
+            'prices': [float(h.price) for h in history],
+            'product_name': product.name,
+            'current_price': float(product.current_price) if product.current_price else 0
+        }
+        
+        return Response(data)
+        
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)

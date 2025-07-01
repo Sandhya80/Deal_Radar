@@ -11,25 +11,49 @@
                     <i class="fas fa-tachometer-alt me-2"></i>
                     My Product Dashboard
                 </h1>
-                {% if can_add_more %}
-                <a href="{% url 'add_product' %}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>Track New Product
-                </a>
-                {% else %}
-                <span class="badge bg-warning">Tracking Limit Reached</span>
-                {% endif %}
+                <div>
+                    {% if user.is_superuser %}
+                    <a href="{% url 'test_scraping' %}" class="btn btn-outline-info me-2">
+                        <i class="fas fa-code me-1"></i>Test Scraping
+                    </a>
+                    {% endif %}
+                    {% if can_add_more %}
+                    <a href="{% url 'add_product' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Track New Product
+                    </a>
+                    {% else %}
+                    <span class="badge bg-warning">Tracking Limit Reached</span>
+                    {% endif %}
+                </div>
             </div>
 
-            <!-- Subscription Status -->
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle me-2"></i>
-                <strong>Current Plan:</strong> 
-                {% if user.profile.is_premium %}
-                    Premium (Unlimited tracking)
-                {% else %}
-                    Free ({{ total_tracked }}/3 products tracked)
-                    <a href="{% url 'subscription_plans' %}" class="alert-link ms-2">Upgrade to Premium</a>
-                {% endif %}
+            <!-- Subscription Status & Phase 2 Stats -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Current Plan:</strong> 
+                        {% if user.profile.is_premium %}
+                            Premium (Unlimited tracking, 2-4hr checks)
+                        {% else %}
+                            Free ({{ total_tracked }}/3 products, 24hr checks)
+                            <a href="{% url 'subscription_plans' %}" class="alert-link ms-2">Upgrade to Premium</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body text-center py-3">
+                            <h6 class="card-title mb-1">
+                                <i class="fas fa-robot me-2"></i>Auto-Scraping
+                            </h6>
+                            <span class="badge bg-success fs-6" id="scraping-status">Active</span>
+                            <div class="small text-muted mt-1">
+                                Last check: <span id="last-check">{{ last_scrape_time|default:"Never" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Tracked Products -->
@@ -41,18 +65,76 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ tracked_product.product.name }}</h5>
                             <p class="card-text text-muted">
-                                <small>{{ tracked_product.product.site_name|default:"Manual Entry" }}</small>
+                                <small>
+                                    <i class="fas fa-link me-1"></i>{{ tracked_product.product.domain|default:"Manual Entry" }}
+                                    {% if tracked_product.product.last_checked %}
+                                        <br><i class="fas fa-clock me-1"></i>Last checked: {{ tracked_product.product.last_checked|timesince }} ago
+                                    {% endif %}
+                                </small>
                             </p>
                             
                             <div class="row mb-3">
                                 <div class="col-6">
                                     <strong>Current Price:</strong><br>
                                     <span class="h5 text-primary">£{{ tracked_product.product.current_price }}</span>
+                                    {% if tracked_product.product.price_change_24h %}
+                                        {% if tracked_product.product.price_change_24h > 0 %}
+                                            <small class="text-danger d-block">
+                                                <i class="fas fa-arrow-up"></i>+£{{ tracked_product.product.price_change_24h }}
+                                            </small>
+                                        {% elif tracked_product.product.price_change_24h < 0 %}
+                                            <small class="text-success d-block">
+                                                <i class="fas fa-arrow-down"></i>£{{ tracked_product.product.price_change_24h }}
+                                            </small>
+                                        {% endif %}
+                                    {% endif %}
                                 </div>
                                 <div class="col-6">
                                     <strong>Target Price:</strong><br>
                                     <span class="h6">£{{ tracked_product.desired_price }}</span>
+                                    {% if tracked_product.product.current_price <= tracked_product.desired_price %}
+                                        <small class="text-success d-block">
+                                            <i class="fas fa-check-circle"></i>Target reached!
+                                        </small>
+                                    {% else %}
+                                        {% with diff=tracked_product.product.current_price|sub:tracked_product.desired_price %}
+                                        <small class="text-muted d-block">
+                                            £{{ diff|floatformat:2 }} to go
+                                        </small>
+                                        {% endwith %}
+                                    {% endif %}
                                 </div>
+                            </div>
+
+                            <!-- Phase 2: Price History Mini Chart -->
+                            {% if tracked_product.product.recent_prices %}
+                            <div class="mb-3">
+                                <small class="text-muted">Price trend (7 days):</small>
+                                <div class="progress mt-1" style="height: 4px;">
+                                    {% for price in tracked_product.product.recent_prices %}
+                                    <div class="progress-bar bg-primary" style="width: {{ price.percentage }}%;"></div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Phase 2: Scraping Status Indicator -->
+                            <div class="mb-2">
+                                {% if tracked_product.product.last_checked %}
+                                    {% if tracked_product.product.scrape_failures > 2 %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-exclamation-triangle"></i>Check issues
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check"></i>Monitoring
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="fas fa-clock"></i>Pending check
+                                    </span>
+                                {% endif %}
                             </div>
 
                             {% if tracked_product.is_deal_available %}
@@ -65,6 +147,11 @@
                                 <a href="{{ tracked_product.product.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
                                     <i class="fas fa-external-link-alt me-1"></i>View
                                 </a>
+                                {% if user.is_superuser %}
+                                <a href="{% url 'trigger_scraping' tracked_product.id %}" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-sync me-1"></i>Check Now
+                                </a>
+                                {% endif %}
                                 <a href="{% url 'edit_product' tracked_product.id %}" class="btn btn-outline-secondary btn-sm">
                                     <i class="fas fa-edit me-1"></i>Edit
                                 </a>

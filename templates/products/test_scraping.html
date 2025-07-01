@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Test Scraping - Deal Radar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-code me-2"></i>Manual Scraping Test</h4>
+                    <small class="text-muted">Admin only - Test scraping functionality</small>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="url" class="form-label">Product URL</label>
+                            <input 
+                                type="url" 
+                                class="form-control" 
+                                id="url" 
+                                name="url" 
+                                placeholder="https://www.amazon.co.uk/dp/..." 
+                                required
+                            >
+                            <div class="form-text">
+                                Supported sites: Amazon UK, Argos, eBay UK, or any site with common price selectors
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Test Scraping
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Example URLs for testing -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Example URLs for Testing</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Amazon UK</h6>
+                    <code>https://www.amazon.co.uk/dp/B08N5WRWNW</code>
+                    
+                    <h6 class="mt-3">Argos</h6>
+                    <code>https://www.argos.co.uk/product/...</code>
+                    
+                    <h6 class="mt-3">eBay UK</h6>
+                    <code>https://www.ebay.co.uk/itm/...</code>
+                    
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> This tool is for testing the scraping functionality. 
+                        Actual product tracking should be done through the regular dashboard.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
