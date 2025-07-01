@@ -37,8 +37,10 @@ class Product(models.Model):
     
     # Tracking metadata for system monitoring
     is_active = models.BooleanField(default=True)              # Enable/disable scraping
-    last_scraped = models.DateTimeField(auto_now_add=True)     # Last successful scrape
+    last_checked = models.DateTimeField(auto_now_add=True)     # Last scraping attempt (success or fail)
+    last_scraped = models.DateTimeField(null=True, blank=True) # Last successful scrape
     scrape_count = models.IntegerField(default=0)              # Total scrapes performed
+    scrape_failures = models.IntegerField(default=0)           # Failed scrape attempts
     
     # Audit trail
     created_at = models.DateTimeField(auto_now_add=True)
@@ -55,7 +57,35 @@ class Product(models.Model):
         ]
     
     def __str__(self):
-        return f"{self.name} - ${self.current_price}"
+        return f"{self.name} - £{self.current_price}"
+    
+    @property
+    def domain(self):
+        """Extract domain from product URL"""
+        from urllib.parse import urlparse
+        return urlparse(self.url).netloc
+    
+    @property
+    def price_change_24h(self):
+        """Get price change in last 24 hours"""
+        from datetime import timedelta
+        yesterday = timezone.now() - timedelta(days=1)
+        
+        recent_price = self.pricehistory_set.filter(
+            timestamp__gte=yesterday
+        ).order_by('timestamp').first()
+        
+        if recent_price:
+            return self.current_price - recent_price.price
+        return Decimal('0.00')
+    
+    @property
+    def scrape_success_rate(self):
+        """Calculate scraping success rate"""
+        total_attempts = self.scrape_count + self.scrape_failures
+        if total_attempts == 0:
+            return 100.0
+        return (self.scrape_count / total_attempts) * 100
     
     @property
     def price_history(self):
@@ -91,7 +121,7 @@ class PriceHistory(models.Model):
     
     # Additional tracking data for scraping reliability
     was_available = models.BooleanField(default=True)               # Product availability status
-    scraper_source = models.CharField(max_length=50, default='manual')  # Which scraper collected this
+    source = models.CharField(max_length=50, default='manual')      # Which scraper collected this (Amazon UK, Argos, etc.)
     
     class Meta:
         db_table = 'price_history'
