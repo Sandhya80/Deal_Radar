@@ -33,6 +33,11 @@
   - Contains detailed site analysis and selector mappings
   - Status: ✅ REMOVED FROM TRACKING + IGNORED
 
+- ✅ **Manual Setup Guide** (`PHASE2_MANUAL_SETUP.md`)
+  - Contains Redis URLs, infrastructure details, testing URLs
+  - Reveals deployment methods and technical architecture
+  - Status: ✅ IGNORED (never tracked)
+
 - ✅ **Scraper Configurations** (`scraper_configs/`, `site_selectors/`)
 - ✅ **User Agent Lists** (`user_agents.txt`)
 - ✅ **Rate Limit Configs** (`rate_limits.json`)
@@ -116,6 +121,7 @@ dump.rdb                               # Redis database
 redis/ and redis.zip                   # Redis installation
 phase2_scraping_implementation.py      # Scraping logic
 PHASE2_SCRAPING_PLAN.md               # Scraping strategies
+PHASE2_MANUAL_SETUP.md                # Setup guide with infrastructure details
 test_*.py                             # Test files
 __pycache__/                          # Python cache
 staticfiles/                          # Collected static files
