@@ -106,11 +106,14 @@ debug_scraped_data/
 # Phase 2 Implementation Files - SENSITIVE LOGIC
 phase2_scraping_implementation.py
 PHASE2_SCRAPING_PLAN.md
+PHASE2_MANUAL_SETUP.md
 scraper_configs/
 site_selectors/
 scraping_strategies/
 selector_mappings.json
 scraping_instructions.md
+deployment_guides/
+setup_instructions/
 
 # Task Queue and Background Jobs
 celery_tasks.log
