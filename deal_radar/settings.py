@@ -3,7 +3,6 @@ Django settings for deal_radar project - Phase 2
 
 Core functionality:
 - Product management and display
-- Web scraping capabilities
 - Basic admin interface
 """
 
