@@ -3,7 +3,7 @@ Product Views for Deal Radar - Phase 2
 Simple product display functionality
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import Product
 
@@ -154,3 +154,25 @@ def home(request):
         </ul>
         <p><a href="/admin/">Try Admin Panel</a></p>
         """)
+
+def product_detail(request, pk):
+    """Display individual product details"""
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'products/product_detail.html', {'product': product})
+
+def search_products(request):
+    """Search products by name or category"""
+    query = request.GET.get('q', '')
+    if query:
+        products = Product.objects.filter(
+            name__icontains=query
+        ) | Product.objects.filter(
+            category__icontains=query
+        )
+    else:
+        products = Product.objects.all()
+    
+    return render(request, 'products/search_results.html', {
+        'products': products,
+        'query': query
+    })
