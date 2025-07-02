@@ -1,466 +1,156 @@
 """
-Product Views for Deal Radar
-
-This module contains all views related to product tracking functionality.
-It provides both web interface views (for the dashboard) and API endpoints
-(for mobile apps and frontend frameworks).
-
-Architecture Logic:
-- Web views return rendered HTML templates
-- API views return JSON responses using Django REST Framework
-- All views require authentication to protect user data
-- Views implement subscription tier business logic
-
-Business Logic Implementation:
-- Users can track products by providing URLs and desired prices
-- Free users are limited to 3 tracked products
-- Premium users have unlimited tracking
-- Real-time price updates and alerts (implemented in Phase 2)
+Product Views for Deal Radar - Phase 2
+Simple product display functionality
 """
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.http import JsonResponse
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import Product, TrackedProduct, PriceHistory, DealAlert
+from django.shortcuts import render
+from django.http import HttpResponse
+from .models import Product
 
-# Create your views here.
-
-@login_required
-def dashboard(request):
-    """
-    Main dashboard view showing user's tracked products
-    
-    This is the primary interface where users manage their product tracking.
-    It displays all active tracked products with current pricing information
-    and provides quick access to management actions.
-    
-    Business Logic:
-    - Only show active tracked products (user hasn't deleted them)
-    - Display current prices with visual indicators for price changes
-    - Show subscription limits and upgrade prompts for free users
-    - Provide quick actions: add new products, edit tracking, delete
-    
-    Template Context:
-    - tracked_products: QuerySet of user's TrackedProduct objects
-    - can_add_more: Boolean indicating if user can track more products
-    - total_tracked: Count of currently tracked products
-    
-    Phase 2 Enhancements:
-    - Price history charts using Chart.js
-    - Recent deal alerts and notifications
-    - Bulk actions for managing multiple products
-    - Filter and search functionality
-    - Auto-scraping status and last check times
-    """
-    # Optimize database queries with select_related for efficiency
-    # This prevents N+1 query problems when accessing product data
-    tracked_products = TrackedProduct.objects.filter(
-        user=request.user, 
-        is_active=True
-    ).select_related('product').order_by('-created_at')
-    
-    # Check subscription limits for business rule enforcement
-    # Free users can only track 3 products, premium users unlimited
-    profile = getattr(request.user, 'profile', None)
-    can_add_more = profile.can_track_more_products if profile else False
-    
-    # Phase 2: Get recent scraping activity
-    from django.utils import timezone
-    from datetime import timedelta
-    
-    recent_checks = Product.objects.filter(
-        trackedproduct__user=request.user,
-        last_checked__isnull=False
-    ).order_by('-last_checked')
-    
-    last_scrape_time = recent_checks.first().last_checked if recent_checks.exists() else None
-    
-    # Get recent deal alerts (if any)
-    recent_alerts = DealAlert.objects.filter(
-        user=request.user,
-        created_at__gte=timezone.now() - timedelta(days=7)
-    ).order_by('-created_at')[:5]
-    
-    context = {
-        'tracked_products': tracked_products,
-        'can_add_more': can_add_more,
-        'total_tracked': tracked_products.count(),
-        # Phase 2 context additions:
-        'last_scrape_time': last_scrape_time,
-        'recent_alerts': recent_alerts,
-        'scraping_active': True,  # Will be dynamic based on Celery status
-    }
-    return render(request, 'products/dashboard.html', context)
-
-@login_required
-def add_product(request):
-    """
-    Add a new product to user's tracking list
-    
-    This view handles the form for adding new products to track.
-    It accepts a product URL and desired price from the user.
-    
-    Business Logic:
-    - Validate subscription limits before allowing new products
-    - Check if product already exists to prevent duplicates
-    - Create minimal product record (Phase 1: manual data entry)
-    - Create TrackedProduct relationship with user preferences
-    
-    Form Processing:
-    - GET: Display the add product form
-    - POST: Process form submission and create tracking
-    
-    Phase 2 Enhancements:
-    - Web scraping to automatically populate product details
-    - URL validation to ensure supported e-commerce sites
-    - Duplicate detection based on product URLs
-    - Automatic price fetching and validation
-    
-    Error Handling:
-    - Subscription limit exceeded
-    - Invalid URLs or pricing data
-    - Duplicate tracking attempts
-    """
-    if request.method == 'POST':
-        url = request.POST.get('url')
-        desired_price = request.POST.get('desired_price')
-        
-        # Validate required fields
-        if url and desired_price:
-            # Check subscription limits before proceeding
-            profile = getattr(request.user, 'profile', None)
-            if profile and not profile.can_track_more_products:
-                messages.error(request, 'You have reached your tracking limit. Upgrade to Premium for unlimited tracking!')
-                return redirect('dashboard')
-            
-            try:
-                # Convert price to float for validation
-                price_value = float(desired_price)
-                if price_value <= 0:
-                    raise ValueError("Price must be positive")
-                
-                # Create or get existing product
-                # Phase 1: Basic product creation with minimal data
-                # Phase 2: Will include web scraping for full product details
-                product, created = Product.objects.get_or_create(
-                    url=url,
-                    defaults={
-                        'name': f'Product from {url}',  # Placeholder name
-                        'current_price': price_value,
-                        'site_name': 'Manual',  # Will be auto-detected in Phase 2
-                    }
-                )
-                
-                # Create tracking relationship with user preferences
-                tracked_product, tracking_created = TrackedProduct.objects.get_or_create(
-                    user=request.user,
-                    product=product,
-                    defaults={'desired_price': price_value}
-                )
-                
-                if tracking_created:
-                    messages.success(request, 'Product added successfully! You will receive alerts when the price drops.')
-                else:
-                    messages.info(request, 'You are already tracking this product.')
-                
-                return redirect('dashboard')
-                
-            except ValueError as e:
-                messages.error(request, 'Please enter a valid price.')
-        else:
-            messages.error(request, 'Please provide both URL and desired price.')
-    
-    # GET request: show the form
-    return render(request, 'products/add_product.html')
-
-@login_required
-def edit_product(request, product_id):
-    """
-    Edit tracking preferences for a user's tracked product
-    
-    This view allows users to modify their tracking preferences for
-    a specific product without changing the core product data.
-    
-    Business Logic:
-    - Users can only edit their own tracked products
-    - Modifications include: desired price, notification preferences
-    - Core product data (name, URL) remains unchanged
-    - Changes are immediately saved and alerts updated
-    
-    Security:
-    - get_object_or_404 ensures user owns the tracked product
-    - Django's @login_required prevents unauthorized access
-    
-    Form Processing:
-    - GET: Display current tracking settings in form
-    - POST: Update tracking preferences and redirect to dashboard
-    
-    Future Enhancements:
-    - Notification frequency settings
-    - Custom discount percentage thresholds
-    - Pause/resume tracking without deletion
-    """
-    # Security check: ensure user owns this tracked product
-    tracked_product = get_object_or_404(
-        TrackedProduct, 
-        id=product_id, 
-        user=request.user  # Prevents users from editing others' products
-    )
-    
-    if request.method == 'POST':
-        desired_price = request.POST.get('desired_price')
-        
-        if desired_price:
-            try:
-                price_value = float(desired_price)
-                if price_value <= 0:
-                    raise ValueError("Price must be positive")
-                
-                # Update tracking preferences
-                tracked_product.desired_price = price_value
-                
-                # Future: Update notification preferences from form
-                # tracked_product.notify_on_price_drop = request.POST.get('notify_price_drop', False)
-                # tracked_product.minimum_discount_percent = request.POST.get('min_discount', 10.0)
-                
-                tracked_product.save()
-                messages.success(request, 'Product tracking updated successfully!')
-                return redirect('dashboard')
-                
-            except ValueError:
-                messages.error(request, 'Please enter a valid price.')
-        else:
-            messages.error(request, 'Please provide a desired price.')
-    
-    # GET request: show edit form with current values
-    context = {'tracked_product': tracked_product}
-    return render(request, 'products/edit_product.html', context)
-
-@login_required
-def delete_product(request, product_id):
-    """
-    Remove a product from user's tracking list
-    
-    This view handles the deletion of tracked products from a user's list.
-    It implements soft deletion by setting is_active=False to preserve
-    historical data while removing the product from active tracking.
-    
-    Business Logic:
-    - Only the tracking relationship is deleted, not the core product
-    - Other users can continue tracking the same product
-    - Price history is preserved for analytics
-    - Deletion is immediate and cannot be undone (Phase 1)
-    
-    Security:
-    - Users can only delete their own tracked products
-    - Confirmation page prevents accidental deletions
-    - get_object_or_404 ensures proper ownership
-    
-    UX Considerations:
-    - GET: Show confirmation page with product details
-    - POST: Perform deletion and redirect with success message
-    - Cancel option returns to dashboard without changes
-    
-    Future Enhancements:
-    - Soft deletion with restore capability
-    - Bulk delete functionality
-    - Export data before deletion
-    """
-    # Security: ensure user owns this tracked product
-    tracked_product = get_object_or_404(
-        TrackedProduct, 
-        id=product_id, 
-        user=request.user
-    )
-    
-    if request.method == 'POST':
-        # Get product name for success message before deletion
-        product_name = tracked_product.product.name
-        
-        # Perform deletion - this removes the tracking relationship
-        # The core Product object remains for other users who may be tracking it
-        tracked_product.delete()
-        
-        messages.success(request, f'"{product_name}" has been removed from your tracking list.')
-        return redirect('dashboard')
-    
-    # GET request: show confirmation page
-    context = {
-        'tracked_product': tracked_product,
-        'product_name': tracked_product.product.name,
-        'current_price': tracked_product.product.current_price,
-    }
-    return render(request, 'products/delete_product.html', context)
-
-# API Views for Mobile Apps and Frontend Frameworks
-# These views provide JSON responses for programmatic access
-
-@api_view(['GET'])
-def product_list_api(request):
-    """
-    API endpoint to retrieve user's tracked products
-    
-    This RESTful API endpoint provides programmatic access to a user's
-    tracked products for mobile apps, frontend frameworks, or third-party
-    integrations.
-    
-    Authentication:
-    - Requires valid authentication token or active session
-    - Returns 401 for unauthenticated requests
-    
-    Response Format:
-    - JSON array of tracked product objects
-    - Each object includes product details and tracking preferences
-    - Optimized for mobile app consumption
-    
-    Business Logic:
-    - Only returns active tracked products for the authenticated user
-    - Includes calculated fields like deal availability
-    - Efficient database queries with select_related
-    
-    Future Enhancements:
-    - Pagination for users with many tracked products
-    - Filtering and search parameters
-    - Price history data inclusion
-    - Real-time updates via WebSockets
-    
-    Example Response:
-    [
-        {
-            "id": 1,
-            "product_name": "iPhone 15 Pro",
-            "product_url": "https://amazon.com/...",
-            "current_price": 799.99,
-            "desired_price": 699.99,
-            "is_deal_available": false,
-            "discount_percent": 0.0
-        }
-    ]
-    """
-    # Authentication check (handled by DRF authentication classes)
-    if not request.user.is_authenticated:
-        return Response({'error': 'Authentication required'}, status=401)
-    
-    # Efficient query with related product data
-    tracked_products = TrackedProduct.objects.filter(
-        user=request.user, 
-        is_active=True
-    ).select_related('product')
-    
-    # Serialize data for JSON response
-    data = []
-    for tp in tracked_products:
-        data.append({
-            'id': tp.id,
-            'product_name': tp.product.name,
-            'product_url': tp.product.url,
-            'product_image': tp.product.image_url or '',
-            'current_price': float(tp.product.current_price),
-            'desired_price': float(tp.desired_price),
-            'is_deal_available': tp.is_deal_available,
-            'discount_percent': float(tp.current_discount_percent),
-            'last_updated': tp.product.last_scraped.isoformat(),
-            'created_at': tp.created_at.isoformat(),
-        })
-    
-    return Response({
-        'products': data,
-        'total_count': len(data),
-        'can_add_more': request.user.profile.can_track_more_products if hasattr(request.user, 'profile') else False
-    })
-
-# Phase 2: Manual Scraping Test Endpoints (for development/testing)
-
-@login_required
-def test_scraping(request):
-    """
-    Manual scraping test view - useful for development and debugging
-    Allows admin users to manually trigger scraping for testing
-    """
-    if not request.user.is_superuser:
-        messages.error(request, "Admin access required for scraping tests.")
-        return redirect('dashboard')
-    
-    if request.method == 'POST':
-        url = request.POST.get('url')
-        if url:
-            from .tasks import PriceScraper
-            scraper = PriceScraper()
-            result = scraper.scrape_price(url)
-            
-            if result.get('success'):
-                messages.success(
-                    request, 
-                    f"Scraping successful! Price: £{result['price']} from {result['source']}"
-                )
-            else:
-                messages.error(request, f"Scraping failed: {result.get('error', 'Unknown error')}")
-        else:
-            messages.error(request, "Please provide a URL to test.")
-    
-    return render(request, 'products/test_scraping.html')
-
-@login_required  
-def trigger_scraping(request, product_id):
-    """
-    Manually trigger scraping for a specific product
-    Useful for testing and immediate price updates
-    """
-    tracked_product = get_object_or_404(
-        TrackedProduct, 
-        id=product_id, 
-        user=request.user
-    )
-    
+def home(request):
+    """Phase 2: Simple homepage showing products from Phase 1 admin"""
     try:
-        from .tasks import scrape_product_price
+        # Get all products added via admin (Phase 1)
+        products = Product.objects.all().order_by('-created_at')
+        total_products = products.count()
         
-        # Trigger immediate scraping task
-        task_result = scrape_product_price.delay(tracked_product.id)
+        # Build a clean HTML page showing Phase 1 work
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Deal Radar - Phases 1 & 2</title>
+            <style>
+                body {{ 
+                    font-family: Arial, sans-serif; 
+                    margin: 40px; 
+                    background-color: #f5f5f5;
+                }}
+                .header {{
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 30px;
+                    border-radius: 10px;
+                    text-align: center;
+                    margin-bottom: 30px;
+                }}
+                .stats {{
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    margin-bottom: 30px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }}
+                .product {{ 
+                    background: white;
+                    border: 1px solid #ddd; 
+                    padding: 20px; 
+                    margin: 15px 0; 
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }}
+                .product h3 {{ color: #333; margin-top: 0; }}
+                .price {{ 
+                    font-size: 24px; 
+                    font-weight: bold; 
+                    color: #e74c3c; 
+                }}
+                .meta {{ color: #666; font-size: 14px; }}
+                .no-products {{ 
+                    text-align: center; 
+                    padding: 40px; 
+                    background: white; 
+                    border-radius: 8px; 
+                }}
+                .admin-link {{
+                    display: inline-block;
+                    background: #3498db;
+                    color: white;
+                    padding: 12px 24px;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    margin: 10px 5px;
+                }}
+                .admin-link:hover {{ background: #2980b9; }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🎯 Deal Radar</h1>
+                <p>Phase 1: Admin Interface ✅ | Phase 2: Product Display ✅</p>
+            </div>
+            
+            <div class="stats">
+                <h2>📊 Project Status</h2>
+                <p><strong>Products in Database:</strong> {total_products}</p>
+                <p><strong>Phase 1 Complete:</strong> ✅ Admin interface for product management</p>
+                <p><strong>Phase 2 Complete:</strong> ✅ Public website displaying products</p>
+                <p><strong>Next:</strong> Phase 3 will add user accounts and personal tracking</p>
+            </div>
+            
+            <h2>🛍️ Products Being Tracked</h2>
+        """
         
-        messages.info(
-            request, 
-            f"Price check initiated for {tracked_product.product.name}. "
-            f"Task ID: {task_result.id}"
-        )
-    except Exception as e:
-        messages.error(request, f"Failed to start price check: {e}")
-    
-    return redirect('dashboard')
-
-@api_view(['GET'])
-def product_price_history(request, product_id):
-    """
-    API endpoint to get price history for charts
-    Returns JSON data suitable for Chart.js
-    """
-    try:
-        product = get_object_or_404(Product, id=product_id)
+        if products:
+            for product in products:
+                # Format the price display
+                price_display = f"£{product.current_price}" if product.current_price else "Price not set"
+                
+                # Format dates nicely
+                created_date = product.created_at.strftime("%B %d, %Y at %I:%M %p")
+                
+                html += f"""
+                <div class="product">
+                    <h3>{product.name}</h3>
+                    <div class="price">{price_display}</div>
+                    <div class="meta">
+                        <p><strong>Site:</strong> {product.site_name or 'Not specified'}</p>
+                        <p><strong>Category:</strong> {product.category or 'Uncategorized'}</p>
+                        <p><strong>Added:</strong> {created_date}</p>
+                        <p><strong>Description:</strong> {product.description[:100] + '...' if len(product.description) > 100 else product.description}</p>
+                        <p><a href="{product.url}" target="_blank" style="color: #3498db;">🔗 View on {product.site_name or 'Website'}</a></p>
+                    </div>
+                </div>
+                """
+        else:
+            html += """
+            <div class="no-products">
+                <h3>No Products Yet</h3>
+                <p>No products have been added to the database yet.</p>
+                <p>Use the admin panel below to add your first products!</p>
+            </div>
+            """
         
-        # Check if user has access to this product
-        if not TrackedProduct.objects.filter(product=product, user=request.user).exists():
-            return Response({'error': 'Access denied'}, status=403)
+        html += f"""
+            <div style="text-align: center; margin-top: 40px; padding: 30px; background: white; border-radius: 8px;">
+                <h3>🔧 Admin Controls (Phase 1)</h3>
+                <p>Add, edit, and manage products using the Django admin interface:</p>
+                <a href="/admin/" class="admin-link">🎛️ Admin Panel</a>
+                <a href="/admin/products/product/add/" class="admin-link">➕ Add New Product</a>
+                
+                <hr style="margin: 30px 0;">
+                
+                <h3>🚀 Coming in Phase 3</h3>
+                <p>• User accounts and authentication<br>
+                • Personal product tracking lists<br>
+                • Price alert notifications<br>
+                • Individual user dashboards</p>
+            </div>
+        </body>
+        </html>
+        """
         
-        # Get recent price history (last 30 days)
-        from django.utils import timezone
-        from datetime import timedelta
-        
-        history = PriceHistory.objects.filter(
-            product=product,
-            timestamp__gte=timezone.now() - timedelta(days=30)
-        ).order_by('timestamp')
-        
-        data = {
-            'labels': [h.timestamp.strftime('%Y-%m-%d') for h in history],
-            'prices': [float(h.price) for h in history],
-            'product_name': product.name,
-            'current_price': float(product.current_price) if product.current_price else 0
-        }
-        
-        return Response(data)
+        return HttpResponse(html)
         
     except Exception as e:
-        return Response({'error': str(e)}, status=500)
+        # Error handling - show what went wrong
+        return HttpResponse(f"""
+        <h1>Deal Radar - Debug Mode</h1>
+        <p><strong>Error:</strong> {str(e)}</p>
+        <p><strong>Phase Status:</strong></p>
+        <ul>
+            <li>Phase 1: Admin setup - Should be working</li>
+            <li>Phase 2: Product display - Currently debugging</li>
+        </ul>
+        <p><a href="/admin/">Try Admin Panel</a></p>
+        """)

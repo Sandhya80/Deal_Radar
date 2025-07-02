@@ -165,7 +165,7 @@ supervisor_configs/
 .azure/
 
 # Backup files
-*.bak
+
 *.backup
 *.sql
 
@@ -173,7 +173,6 @@ supervisor_configs/
 .cache/
 tmp/
 temp/
-*.tmp
 
 # Logs and monitoring - CONTAINS USER DATA
 logs/

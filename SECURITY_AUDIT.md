@@ -47,7 +47,6 @@
 - ✅ **User Exports** (`user_exports/`, `data_requests/`)
 - ✅ **Analytics Data** (`analytics/`, `user_analytics/`)
 - ✅ **Monitoring Data** (`monitoring_data/`, `metrics/`)
-- ✅ **Backup Files** (`*_backup/`, `*.bak`)
 - Status: ✅ ALL IGNORED
 
 #### 🔄 **BACKGROUND TASKS - PROTECTED**

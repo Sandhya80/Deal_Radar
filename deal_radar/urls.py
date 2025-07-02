@@ -19,23 +19,10 @@ urlpatterns = [
     # Admin interface for data management and debugging
     path('admin/', admin.site.urls),
     
-    # Authentication system (django-allauth)
-    # Provides: /accounts/login/, /accounts/logout/, /accounts/signup/
-    path('accounts/', include('allauth.urls')),
-    
-    # API endpoints for mobile apps or frontend frameworks
-    path('api/auth/', include('users.urls')),           # User management API
-    path('api/products/', include('products.urls')),     # Product tracking API
-    path('api/notifications/', include('notifications.urls')),  # Notification API
-    path('api/subscriptions/', include('subscriptions.urls')),  # Payment API
-    
     # Frontend web interface views
-    path('', include('users.urls')),                     # Home page and auth views
-    path('dashboard/', include('products.urls')),        # Main user dashboard
-    path('subscriptions/', include('subscriptions.urls')),  # Subscription management
+    path('', include('products.urls')),        # Main user dashboard
 ]
 
 # Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
