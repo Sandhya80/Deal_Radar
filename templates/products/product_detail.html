@@ -1,20 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ product.name }} - Deal Radar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Add styling similar to home page */
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f8f9fa; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; }
+        .product-detail { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .price { font-size: 36px; font-weight: bold; color: #e74c3c; margin: 20px 0; }
+        .meta { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .btn { display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 5px; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
     </style>
 </head>
 <body>
-    <h1>{{ product.name }}</h1>
-    <p><strong>Price:</strong> £{{ product.current_price }}</p>
-    <p><strong>Site:</strong> {{ product.site_name }}</p>
-    <p><strong>Category:</strong> {{ product.category }}</p>
-    <p><strong>Description:</strong> {{ product.description }}</p>
-    <p><a href="{{ product.url }}" target="_blank">View on {{ product.site_name }}</a></p>
-    <p><a href="{% url 'home' %}">← Back to All Products</a></p>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Product Details</h1>
+        </div>
+        
+        <div class="product-detail">
+            <h1>{{ product.name }}</h1>
+            <div class="price">£{{ product.current_price }}</div>
+            
+            <div class="meta">
+                <p><strong>🏪 Site:</strong> {{ product.site_name|default:"Not specified" }}</p>
+                <p><strong>📂 Category:</strong> {{ product.category|default:"Uncategorized" }}</p>
+                <p><strong>📅 Added:</strong> {{ product.created_at|date:"F d, Y \a\t h:i A" }}</p>
+                <p><strong>🔄 Updated:</strong> {{ product.updated_at|date:"F d, Y \a\t h:i A" }}</p>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3>📝 Description</h3>
+                <p>{{ product.description|default:"No description available." }}</p>
+            </div>
+            
+            <div>
+                <a href="{{ product.url }}" target="_blank" class="btn btn-primary">🔗 Visit Product Page</a>
+                <a href="/admin/products/product/{{ product.pk }}/change/" class="btn btn-secondary">✏️ Edit Product</a>
+                <a href="/" class="btn btn-secondary">← Back to All Products</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
