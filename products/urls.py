@@ -9,5 +9,6 @@ from . import views
 urlpatterns = [
     # Phase 2 - Basic functionality only
     path('', views.home, name='home'),
+    path('product/<int:pk>/', views.product_detail, name='product_detail'),
     # Phase 3+ URLs will be added later
 ]
