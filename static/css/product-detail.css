@@ -1,0 +1,97 @@
+/* Product detail specific styles */
+.product-detail {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.product-detail h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+.product-price {
+    font-size: 3em;
+    font-weight: bold;
+    color: #e74c3c;
+    margin: 20px 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.product-meta {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 4px solid #667eea;
+}
+
+.product-meta p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.product-description {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.tracking-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 25px;
+    border-radius: 12px;
+    margin: 25px 0;
+    border: 2px solid #e0e0e0;
+}
+
+.tracking-section h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.tracking-active {
+    border-left: 4px solid #28a745;
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+}
+
+.tracking-signup {
+    border-left: 4px solid #667eea;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+}
+
+.action-buttons {
+    margin-top: 20px;
+}
+
+.action-buttons .btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Tracking status message */
+.tracking-status-active {
+    color: #28a745 !important;
+    font-weight: bold !important;
+    background: #d4edda;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+    margin: 15px 0;
+}

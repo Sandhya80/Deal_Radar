@@ -1,0 +1,235 @@
+/* Dashboard - matching your beautiful original design */
+
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 40px;
+    border-radius: 25px;
+    text-align: center;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.dashboard-header h1 {
+    font-size: 3.2em;
+    margin: 0 0 15px 0;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.dashboard-header p {
+    font-size: 1.3em;
+    margin: 0;
+    opacity: 0.95;
+    font-weight: 300;
+}
+
+/* Stats grid - clean and simple like your original */
+.stats-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 40px; 
+    margin-bottom: 50px;
+    padding: 0 20px;
+}
+
+.stat-card { 
+    background: white; 
+    padding: 40px 30px; 
+    border-radius: 15px; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08); 
+    text-align: center; 
+    transition: all 0.3s ease;
+    border: 1px solid #f8f9fa;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.stat-number { 
+    font-size: 4em; 
+    font-weight: 700; 
+    color: #667eea; 
+    margin: 0 0 15px 0; 
+    line-height: 1;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+    margin: 15px 0 8px 0;
+    color: #333;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.stat-card p {
+    color: #666;
+    margin: 0;
+    font-size: 1em;
+    font-weight: 400;
+}
+
+/* Section header - clean like your original */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 50px 0 30px 0;
+    padding: 0 10px;
+}
+
+.section-header h2 {
+    color: #333;
+    font-size: 1.8em;
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.section-header .btn {
+    font-size: 14px;
+    padding: 10px 20px;
+}
+
+/* Product listing - simple like your original */
+.tracked-product-item {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: 1px solid #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.tracked-product-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    border-color: #667eea;
+}
+
+.tracked-product-item h3 {
+    color: #333;
+    font-size: 1.4em;
+    margin: 0 0 15px 0;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.tracked-product-price {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #e74c3c;
+    margin: 15px 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.tracked-product-meta {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+.tracked-product-meta strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.tracked-product-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tracked-product-actions .btn {
+    font-size: 13px;
+    padding: 8px 16px;
+}
+
+/* Empty state - clean and minimal */
+.empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin: 40px 0;
+}
+
+.empty-state h3 {
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.empty-state p {
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 30px;
+}
+
+/* Quick actions - simple and clean */
+.quick-actions {
+    text-align: center;
+    margin-top: 50px;
+    padding: 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.quick-actions h3 {
+    color: #333;
+    font-size: 1.6em;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+/* Override product grid for dashboard - use simple list */
+.dashboard .product-grid {
+    display: block;
+}
+
+.dashboard .product {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: 1px solid #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.dashboard .product:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    border-color: #667eea;
+}
+
+.dashboard .product h3 {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+}
+
+.dashboard .product .price {
+    font-size: 1.8em;
+    margin: 15px 0;
+}
+
+.dashboard .action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.dashboard .action-buttons .btn {
+    font-size: 13px;
+    padding: 8px 16px;
+}

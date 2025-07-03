@@ -1,0 +1,404 @@
+/* Beautiful base styles matching your original design */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    margin: 0; 
+    background: #f5f6fa;
+    color: #333;
+    padding-top: 80px; /* Adjust based on your navbar height */
+}
+
+.container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 20px; 
+    position: relative; /* Ensure container doesn't interfere with fixed positioning */
+}
+
+/* Gorgeous header with purple gradient */
+.header { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+    color: white; 
+    padding: 60px 40px; 
+    border-radius: 25px; 
+    text-align: center; 
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.header h1 {
+    font-size: 3.5em;
+    margin: 0 0 15px 0;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.header p {
+    font-size: 1.3em;
+    margin: 0;
+    opacity: 0.95;
+    font-weight: 300;
+}
+
+/* Clean navigation bar */
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    margin: 0; /* Remove any existing margins */
+}
+
+.nav-links a {
+    text-decoration: none; 
+    color: #667eea; 
+    margin: 0 20px; 
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #5a67d8;
+    transform: translateY(-2px);
+}
+
+.nav-auth {
+    color: #333; 
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.nav-auth a {
+    text-decoration: none;
+    margin-left: 15px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-auth a[href*="logout"] {
+    color: #dc3545;
+}
+
+.nav-auth a[href*="logout"]:hover {
+    background: #dc3545;
+    color: white;
+}
+
+.nav-auth a[href*="login"] {
+    color: #667eea;
+}
+
+.nav-auth a[href*="login"]:hover {
+    background: #667eea;
+    color: white;
+}
+
+.nav-auth a[href*="signup"] {
+    color: #28a745;
+}
+
+.nav-auth a[href*="signup"]:hover {
+    background: #28a745;
+    color: white;
+}
+
+/* Beautiful buttons */
+.btn { 
+    display: inline-block; 
+    padding: 12px 24px; 
+    text-decoration: none; 
+    border-radius: 10px; 
+    margin: 5px; 
+    cursor: pointer;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.btn-primary { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+    color: white; 
+}
+
+.btn-secondary { 
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%); 
+    color: white; 
+}
+
+.btn-danger { 
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); 
+    color: white; 
+}
+
+/* Messages styling */
+.messages { 
+    margin-bottom: 25px; 
+}
+
+.messages div { 
+    padding: 15px 20px; 
+    border-radius: 12px; 
+    margin-bottom: 15px; 
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.messages .success { 
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); 
+    color: #155724; 
+    border-left: 4px solid #28a745;
+}
+
+.messages .info { 
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%); 
+    color: #0c5460; 
+    border-left: 4px solid #17a2b8;
+}
+
+.messages .error { 
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); 
+    color: #721c24; 
+    border-left: 4px solid #dc3545;
+}
+
+/* Accessibility - Screen reader only content */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.sr-only-focusable:focus {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 8px 16px !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+    background: #667eea !important;
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 4px !important;
+}
+
+/* Enhanced navigation styles */
+.nav-link.active {
+    color: #5a67d8 !important;
+    font-weight: 700;
+    position: relative;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: #667eea;
+    border-radius: 50%;
+}
+
+.user-welcome {
+    color: #333;
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+.nav-logout, .nav-login, .nav-signup {
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.nav-logout {
+    color: #dc3545;
+}
+
+.nav-logout:hover {
+    background: #dc3545;
+    color: white;
+}
+
+.nav-login {
+    color: #667eea;
+}
+
+.nav-login:hover {
+    background: #667eea;
+    color: white;
+}
+
+.nav-signup {
+    color: #28a745;
+}
+
+.nav-signup:hover {
+    background: #28a745;
+    color: white;
+}
+
+/* Enhanced messages */
+.message {
+    position: relative;
+    padding: 15px 45px 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    animation: slideInDown 0.3s ease;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.message-close:hover {
+    opacity: 1;
+}
+
+.message-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.message-info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+.message-error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.message-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+/* Smooth scroll behavior for skip links */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Adjust main content spacing */
+main#main-content {
+    margin-top: 20px; /* Add some space after the fixed navbar */
+}
+
+/* Mobile responsiveness for fixed navbar */
+@media (max-width: 768px) {
+    body {
+        padding-top: 70px; /* Smaller padding on mobile */
+    }
+    
+    .nav-bar {
+        padding: 12px 20px;
+    }
+    
+    .nav-links {
+        gap: 15px;
+    }
+    
+    .user-welcome {
+        display: none; /* Hide welcome text on small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-top: 60px;
+    }
+    
+    .nav-bar {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+    }
+    
+    .nav-links, .nav-auth {
+        gap: 10px;
+    }
+    
+    .nav-link, .nav-login, .nav-signup, .nav-logout {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+}
+
+/* Navbar brand styling */
+.nav-brand .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 700;
+    font-size: 1.2em;
+}
+
+.navbar-radar {
+    width: 30px;
+    height: 30px;
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
