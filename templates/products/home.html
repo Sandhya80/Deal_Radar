@@ -29,14 +29,14 @@
         </div>
         
         <!-- Add this navigation bar after the header div -->
-        <div class="nav-bar" style="background: white; padding: 15px 30px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
-            <div class="nav-links">
+        <div style="background: white; padding: 15px 30px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
+            <div>
                 <a href="{% url 'home' %}" style="text-decoration: none; color: #667eea; margin: 0 15px; font-weight: 500;">🏠 Home</a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'dashboard' %}" style="text-decoration: none; color: #667eea; margin: 0 15px; font-weight: 500;">📊 Dashboard</a>
                 {% endif %}
             </div>
-            <div class="user-info" style="color: #333; font-weight: bold;">
+            <div style="color: #333; font-weight: bold;">
                 {% if user.is_authenticated %}
                     👋 Welcome, {{ user.username }}! 
                     <a href="{% url 'logout' %}" style="color: #dc3545; margin-left: 15px; text-decoration: none;">Logout</a>
