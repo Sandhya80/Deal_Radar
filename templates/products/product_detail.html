@@ -1,77 +1,77 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ product.name }} - Deal Radar</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f8f9fa; }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; }
-        .product-detail { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-        .price { font-size: 36px; font-weight: bold; color: #e74c3c; margin: 20px 0; }
-        .meta { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; }
-        .btn { display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 5px; }
-        .btn-primary { background: #667eea; color: white; }
-        .btn-secondary { background: #6c757d; color: white; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🎯 Product Details</h1>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Deal Radar{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/product-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+    <a href="{% url 'home' %}" class="back-link">← Back to Products</a>
+    
+    <div class="product-detail">
+        <h1>{{ product.name }}</h1>
+        <div class="product-price">£{{ product.current_price }}</div>
+        
+        <div class="product-meta">
+            <p><strong>🏪 Site:</strong> {{ product.site_name|default:"Not specified" }}</p>
+            <p><strong>📂 Category:</strong> {{ product.category|default:"Uncategorized" }}</p>
+            <p><strong>📅 Added:</strong> {{ product.created_at|date:"F d, Y \a\t h:i A" }}</p>
+            <p><strong>🔄 Updated:</strong> {{ product.updated_at|date:"F d, Y \a\t h:i A" }}</p>
         </div>
         
-        <div class="product-detail">
-            <h1>{{ product.name }}</h1>
-            <div class="price">£{{ product.current_price }}</div>
-            
-            <div class="meta">
-                <p><strong>🏪 Site:</strong> {{ product.site_name|default:"Not specified" }}</p>
-                <p><strong>📂 Category:</strong> {{ product.category|default:"Uncategorized" }}</p>
-                <p><strong>📅 Added:</strong> {{ product.created_at|date:"F d, Y \a\t h:i A" }}</p>
-                <p><strong>🔄 Updated:</strong> {{ product.updated_at|date:"F d, Y \a\t h:i A" }}</p>
-            </div>
-            
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                <h3>📝 Description</h3>
-                <p>{{ product.description|default:"No description available." }}</p>
-            </div>
-            
-            {% if user.is_authenticated %}
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                    <h3>📊 Personal Tracking</h3>
-                    {% if is_tracked %}
-                        <p style="color: #28a745;">✅ You are tracking this product!</p>
-                        {% if tracked_product.target_price %}
-                            <p><strong>🎯 Your Target Price:</strong> £{{ tracked_product.target_price }}</p>
-                        {% endif %}
-                        <a href="{% url 'remove_from_tracking' product.pk %}" 
-                           style="background: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
-                           🗑️ Stop Tracking
-                        </a>
-                    {% else %}
-                        <p>Add this product to your personal tracking list to monitor price changes.</p>
-                        <a href="{% url 'add_to_tracking' product.pk %}" 
-                           style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
-                           ➕ Track This Product
-                        </a>
+        <div class="product-description">
+            <h3>📝 Description</h3>
+            <p>{{ product.description|default:"No description available." }}</p>
+        </div>
+        
+        {% if user.is_authenticated %}
+            <div class="tracking-section {% if is_tracked %}tracking-active{% endif %}">
+                <h3>📊 Personal Tracking</h3>
+                {% if is_tracked %}
+                    <p class="tracking-status-active">✅ You are tracking this product!</p>
+                    {% if tracked_product.target_price %}
+                        <p><strong>🎯 Your Target Price:</strong> £{{ tracked_product.target_price }}</p>
                     {% endif %}
-                </div>
-            {% else %}
-                <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                    <h3>🔐 Personal Tracking</h3>
-                    <p>Create an account to track this product and get price alerts!</p>
-                    <a href="{% url 'signup' %}" style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Sign Up</a>
-                    <a href="{% url 'login' %}" style="background: #667eea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">Login</a>
-                </div>
-            {% endif %}
-            
-            <div>
-                <a href="{{ product.url }}" target="_blank" class="btn btn-primary">🔗 Visit Product Page</a>
-                <a href="/admin/products/product/{{ product.pk }}/change/" class="btn btn-secondary">✏️ Edit Product</a>
-                <a href="/" class="btn btn-secondary">← Back to All Products</a>
+                    {% if tracked_product.notes %}
+                        <p><strong>📝 Your Notes:</strong> {{ tracked_product.notes }}</p>
+                    {% endif %}
+                    <div class="action-buttons">
+                        <a href="{% url 'remove_from_tracking' product.pk %}" class="btn btn-danger">
+                            🗑️ Stop Tracking
+                        </a>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                            📊 View Dashboard
+                        </a>
+                    </div>
+                {% else %}
+                    <p>Add this product to your personal tracking list to monitor price changes and set alerts.</p>
+                    <div class="action-buttons">
+                        <a href="{% url 'add_to_tracking' product.pk %}" class="btn btn-primary">
+                            ➕ Track This Product
+                        </a>
+                    </div>
+                {% endif %}
             </div>
+        {% else %}
+            <div class="tracking-section tracking-signup">
+                <h3>🔐 Personal Tracking</h3>
+                <p>Create an account to track this product and get price alerts!</p>
+                <div class="action-buttons">
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+                    <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+                </div>
+            </div>
+        {% endif %}
+        
+        <div class="action-buttons">
+            <a href="{{ product.url }}" target="_blank" class="btn btn-primary">🔗 Visit Original Site</a>
+            <a href="{% url 'home' %}" class="btn btn-secondary">← Back to All Products</a>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/product-detail.js' %}"></script>
+{% endblock %}

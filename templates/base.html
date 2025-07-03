@@ -1,3 +1,4 @@
+{% load static %}
 <!--
 Base Template for Deal Radar
 
@@ -42,182 +43,81 @@ Performance Considerations:
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Deal Radar - Track product prices and get alerts when prices drop. Never miss a deal again!">
-    <meta name="keywords" content="price tracking, deal alerts, price drop notifications, shopping, discounts">
-    <meta name="author" content="Deal Radar Team">
+    <title>{% block title %}Deal Radar{% endblock %}</title>
     
-    <!-- Page Title with SEO optimization -->
-    <title>{% block title %}Deal Radar - Never Miss a Deal{% endblock %}</title>
+    <!-- Favicon and app icons -->
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
     
-    <!-- Bootstrap CSS for responsive design and components -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" 
-          integrity="sha384-9ndCyUa1rLkzKOcx8CYvb7Z3Nf5j3n8P7dT6+mZfRfIWfG6NJQ8kXvJJ8LiS7fGt" 
-          crossorigin="anonymous">
+    <!-- Base styles -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- Custom CSS for Deal Radar branding -->
-    <style>
-        /* Base styling and layout */
-        body {
-            background-color: #f8f9fa;  /* Light gray background */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        /* Navigation styling */
-        .navbar-brand {
-            font-weight: bold;
-            color: #007bff !important;  /* Primary blue color */
-            font-size: 1.5rem;
-        }
-        
-        /* Deal card styling for product display */
-        .deal-card {
-            transition: transform 0.2s ease-in-out;  /* Smooth hover animation */
-            border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);  /* Subtle shadow */
-        }
-        
-        .deal-card:hover {
-            transform: translateY(-2px);  /* Lift effect on hover */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);  /* Enhanced shadow */
-        }
-        
-        /* Price change indicators */
-        .price-drop {
-            color: #28a745;  /* Green for price drops (good for user) */
-            font-weight: bold;
-        }
-        
-        .price-increase {
-            color: #dc3545;  /* Red for price increases */
-            font-weight: bold;
-        }
-        
-        .price-unchanged {
-            color: #6c757d;  /* Gray for no change */
-        }
-        
-        /* Status badges */
-        .badge-deal {
-            background-color: #28a745;  /* Green badge for deals */
-        }
-        
-        .badge-tracking {
-            background-color: #007bff;  /* Blue badge for tracking status */
-        }
-        
-        /* Footer styling */
-        .footer {
-            background-color: #343a40;  /* Dark background */
-            color: white;
-            margin-top: auto;  /* Push to bottom */
-        }
-        
-        /* Utility classes */
-        .text-muted-custom {
-            color: #6c757d !important;
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .navbar-brand {
-                font-size: 1.2rem;
-            }
-            
-            .deal-card {
-                margin-bottom: 1rem;
-            }
-        }
-    </style>
-    
-    <!-- Page-specific CSS can be added here -->
+    <!-- Page-specific styles -->
     {% block extra_css %}{% endblock %}
-</head>
-<body class="d-flex flex-column min-vh-100">
-    <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-        <div class="container">
-            <!-- Brand/Logo -->
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <i class="fas fa-search-dollar me-2"></i>Deal Radar
-            </a>
-            
-            <!-- Mobile menu toggle button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <!-- Navigation menu items -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-                        </li>
-                    {% endif %}
-                </ul>
-                
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                {{ user.username }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'profile' %}">Profile Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Register</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Messages -->
-    {% if messages %}
-        <div class="container mt-3">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <!-- Main Content -->
-    <main class="container my-4">
-        {% block content %}
-        {% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <div class="container">
-            <p>&copy; 2025 Deal Radar. Built with Django & Bootstrap.</p>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- Preload critical fonts for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="sr-only sr-only-focusable">Skip to main content</a>
+    
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="nav-bar" role="navigation" aria-label="Main navigation">
+            <div class="nav-brand">
+                <a href="{% url 'home' %}" class="brand-link">
+                    <img src="{% static 'images/radar-animation.gif' %}" alt="Deal Radar" class="navbar-radar">
+                    <span class="brand-text">Deal Radar</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'home' %}" 
+                   class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    🏠 Home
+                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" 
+                       class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                        📊 Dashboard
+                    </a>
+                {% endif %}
+            </div>
+            <div class="nav-auth">
+                {% if user.is_authenticated %}
+                    <span class="user-welcome">👋 Welcome, {{ user.username }}!</span>
+                    <a href="{% url 'logout' %}" class="nav-logout">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-login">Login</a>
+                    <a href="{% url 'signup' %}" class="nav-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+
+        <!-- Messages -->
+        {% if messages %}
+            <div class="messages" role="alert" aria-live="polite">
+                {% for message in messages %}
+                    <div class="message message-{{ message.tags }}">
+                        {{ message }}
+                        <button type="button" class="message-close" aria-label="Close message">&times;</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Main content area -->
+        <main id="main-content" role="main">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Base JavaScript -->
+    <script src="{% static 'js/base.js' %}"></script>
+    
+    <!-- Page-specific JavaScript -->
     {% block extra_js %}{% endblock %}
 </body>
 </html>

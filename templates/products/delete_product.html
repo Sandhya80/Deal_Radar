@@ -1,54 +1,57 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Delete Product - Deal Radar{% endblock %}
+{% block title %}Remove Product - Deal Radar{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/delete-product.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card border-danger">
-                <div class="card-header bg-danger text-white">
-                    <h4><i class="fas fa-trash me-2"></i>Remove Product from Tracking</h4>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>Are you sure you want to remove this product from tracking?</strong>
+    <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+    
+    <div class="delete-container">
+        <div class="delete-header">
+            <h1>🗑️ Remove Product from Tracking</h1>
+            <p>Are you sure you want to stop tracking this product?</p>
+        </div>
+        
+        <div class="product-info">
+            <h3>{{ product_name }}</h3>
+            <div class="product-details">
+                <p><strong>🔗 URL:</strong> 
+                   <a href="{{ tracked_product.product.url }}" target="_blank" class="product-link">
+                       {{ tracked_product.product.url|truncatechars:60 }}
+                   </a>
+                </p>
+                <div class="price-info">
+                    <div class="price-item">
+                        <strong>💰 Current Price:</strong> £{{ current_price }}
                     </div>
-
-                    <div class="mb-4">
-                        <h5>{{ product_name }}</h5>
-                        <p class="text-muted">
-                            <i class="fas fa-link me-1"></i>
-                            <a href="{{ tracked_product.product.url }}" target="_blank">{{ tracked_product.product.url }}</a>
-                        </p>
-                        <div class="row">
-                            <div class="col-6">
-                                <strong>Current Price:</strong> £{{ current_price }}
-                            </div>
-                            <div class="col-6">
-                                <strong>Your Target:</strong> £{{ tracked_product.desired_price }}
-                            </div>
-                        </div>
+                    <div class="price-item">
+                        <strong>🎯 Your Target:</strong> £{{ tracked_product.desired_price }}
                     </div>
-
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        This action cannot be undone. You will stop receiving price alerts for this product.
-                    </div>
-
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash me-2"></i>Yes, Remove Product
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
+        
+        <div class="warning-box">
+            <h4>⚠️ Warning</h4>
+            <p>This action cannot be undone. You will stop receiving price alerts for this product.</p>
+        </div>
+        
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-danger">
+                    🗑️ Yes, Remove Product
+                </button>
+            </div>
+        </form>
     </div>
-</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/delete-product.js' %}"></script>
 {% endblock %}

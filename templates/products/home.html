@@ -1,101 +1,80 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Deal Radar - Phase 2.5</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f8f9fa; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 15px; text-align: center; margin-bottom: 30px; }
-        .search-container { background: white; padding: 25px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .search-form { display: flex; gap: 10px; }
-        .search-input { flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; }
-        .search-btn { padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
-        .product { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s; }
-        .product:hover { transform: translateY(-5px); }
-        .price { font-size: 28px; font-weight: bold; color: #e74c3c; margin: 15px 0; }
-        .btn { display: inline-block; padding: 8px 16px; text-decoration: none; border-radius: 6px; margin: 5px; }
-        .btn-primary { background: #667eea; color: white; }
-        .btn-secondary { background: #6c757d; color: white; }
-        mark { background-color: #ffeb3b; padding: 2px 4px; border-radius: 3px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🎯 Deal Radar</h1>
-            <p>Phase 2.5: Enhanced Search & Product Tracking</p>
-        </div>
-        
-        <!-- Add this navigation bar after the header div -->
-        <div style="background: white; padding: 15px 30px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <a href="{% url 'home' %}" style="text-decoration: none; color: #667eea; margin: 0 15px; font-weight: 500;">🏠 Home</a>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}" style="text-decoration: none; color: #667eea; margin: 0 15px; font-weight: 500;">📊 Dashboard</a>
-                {% endif %}
-            </div>
-            <div style="color: #333; font-weight: bold;">
-                {% if user.is_authenticated %}
-                    👋 Welcome, {{ user.username }}! 
-                    <a href="{% url 'logout' %}" style="color: #dc3545; margin-left: 15px; text-decoration: none;">Logout</a>
-                {% else %}
-                    <a href="{% url 'login' %}" style="color: #667eea; margin-right: 15px; text-decoration: none;">Login</a>
-                    <a href="{% url 'signup' %}" style="color: #28a745; text-decoration: none;">Sign Up</a>
-                {% endif %}
-            </div>
-        </div>
-        
-        <div class="search-container">
-            <h2>🔍 Search Products</h2>
-            <form method="GET" class="search-form">
-                <input type="text" name="search" class="search-input" 
-                       placeholder="Search products..." value="{{ search_query }}">
-                <button type="submit" class="search-btn">Search</button>
-                <a href="/" class="btn btn-secondary">Clear</a>
-            </form>
-            {% if search_query %}
-                <p><strong>Found:</strong> {{ search_count }} results for "{{ search_query }}"</p>
-            {% endif %}
-        </div>
-        
-        <h2>🛍️ {% if search_query %}Search Results{% else %}All Products{% endif %}</h2>
-        
-        {% if products %}
-            <div class="product-grid">
-                {% for product in products %}
-                    <div class="product">
-                        <h3>
-                            {% if search_query %}
-                                {{ product.name|safe }}
-                            {% else %}
-                                {{ product.name }}
-                            {% endif %}
-                        </h3>
-                        <div class="price">£{{ product.current_price|default:"Not set" }}</div>
-                        <p><strong>Site:</strong> {{ product.site_name|default:"Not specified" }}</p>
-                        <p><strong>Category:</strong> {{ product.category|default:"Uncategorized" }}</p>
-                        <p>{{ product.description|truncatechars:100 }}</p>
-                        <div>
-                            <a href="/product/{{ product.pk }}/" class="btn btn-primary">View Details</a>
-                            <a href="{{ product.url }}" target="_blank" class="btn btn-secondary">Visit Site</a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div style="text-align: center; padding: 60px; background: white; border-radius: 12px;">
-                <h3>{% if search_query %}No Results Found{% else %}No Products Yet{% endif %}</h3>
-                <p>{% if search_query %}Try a different search term{% else %}Add products via admin panel{% endif %}</p>
-            </div>
-        {% endif %}
-        
-        <div style="text-align: center; margin-top: 40px; padding: 30px; background: white; border-radius: 12px;">
-            <h3>🔧 Admin Controls</h3>
-            <a href="/admin/" class="btn btn-primary">🎛️ Admin Panel</a>
-            <a href="/admin/products/product/add/" class="btn btn-primary">➕ Add Product</a>
-        </div>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Deal Radar - Home{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <h1>
+            <img src="{% static 'images/radar-animation.gif' %}" alt="Deal Radar" class="radar-icon"> 
+            Deal Radar
+        </h1>
+        <p>Phase 3: Enhanced Search & User Tracking</p>
+        <p class="subtitle">Scanning for the best deals across the web</p>
     </div>
-</body>
-</html>
+    
+    <div class="search-container">
+        <h2>🔍 Search Products</h2>
+        <form method="GET" class="search-form">
+            <input type="text" name="search" class="search-input" 
+                   placeholder="Search products..." value="{{ search_query }}">
+            <button type="submit" class="search-btn">Search</button>
+            <a href="/" class="btn btn-secondary">Clear</a>
+        </form>
+        {% if search_query %}
+            <p><strong>Found:</strong> {{ search_count }} results for "{{ search_query }}"</p>
+        {% endif %}
+    </div>
+    
+    <h2>🛍️ {% if search_query %}Search Results{% else %}All Products{% endif %}</h2>
+    
+    {% if products %}
+        <div class="product-grid">
+            {% for product in products %}
+                <div class="product">
+                    <h3>
+                        {% if search_query %}
+                            {{ product.name|safe }}
+                        {% else %}
+                            {{ product.name }}
+                        {% endif %}
+                    </h3>
+                    <div class="price">£{{ product.current_price|default:"Not set" }}</div>
+                    <p><strong>🏪 Site:</strong> {{ product.site_name|default:"Not specified" }}</p>
+                    <p><strong>📂 Category:</strong> {{ product.category|default:"Uncategorized" }}</p>
+                    <p>{{ product.description|truncatechars:100 }}</p>
+                    <div>
+                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary">View Details</a>
+                        <a href="{{ product.url }}" target="_blank" class="btn btn-secondary">Visit Site</a>
+                        {% if user.is_authenticated %}
+                            {% if product.pk in user_tracked_products %}
+                                <span class="tracking-badge">✅ Tracking</span>
+                            {% else %}
+                                <a href="{% url 'add_to_tracking' product.pk %}" class="btn btn-primary btn-small">➕ Track</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h3>{% if search_query %}No Results Found{% else %}No Products Yet{% endif %}</h3>
+            <p>{% if search_query %}Try a different search term{% else %}Add products via admin panel{% endif %}</p>
+        </div>
+    {% endif %}
+    
+    <div class="admin-controls">
+        <h3>🔧 Admin Controls</h3>
+        <a href="/admin/" class="btn btn-primary">🎛️ Admin Panel</a>
+        <a href="/admin/products/product/add/" class="btn btn-primary">➕ Add Product</a>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/home.js' %}"></script>
+{% endblock %}

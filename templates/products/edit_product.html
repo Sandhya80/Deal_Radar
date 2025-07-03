@@ -1,51 +1,65 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Edit Product - Deal Radar{% endblock %}
+{% block title %}Edit Product Tracking - Deal Radar{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/edit-product.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h4><i class="fas fa-edit me-2"></i>Edit Product Tracking</h4>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <h5>{{ tracked_product.product.name }}</h5>
-                        <p class="text-muted">
-                            <i class="fas fa-link me-1"></i>
-                            <a href="{{ tracked_product.product.url }}" target="_blank">View Product Page</a>
-                        </p>
-                    </div>
-
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label for="desired_price" class="form-label">Desired Price (£)</label>
-                            <input type="number" step="0.01" class="form-control" id="desired_price" 
-                                   name="desired_price" value="{{ tracked_product.desired_price }}" required>
-                            <div class="form-text">
-                                Current price: <strong>£{{ tracked_product.product.current_price }}</strong>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            You'll receive an alert when the price drops to or below your desired price.
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Update Tracking
-                            </button>
-                        </div>
-                    </form>
+    <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+    
+    <div class="edit-container">
+        <div class="edit-header">
+            <h1>✏️ Edit Product Tracking</h1>
+            <p>Update your price alert settings for this product</p>
+        </div>
+        
+        <div class="product-info">
+            <h3>{{ tracked_product.product.name }}</h3>
+            <p class="product-url">
+                <strong>🔗 Product Link:</strong>
+                <a href="{{ tracked_product.product.url }}" target="_blank" class="product-link">
+                    View Product Page
+                </a>
+            </p>
+            <div class="price-display">
+                <div class="current-price">
+                    <span class="label">💰 Current Price:</span>
+                    <span class="price">£{{ tracked_product.product.current_price }}</span>
                 </div>
             </div>
         </div>
+        
+        <form method="post" class="edit-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="desired_price">🎯 Your Target Price (£):</label>
+                <input type="number" step="0.01" id="desired_price" 
+                       name="desired_price" value="{{ tracked_product.desired_price }}" 
+                       required placeholder="79.99">
+                <div class="help-text">
+                    You'll receive an alert when the price drops to or below this amount.
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>💡 How Price Alerts Work</h4>
+                <p>We'll monitor this product and notify you immediately when the price reaches your target. You can change this target price anytime.</p>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">
+                    💾 Update Tracking
+                </button>
+            </div>
+        </form>
     </div>
-</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/edit-product.js' %}"></script>
 {% endblock %}
