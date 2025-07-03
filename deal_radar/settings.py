@@ -135,3 +135,13 @@ LOGGING = {
         },
     },
 }
+
+# Phase 3: Authentication settings
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/'
+
+# Add authentication backends if needed
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
