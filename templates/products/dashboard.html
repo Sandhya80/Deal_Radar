@@ -1,185 +1,118 @@
-{% extends 'base.html' %}
-
-{% block title %}Dashboard - Deal Radar{% endblock %}
-
-{% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3">
-                    <i class="fas fa-tachometer-alt me-2"></i>
-                    My Product Dashboard
-                </h1>
-                <div>
-                    {% if user.is_superuser %}
-                    <a href="{% url 'test_scraping' %}" class="btn btn-outline-info me-2">
-                        <i class="fas fa-code me-1"></i>Test Scraping
-                    </a>
-                    {% endif %}
-                    {% if can_add_more %}
-                    <a href="{% url 'add_product' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Track New Product
-                    </a>
-                    {% else %}
-                    <span class="badge bg-warning">Tracking Limit Reached</span>
-                    {% endif %}
-                </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Dashboard - Deal Radar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 15px; text-align: center; margin-bottom: 30px; }
+        .nav-bar { background: white; padding: 15px 30px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .nav-links a { text-decoration: none; color: #667eea; margin: 0 15px; font-weight: 500; }
+        .nav-links a:hover { color: #5a67d8; }
+        .user-info { color: #333; font-weight: bold; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        .stat-number { font-size: 36px; font-weight: bold; color: #667eea; margin: 10px 0; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+        .product { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .product:hover { transform: translateY(-5px); }
+        .price { font-size: 24px; font-weight: bold; color: #e74c3c; margin: 15px 0; }
+        .target-price { font-size: 16px; color: #28a745; margin: 10px 0; }
+        .btn { display: inline-block; padding: 8px 16px; text-decoration: none; border-radius: 6px; margin: 5px; font-size: 14px; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .empty-state { text-align: center; padding: 60px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .messages { margin-bottom: 20px; }
+        .messages div { padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+        .messages .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .messages .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .messages .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar">
+            <div class="nav-links">
+                <a href="{% url 'home' %}">🏠 Home</a>
+                <a href="{% url 'dashboard' %}">📊 Dashboard</a>
             </div>
-
-            <!-- Subscription Status & Phase 2 Stats -->
-            <div class="row mb-4">
-                <div class="col-md-8">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Current Plan:</strong> 
-                        {% if user.profile.is_premium %}
-                            Premium (Unlimited tracking, 2-4hr checks)
-                        {% else %}
-                            Free ({{ total_tracked }}/3 products, 24hr checks)
-                            <a href="{% url 'subscription_plans' %}" class="alert-link ms-2">Upgrade to Premium</a>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-light">
-                        <div class="card-body text-center py-3">
-                            <h6 class="card-title mb-1">
-                                <i class="fas fa-robot me-2"></i>Auto-Scraping
-                            </h6>
-                            <span class="badge bg-success fs-6" id="scraping-status">Active</span>
-                            <div class="small text-muted mt-1">
-                                Last check: <span id="last-check">{{ last_scrape_time|default:"Never" }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="user-info">
+                👋 Welcome, {{ user.username }}! 
+                <a href="{% url 'logout' %}" style="color: #dc3545; margin-left: 15px;">Logout</a>
             </div>
+        </div>
 
-            <!-- Tracked Products -->
-            {% if tracked_products %}
-            <div class="row">
-                {% for tracked_product in tracked_products %}
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card deal-card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ tracked_product.product.name }}</h5>
-                            <p class="card-text text-muted">
-                                <small>
-                                    <i class="fas fa-link me-1"></i>{{ tracked_product.product.domain|default:"Manual Entry" }}
-                                    {% if tracked_product.product.last_checked %}
-                                        <br><i class="fas fa-clock me-1"></i>Last checked: {{ tracked_product.product.last_checked|timesince }} ago
-                                    {% endif %}
-                                </small>
-                            </p>
-                            
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <strong>Current Price:</strong><br>
-                                    <span class="h5 text-primary">£{{ tracked_product.product.current_price }}</span>
-                                    {% if tracked_product.product.price_change_24h %}
-                                        {% if tracked_product.product.price_change_24h > 0 %}
-                                            <small class="text-danger d-block">
-                                                <i class="fas fa-arrow-up"></i>+£{{ tracked_product.product.price_change_24h }}
-                                            </small>
-                                        {% elif tracked_product.product.price_change_24h < 0 %}
-                                            <small class="text-success d-block">
-                                                <i class="fas fa-arrow-down"></i>£{{ tracked_product.product.price_change_24h }}
-                                            </small>
-                                        {% endif %}
-                                    {% endif %}
-                                </div>
-                                <div class="col-6">
-                                    <strong>Target Price:</strong><br>
-                                    <span class="h6">£{{ tracked_product.desired_price }}</span>
-                                    {% if tracked_product.product.current_price <= tracked_product.desired_price %}
-                                        <small class="text-success d-block">
-                                            <i class="fas fa-check-circle"></i>Target reached!
-                                        </small>
-                                    {% else %}
-                                        {% with diff=tracked_product.product.current_price|sub:tracked_product.desired_price %}
-                                        <small class="text-muted d-block">
-                                            £{{ diff|floatformat:2 }} to go
-                                        </small>
-                                        {% endwith %}
-                                    {% endif %}
-                                </div>
-                            </div>
+        <div class="header">
+            <h1>🎯 Your Personal Dashboard</h1>
+            <p>Track your favorite products and manage price alerts</p>
+        </div>
 
-                            <!-- Phase 2: Price History Mini Chart -->
-                            {% if tracked_product.product.recent_prices %}
-                            <div class="mb-3">
-                                <small class="text-muted">Price trend (7 days):</small>
-                                <div class="progress mt-1" style="height: 4px;">
-                                    {% for price in tracked_product.product.recent_prices %}
-                                    <div class="progress-bar bg-primary" style="width: {{ price.percentage }}%;"></div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            {% endif %}
-
-                            <!-- Phase 2: Scraping Status Indicator -->
-                            <div class="mb-2">
-                                {% if tracked_product.product.last_checked %}
-                                    {% if tracked_product.product.scrape_failures > 2 %}
-                                        <span class="badge bg-warning">
-                                            <i class="fas fa-exclamation-triangle"></i>Check issues
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-success">
-                                            <i class="fas fa-check"></i>Monitoring
-                                        </span>
-                                    {% endif %}
-                                {% else %}
-                                    <span class="badge bg-secondary">
-                                        <i class="fas fa-clock"></i>Pending check
-                                    </span>
-                                {% endif %}
-                            </div>
-
-                            {% if tracked_product.is_deal_available %}
-                            <div class="alert alert-success py-2">
-                                <i class="fas fa-tags me-2"></i>Deal Available!
-                            </div>
-                            {% endif %}
-
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ tracked_product.product.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-external-link-alt me-1"></i>View
-                                </a>
-                                {% if user.is_superuser %}
-                                <a href="{% url 'trigger_scraping' tracked_product.id %}" class="btn btn-outline-info btn-sm">
-                                    <i class="fas fa-sync me-1"></i>Check Now
-                                </a>
-                                {% endif %}
-                                <a href="{% url 'edit_product' tracked_product.id %}" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-edit me-1"></i>Edit
-                                </a>
-                                <a href="{% url 'delete_product' tracked_product.id %}" class="btn btn-outline-danger btn-sm">
-                                    <i class="fas fa-trash me-1"></i>Remove
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-footer text-muted">
-                            <small>Added {{ tracked_product.created_at|date:"M d, Y" }}</small>
-                        </div>
-                    </div>
-                </div>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="{{ message.tags }}">{{ message }}</div>
                 {% endfor %}
             </div>
-            {% else %}
-            <div class="text-center py-5">
-                <i class="fas fa-search-dollar fa-4x text-muted mb-3"></i>
-                <h4>No Products Tracked Yet</h4>
-                <p class="text-muted">Start tracking products to get price drop alerts!</p>
-                {% if can_add_more %}
-                <a href="{% url 'add_product' %}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>Track Your First Product
-                </a>
-                {% endif %}
+        {% endif %}
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_tracked }}</div>
+                <h3>Products Tracked</h3>
+                <p>Items in your watchlist</p>
             </div>
-            {% endif %}
+            <div class="stat-card">
+                <div class="stat-number">{{ total_alerts }}</div>
+                <h3>Active Alerts</h3>
+                <p>Price notifications enabled</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ tracked_products|length }}</div>
+                <h3>Active Items</h3>
+                <p>Currently being tracked</p>
+            </div>
+        </div>
+
+        <h2>🛍️ Your Tracked Products</h2>
+
+        {% if tracked_products %}
+            <div class="product-grid">
+                {% for tracked in tracked_products %}
+                    <div class="product">
+                        <h3>{{ tracked.product.name }}</h3>
+                        <div class="price">£{{ tracked.product.current_price }}</div>
+                        {% if tracked.target_price %}
+                            <div class="target-price">🎯 Target: £{{ tracked.target_price }}</div>
+                        {% endif %}
+                        <p><strong>🏪 Site:</strong> {{ tracked.product.site_name|default:"Not specified" }}</p>
+                        <p><strong>📂 Category:</strong> {{ tracked.product.category|default:"Uncategorized" }}</p>
+                        <p><strong>📅 Added:</strong> {{ tracked.added_at|date:"M d, Y" }}</p>
+                        {% if tracked.notes %}
+                            <p><strong>📝 Notes:</strong> {{ tracked.notes|truncatechars:100 }}</p>
+                        {% endif %}
+                        <div>
+                            <a href="{% url 'product_detail' tracked.product.pk %}" class="btn btn-primary">View Details</a>
+                            <a href="{{ tracked.product.url }}" target="_blank" class="btn btn-secondary">Visit Site</a>
+                            <a href="{% url 'remove_from_tracking' tracked.product.pk %}" class="btn btn-danger">Remove</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>🎯 No Products Tracked Yet</h3>
+                <p>Start building your watchlist by adding products you want to track!</p>
+                <a href="{% url 'home' %}" class="btn btn-primary">Browse Products</a>
+            </div>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 40px; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h3>🔧 Quick Actions</h3>
+            <a href="{% url 'home' %}" class="btn btn-primary">🔍 Find More Products</a>
+            <a href="/admin/" class="btn btn-secondary">🎛️ Admin Panel</a>
         </div>
     </div>
-</div>
-{% endblock %}
+</body>
+</html>
