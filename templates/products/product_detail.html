@@ -37,6 +37,35 @@
                 <p>{{ product.description|default:"No description available." }}</p>
             </div>
             
+            {% if user.is_authenticated %}
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3>📊 Personal Tracking</h3>
+                    {% if is_tracked %}
+                        <p style="color: #28a745;">✅ You are tracking this product!</p>
+                        {% if tracked_product.target_price %}
+                            <p><strong>🎯 Your Target Price:</strong> £{{ tracked_product.target_price }}</p>
+                        {% endif %}
+                        <a href="{% url 'remove_from_tracking' product.pk %}" 
+                           style="background: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                           🗑️ Stop Tracking
+                        </a>
+                    {% else %}
+                        <p>Add this product to your personal tracking list to monitor price changes.</p>
+                        <a href="{% url 'add_to_tracking' product.pk %}" 
+                           style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                           ➕ Track This Product
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3>🔐 Personal Tracking</h3>
+                    <p>Create an account to track this product and get price alerts!</p>
+                    <a href="{% url 'signup' %}" style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Sign Up</a>
+                    <a href="{% url 'login' %}" style="background: #667eea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">Login</a>
+                </div>
+            {% endif %}
+            
             <div>
                 <a href="{{ product.url }}" target="_blank" class="btn btn-primary">🔗 Visit Product Page</a>
                 <a href="/admin/products/product/{{ product.pk }}/change/" class="btn btn-secondary">✏️ Edit Product</a>
