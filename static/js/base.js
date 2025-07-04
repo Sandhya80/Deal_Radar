@@ -99,6 +99,76 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Enhanced Categories Dropdown with JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const categoriesDropdown = document.querySelector('.categories-dropdown');
+    const dropdownBtn = document.querySelector('.dropdown-btn');
+    const dropdownContent = document.querySelector('.dropdown-content');
+    const dropdownArrow = document.querySelector('.dropdown-arrow');
+    
+    if (categoriesDropdown && dropdownBtn && dropdownContent) {
+        let isOpen = false;
+        let hoverTimeout;
+        
+        // Show dropdown on hover
+        categoriesDropdown.addEventListener('mouseenter', function() {
+            clearTimeout(hoverTimeout);
+            showDropdown();
+        });
+        
+        // Hide dropdown when leaving the entire dropdown area
+        categoriesDropdown.addEventListener('mouseleave', function() {
+            hoverTimeout = setTimeout(hideDropdown, 200); // Small delay
+        });
+        
+        // Toggle on click (for mobile)
+        dropdownBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isOpen) {
+                hideDropdown();
+            } else {
+                showDropdown();
+            }
+        });
+        
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!categoriesDropdown.contains(e.target)) {
+                hideDropdown();
+            }
+        });
+        
+        // Close on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isOpen) {
+                hideDropdown();
+            }
+        });
+        
+        function showDropdown() {
+            dropdownContent.style.display = 'block';
+            dropdownArrow.style.transform = 'rotate(180deg)';
+            isOpen = true;
+        }
+        
+        function hideDropdown() {
+            dropdownContent.style.display = 'none';
+            dropdownArrow.style.transform = 'rotate(0deg)';
+            isOpen = false;
+        }
+    }
+    
+    // Keep existing message close functionality
+    const messageCloseButtons = document.querySelectorAll('.message-close');
+    messageCloseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            this.parentElement.style.display = 'none';
+        });
+    });
+});
+
 // Add slide out animation
 const style = document.createElement('style');
 style.textContent = `
