@@ -82,22 +82,31 @@ def product_detail(request, pk):
 
 @login_required
 def dashboard(request):
-    """Phase 3: User's personal dashboard"""
+    """Enhanced dashboard with price alerts"""
+    # Get user's tracked products with related data
     user_tracked = TrackedProduct.objects.filter(
-        user=request.user, 
+        user=request.user,
         is_active=True
-    ).select_related('product').order_by('-added_at')
+    ).select_related('product').prefetch_related('price_alerts')
     
+    # Get statistics
     total_tracked = user_tracked.count()
     total_alerts = PriceAlert.objects.filter(
         tracked_product__user=request.user,
         is_enabled=True
     ).count()
     
+    # Get triggered alerts count
+    triggered_alerts = PriceAlert.objects.filter(
+        tracked_product__user=request.user,
+        is_triggered=True
+    ).count()
+    
     context = {
         'tracked_products': user_tracked,
         'total_tracked': total_tracked,
         'total_alerts': total_alerts,
+        'triggered_alerts': triggered_alerts,
     }
     
     return render(request, 'products/dashboard.html', context)
@@ -159,3 +168,67 @@ def signup(request):
         form = UserCreationForm()
     
     return render(request, 'registration/signup.html', {'form': form})
+
+@login_required
+def create_price_alert(request, pk):
+    """Create a price alert for a tracked product"""
+    tracked_product = get_object_or_404(TrackedProduct, pk=pk, user=request.user)
+    
+    if request.method == 'POST':
+        target_price = request.POST.get('target_price')
+        if target_price:
+            try:
+                target_price = float(target_price)
+                if target_price <= 0:
+                    messages.error(request, 'Target price must be greater than 0.')
+                    return redirect('dashboard')
+                
+                alert, created = PriceAlert.objects.get_or_create(
+                    tracked_product=tracked_product,
+                    target_price=target_price,
+                    defaults={'is_enabled': True, 'is_triggered': False}
+                )
+                
+                if created:
+                    messages.success(request, f'Price alert set for £{target_price}! You\'ll be notified when the price drops.')
+                else:
+                    messages.info(request, f'Price alert for £{target_price} already exists.')
+            except ValueError:
+                messages.error(request, 'Please enter a valid price.')
+        else:
+            messages.error(request, 'Please enter a target price.')
+    
+    return redirect('dashboard')
+
+@login_required
+def toggle_price_alert(request, pk):
+    """Toggle price alert on/off"""
+    alert = get_object_or_404(PriceAlert, pk=pk, tracked_product__user=request.user)
+    alert.is_enabled = not alert.is_enabled
+    alert.save()
+    
+    status = "enabled" if alert.is_enabled else "disabled"
+    messages.success(request, f'Price alert for "{alert.tracked_product.product.name}" {status}.')
+    
+    return redirect('dashboard')
+
+@login_required
+def delete_price_alert(request, pk):
+    """Delete a price alert"""
+    alert = get_object_or_404(PriceAlert, pk=pk, tracked_product__user=request.user)
+    product_name = alert.tracked_product.product.name
+    alert.delete()
+    
+    messages.success(request, f'Price alert for "{product_name}" deleted.')
+    return redirect('dashboard')
+
+@login_required
+def reset_price_alert(request, pk):
+    """Reset a triggered price alert"""
+    alert = get_object_or_404(PriceAlert, pk=pk, tracked_product__user=request.user)
+    alert.is_triggered = False
+    alert.triggered_at = None
+    alert.save()
+    
+    messages.success(request, f'Price alert for "{alert.tracked_product.product.name}" reset and reactivated.')
+    return redirect('dashboard')
