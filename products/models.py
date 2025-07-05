@@ -72,7 +72,7 @@ class TrackedProduct(models.Model):
         return f"{self.user.username} tracking {self.product.name}"
 
 class PriceAlert(models.Model):
-    tracked_product = models.ForeignKey(TrackedProduct, on_delete=models.CASCADE)
+    tracked_product = models.ForeignKey(TrackedProduct, on_delete=models.CASCADE, related_name='price_alerts')
     target_price = models.DecimalField(max_digits=10, decimal_places=2)
     is_enabled = models.BooleanField(default=True)
     is_triggered = models.BooleanField(default=False)
