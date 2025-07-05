@@ -72,18 +72,20 @@ class TrackedProduct(models.Model):
         return f"{self.user.username} tracking {self.product.name}"
 
 class PriceAlert(models.Model):
-    """Price alerts for tracked products"""
-    ALERT_TYPES = [
-        ('price_drop', 'Price Drop'),
-        ('target_reached', 'Target Price Reached'),
-        ('stock_available', 'Back in Stock'),
-    ]
-    
-    tracked_product = models.ForeignKey(TrackedProduct, on_delete=models.CASCADE, related_name='alerts')
-    alert_type = models.CharField(max_length=20, choices=ALERT_TYPES)
-    alert_threshold = models.DecimalField(max_digits=10, decimal_places=2)
+    tracked_product = models.ForeignKey(TrackedProduct, on_delete=models.CASCADE)
+    target_price = models.DecimalField(max_digits=10, decimal_places=2)
     is_enabled = models.BooleanField(default=True)
+    is_triggered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    triggered_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        unique_together = ['tracked_product', 'target_price']
     
     def __str__(self):
-        return f"Alert for {self.tracked_product.product.name}"
+        return f"Alert: {self.tracked_product.product.name} - £{self.target_price}"
+    
+    def check_price_drop(self):
+        """Check if current price meets target price"""
+        current_price = self.tracked_product.product.current_price
+        return current_price <= self.target_price
