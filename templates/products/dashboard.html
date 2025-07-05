@@ -1,79 +1,161 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}My Dashboard - Deal Radar{% endblock %}
+{% block title %}Dashboard - Deal Radar{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="dashboard">
-    <div class="dashboard-header">
-        <h1>🎯 Your Personal Dashboard</h1>
-        <p>Track your favorite products and manage price alerts</p>
-    </div>
-
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-number">{{ total_tracked }}</div>
-            <h3>Products Tracked</h3>
-            <p>Items in your watchlist</p>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">{{ total_alerts }}</div>
-            <h3>Active Alerts</h3>
-            <p>Price notifications enabled</p>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">{{ tracked_products|length }}</div>
-            <h3>Active Items</h3>
-            <p>Currently being tracked</p>
+<div class="container-fluid py-4">
+    <!-- Dashboard Header -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="fas fa-tachometer-alt text-primary"></i> Dashboard
+            </h2>
         </div>
     </div>
 
-    <div class="section-header">
-        <h2>🛍️ Your Tracked Products</h2>
-        <a href="{% url 'home' %}" class="btn btn-primary">+ Add More Products</a>
-    </div>
-
-    {% if tracked_products %}
-        {% for tracked in tracked_products %}
-            <div class="tracked-product-item">
-                <h3>{{ tracked.product.name }}</h3>
-                <div class="tracked-product-price">£{{ tracked.product.current_price }}</div>
-                
-                <div class="tracked-product-meta">
-                    {% if tracked.target_price %}
-                        <p><strong>🎯 Target Price:</strong> £{{ tracked.target_price }}</p>
-                    {% endif %}
-                    <p><strong>🏪 Site:</strong> {{ tracked.product.site_name|default:"Not specified" }}</p>
-                    <p><strong>📂 Category:</strong> {{ tracked.product.category|default:"Uncategorized" }}</p>
-                    <p><strong>📅 Added:</strong> {{ tracked.added_at|date:"M d, Y" }}</p>
-                    {% if tracked.notes %}
-                        <p><strong>📝 Notes:</strong> {{ tracked.notes|truncatechars:100 }}</p>
-                    {% endif %}
-                </div>
-                
-                <div class="tracked-product-actions">
-                    <a href="{% url 'product_detail' tracked.product.pk %}" class="btn btn-primary">View Details</a>
-                    <a href="{{ tracked.product.url }}" target="_blank" class="btn btn-secondary">Visit Site</a>
-                    <a href="{% url 'remove_from_tracking' tracked.product.pk %}" class="btn btn-danger">Remove</a>
+    <!-- Stats Cards Row - Compact Width -->
+    <div class="stat-cards-row">
+        <div class="stat-card-col">
+            <div class="card stat-card stat-card-1">
+                <div class="card-body">
+                    <i class="fas fa-heart"></i>
+                    <h3 class="card-title">{{ total_tracked }}</h3>
+                    <p class="card-text">Tracked Products</p>
                 </div>
             </div>
-        {% endfor %}
-    {% else %}
-        <div class="empty-state">
-            <h3>🎯 No Products Tracked Yet</h3>
-            <p>Start building your watchlist by adding products you want to track!</p>
-            <a href="{% url 'home' %}" class="btn btn-primary">Browse Products</a>
         </div>
-    {% endif %}
+        <div class="stat-card-col">
+            <div class="card stat-card stat-card-2">
+                <div class="card-body">
+                    <i class="fas fa-bell"></i>
+                    <h3 class="card-title">{{ total_alerts }}</h3>
+                    <p class="card-text">Active Alerts</p>
+                </div>
+            </div>
+        </div>
+        <div class="stat-card-col">
+            <div class="card stat-card stat-card-3">
+                <div class="card-body">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 class="card-title">{{ triggered_alerts }}</h3>
+                    <p class="card-text">Triggered Alerts</p>
+                </div>
+            </div>
+        </div>
+        <div class="stat-card-col">
+            <div class="card stat-card stat-card-4">
+                <div class="card-body">
+                    <i class="fas fa-pound-sign"></i>
+                    <h3 class="card-title">£{{ total_savings|default:"0" }}</h3>
+                    <p class="card-text">Total Savings</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="quick-actions">
-        <h3>🔧 Quick Actions</h3>
-        <a href="{% url 'home' %}" class="btn btn-primary">🔍 Find More Products</a>
-        <a href="/admin/" class="btn btn-secondary">🎛️ Admin Panel</a>
+    <!-- Tracked Products Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bell"></i> Tracked Products & Price Alerts
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if tracked_products %}
+                        {% for tracked in tracked_products %}
+                        <div class="tracked-product-item">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h3>{{ tracked.product.name }}</h3>
+                                    <div class="tracked-product-meta">
+                                        <strong>Category:</strong> {{ tracked.product.get_category_display_with_emoji }}<br>
+                                        <strong>Site:</strong> {{ tracked.product.site_name }}
+                                    </div>
+                                    <div class="tracked-product-price">
+                                        Current: £{{ tracked.product.current_price }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="alert-section">
+                                        <h6 class="text-warning mb-2">
+                                            <i class="fas fa-bell"></i> Set Price Alert
+                                        </h6>
+                                        <form method="POST" action="{% url 'create_price_alert' tracked.id %}" class="mb-3">
+                                            {% csrf_token %}
+                                            <div class="input-group">
+                                                <span class="input-group-text">£</span>
+                                                <input type="number" step="0.01" name="target_price" 
+                                                       placeholder="Alert Price" class="form-control" 
+                                                       min="0.01" max="9999.99">
+                                                <button type="submit" class="btn btn-warning">
+                                                    <i class="fas fa-bell"></i> Set Alert
+                                                </button>
+                                            </div>
+                                        </form>
+                                        {% for alert in tracked.price_alerts.all %}
+                                        <div class="alert-badge mb-2">
+                                            <div class="d-flex justify-content-between align-items-center p-2 rounded alert-item" 
+                                                 data-alert-status="{% if alert.is_triggered %}triggered{% elif alert.is_enabled %}active{% else %}disabled{% endif %}">
+                                                <div>
+                                                    <span class="badge {% if alert.is_triggered %}bg-success{% elif alert.is_enabled %}bg-warning{% else %}bg-secondary{% endif %}">
+                                                        {% if alert.is_triggered %}
+                                                            <i class="fas fa-check-circle"></i> Triggered
+                                                        {% elif alert.is_enabled %}
+                                                            <i class="fas fa-bell"></i> Active
+                                                        {% else %}
+                                                            <i class="fas fa-bell-slash"></i> Disabled
+                                                        {% endif %}
+                                                    </span>
+                                                    <strong class="ms-2">£{{ alert.target_price }}</strong>
+                                                </div>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="{% url 'toggle_price_alert' alert.id %}" 
+                                                       class="btn btn-outline-secondary btn-sm">
+                                                        <i class="fas fa-{% if alert.is_enabled %}pause{% else %}play{% endif %}"></i>
+                                                    </a>
+                                                    <a href="{% url 'delete_price_alert' alert.id %}" 
+                                                       class="btn btn-outline-danger btn-sm">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="tracked-product-actions">
+                                        <a href="{{ tracked.product.url }}" target="_blank" 
+                                           class="btn btn-primary btn-sm">
+                                            <i class="fas fa-external-link-alt"></i> View Product
+                                        </a>
+                                        <a href="{% url 'remove_from_tracking' tracked.product.id %}" 
+                                           class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-heart-broken"></i> Untrack
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5 empty-state">
+                            <i class="fas fa-search fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted mb-3">No tracked products yet</h4>
+                            <p class="text-muted mb-4">Start tracking products to set price alerts and get notified when prices drop!</p>
+                            <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-plus"></i> Browse Products
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
