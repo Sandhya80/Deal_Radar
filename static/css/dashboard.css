@@ -1,5 +1,63 @@
-/* Dashboard - matching your beautiful original design */
+/* EMERGENCY COLOR FIX - Add this at the VERY TOP */
+.row.mb-4 .col-md-3:nth-child(1) .card {
+    background-color: #72aff0 !important;
+    color: white !important;
+}
+.row.mb-4 .col-md-3:nth-child(2) .card {
+    background-color: #e2cc8a !important;
+    color: white !important;
+}
+.row.mb-4 .col-md-3:nth-child(3) .card {
+    background-color: #84d196 !important;
+    color: white !important;
+}
+.row.mb-4 .col-md-3:nth-child(4) .card {
+    background-color: #8bb8be !important;
+    color: white !important;
+}
 
+/* Force all text elements to be white */
+.row.mb-4 .card h3,
+.row.mb-4 .card p,
+.row.mb-4 .card i {
+    color: white !important;
+}
+
+/* Force stat card colors - highest specificity */
+.container-fluid .card.bg-primary.stat-card {
+    background-color: #72aff0 !important;
+    background-image: none !important;
+}
+
+.container-fluid .card.bg-warning.stat-card {
+    background-color: #e2cc8a !important;
+    background-image: none !important;
+}
+
+.container-fluid .card.bg-success.stat-card {
+    background-color: #84d196 !important;
+    background-image: none !important;
+}
+
+.container-fluid .card.bg-info.stat-card {
+    background-color: #8bb8be !important;
+    background-image: none !important;
+}
+
+/* Force white text on colored cards */
+.container-fluid .card.text-white.stat-card,
+.container-fluid .card.text-white.stat-card .card-title,
+.container-fluid .card.text-white.stat-card .card-text,
+.container-fluid .card.text-white.stat-card i {
+    color: white !important;
+}
+
+/* Override any JavaScript animations affecting background */
+.stat-card[style*="transform"] {
+    background-color: inherit !important;
+}
+
+/* Dashboard - matching your beautiful original design */
 .dashboard-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -24,114 +82,277 @@
     font-weight: 300;
 }
 
-/* Stats grid - clean and simple like your original */
-.stats-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-    gap: 40px; 
-    margin-bottom: 50px;
-    padding: 0 20px;
-}
-
-.stat-card { 
-    background: white; 
-    padding: 40px 30px; 
-    border-radius: 15px; 
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08); 
-    text-align: center; 
+/* Stats Cards - Bootstrap compatible */
+.card {
+    border: none;
+    border-radius: 12px;
     transition: all 0.3s ease;
-    border: 1px solid #f8f9fa;
 }
 
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-.stat-number { 
-    font-size: 4em; 
-    font-weight: 700; 
-    color: #667eea; 
-    margin: 0 0 15px 0; 
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    border-bottom: none;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+/* Product Cards */
+.product-card {
+    background-color: #fff;
+    border-left: 4px solid #007bff !important;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Price Display */
+.price-display {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Alert Section */
+.alert-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.alert-section h6 {
+    color: #856404;
+    font-weight: 600;
+}
+
+/* Alert Items */
+.alert-item {
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.alert-item[data-alert-status="triggered"] {
+    background-color: #d4edda !important;
+    border-color: #c3e6cb;
+}
+
+.alert-item[data-alert-status="active"] {
+    background-color: #fff3cd !important;
+    border-color: #ffeaa7;
+}
+
+.alert-item[data-alert-status="disabled"] {
+    background-color: #f8f9fa !important;
+    border-color: #dee2e6;
+}
+
+.alert-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Alert Badges */
+.alert-badge {
+    border-radius: 6px;
+}
+
+.badge {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Forms */
+.price-alert-form .input-group {
+    border-radius: 6px;
+}
+
+.price-alert-form .form-control {
+    border-color: #ced4da;
+}
+
+.price-alert-form .form-control:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}
+
+/* Button Styles */
+.btn-group-vertical .btn {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+
+/* Action Buttons */
+.toggle-alert-btn:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+.reset-alert-btn:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+.delete-alert-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.empty-state .fa-search {
+    opacity: 0.5;
+}
+
+/* Border Utilities */
+.border-start {
+    border-left-width: 4px !important;
+}
+
+/* ===========================================
+   DASHBOARD STAT CARDS - COMPACT & COLORED
+   =========================================== */
+
+/* Reset and base styles for stat cards */
+.stat-cards-row {
+    margin-bottom: 1rem;
+}
+
+.stat-card-col {
+    padding: 0 8px;
+    margin-bottom: 1rem;
+}
+
+.stat-card {
+    height: 100px;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.stat-card .card-body {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.stat-card .card-body i {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+    color: white;
+}
+
+.stat-card .card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.1rem;
     line-height: 1;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    color: white;
 }
 
-.stat-card h3 {
-    margin: 15px 0 8px 0;
-    color: #333;
-    font-size: 1.3em;
-    font-weight: 600;
+.stat-card .card-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 0;
+    color: white;
+    text-align: center;
 }
 
-.stat-card p {
-    color: #666;
-    margin: 0;
-    font-size: 1em;
-    font-weight: 400;
+/* Individual stat card colors - lighter gradients */
+.stat-card-1 {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
 }
 
-/* Section header - clean like your original */
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 50px 0 30px 0;
-    padding: 0 10px;
+.stat-card-2 {
+    background: linear-gradient(135deg, #f5c842 0%, #e6b800 100%);
 }
 
-.section-header h2 {
-    color: #333;
-    font-size: 1.8em;
-    margin: 0;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
+.stat-card-3 {
+    background: linear-gradient(135deg, #5cb85c 0%, #449d44 100%);
 }
 
-.section-header .btn {
-    font-size: 14px;
-    padding: 10px 20px;
+.stat-card-4 {
+    background: linear-gradient(135deg, #5bc0de 0%, #46b8da 100%);
 }
 
-/* Product listing - simple like your original */
+/* Hover effects */
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* ===========================================
+   TRACKED PRODUCTS SECTION
+   =========================================== */
+
 .tracked-product-item {
     background: white;
-    padding: 30px;
-    border-radius: 15px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    border: 1px solid #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    border: 1px solid #e9ecef;
     transition: all 0.3s ease;
 }
 
 .tracked-product-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    border-color: #007bff;
 }
 
 .tracked-product-item h3 {
     color: #333;
-    font-size: 1.4em;
-    margin: 0 0 15px 0;
+    font-size: 1.3em;
+    margin: 0 0 10px 0;
     font-weight: 600;
     line-height: 1.3;
 }
 
-.tracked-product-price {
-    font-size: 1.8em;
-    font-weight: 700;
-    color: #e74c3c;
-    margin: 15px 0;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-}
-
 .tracked-product-meta {
     color: #666;
-    font-size: 15px;
-    line-height: 1.6;
-    margin: 15px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 10px 0;
 }
 
 .tracked-product-meta strong {
@@ -139,97 +360,422 @@
     font-weight: 600;
 }
 
+.tracked-product-price {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #e74c3c;
+    margin: 12px 0;
+}
+
 .tracked-product-actions {
-    margin-top: 20px;
+    margin-top: 15px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .tracked-product-actions .btn {
-    font-size: 13px;
-    padding: 8px 16px;
+    font-size: 12px;
+    padding: 6px 12px;
 }
 
-/* Empty state - clean and minimal */
-.empty-state {
-    text-align: center;
-    padding: 80px 40px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    margin: 40px 0;
+/* ===========================================
+   ALERT SECTION STYLING
+   =========================================== */
+
+.alert-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    margin-top: 10px;
 }
 
-.empty-state h3 {
-    color: #333;
-    font-size: 1.8em;
-    margin-bottom: 15px;
+.alert-section h6 {
+    color: #856404;
     font-weight: 600;
+    margin-bottom: 10px;
 }
 
-.empty-state p {
-    color: #666;
-    font-size: 1.1em;
-    margin-bottom: 30px;
-}
-
-/* Quick actions - simple and clean */
-.quick-actions {
-    text-align: center;
-    margin-top: 50px;
-    padding: 40px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-}
-
-.quick-actions h3 {
-    color: #333;
-    font-size: 1.6em;
-    margin-bottom: 25px;
-    font-weight: 600;
-}
-
-/* Override product grid for dashboard - use simple list */
-.dashboard .product-grid {
-    display: block;
-}
-
-.dashboard .product {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    border: 1px solid #f8f9fa;
+.alert-item {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
     transition: all 0.3s ease;
 }
 
-.dashboard .product:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    border-color: #667eea;
+.alert-item[data-alert-status="triggered"] {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
 }
 
-.dashboard .product h3 {
+.alert-item[data-alert-status="active"] {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+}
+
+.alert-item[data-alert-status="disabled"] {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.alert-badge {
+    margin-bottom: 8px;
+}
+
+.price-alert-form .input-group {
+    border-radius: 6px;
+}
+
+.price-alert-form .form-control {
+    border-color: #ced4da;
+}
+
+.price-alert-form .form-control:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}
+
+/* ===========================================
+   GENERAL DASHBOARD STYLING
+   =========================================== */
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0;
+    border-bottom: none;
+}
+
+.empty-state {
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.empty-state .fa-search {
+    opacity: 0.5;
+}
+
+/* ===========================================
+   FORCE STAT CARD DIMENSIONS - OVERRIDE BOOTSTRAP
+   =========================================== */
+
+.stat-card {
+    height: 100px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
+    border: none !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+.stat-card .card-body {
+    padding: 0.5rem !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.stat-card i {
+    font-size: 1.2rem !important;
+    margin-bottom: 0.2rem !important;
+    color: white !important;
+}
+
+.stat-card .card-title {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.1rem !important;
+    line-height: 1 !important;
+    color: white !important;
+}
+
+.stat-card .card-text {
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+    margin-bottom: 0 !important;
+    color: white !important;
+    text-align: center !important;
+}
+
+/* Individual card colors */
+.stat-card-1 {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%) !important;
+}
+
+.stat-card-2 {
+    background: linear-gradient(135deg, #f5c842 0%, #e6b800 100%) !important;
+}
+
+.stat-card-3 {
+    background: linear-gradient(135deg, #5cb85c 0%, #449d44 100%) !important;
+}
+
+.stat-card-4 {
+    background: linear-gradient(135deg, #5bc0de 0%, #46b8da 100%) !important;
+}
+
+/* Row and column adjustments */
+.stat-cards-row {
+    margin-bottom: 1.5rem !important;
+}
+
+.stat-card-col {
+    padding: 0 0.5rem !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Hover effects */
+.stat-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+}
+
+/* Force stat cards to be compact WIDTH-wise */
+.stat-cards-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.stat-card-col {
+    flex: 0 0 auto !important;
+    width: 200px !important;
+    max-width: 200px !important;
+    padding: 0 !important;
+    margin-bottom: 1rem !important;
+}
+
+.stat-card {
+    width: 100% !important;
+    max-width: 200px !important;
+    height: 100px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
+    border: none !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+    transition: all 0.3s ease !important;
+    margin: 0 !important;
+}
+
+/* Force card body to be compact */
+.stat-card .card-body {
+    padding: 0.5rem !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+}
+
+/* Compact text and icons */
+.stat-card i {
+    font-size: 1.2rem !important;
+    margin-bottom: 0.2rem !important;
+    color: white !important;
+}
+
+.stat-card .card-title {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.1rem !important;
+    line-height: 1 !important;
+    color: white !important;
+}
+
+.stat-card .card-text {
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+    margin-bottom: 0 !important;
+    color: white !important;
+    text-align: center !important;
+}
+
+/* Individual card colors */
+.stat-card-1 {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%) !important;
+}
+
+.stat-card-2 {
+    background: linear-gradient(135deg, #f5c842 0%, #e6b800 100%) !important;
+}
+
+.stat-card-3 {
+    background: linear-gradient(135deg, #5cb85c 0%, #449d44 100%) !important;
+}
+
+.stat-card-4 {
+    background: linear-gradient(135deg, #5bc0de 0%, #46b8da 100%) !important;
+}
+
+/* Hover effects */
+.stat-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+}
+
+/* Override Bootstrap column system */
+.stat-card-col.col-md-3,
+.stat-card-col.col-6 {
+    flex: 0 0 auto !important;
+    width: 200px !important;
+    max-width: 200px !important;
+}
+
+/* Tracked Products Section */
+.tracked-product-item {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.tracked-product-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    border-color: #007bff;
+}
+
+.tracked-product-item h3 {
+    color: #333;
+    font-size: 1.2em;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+.tracked-product-meta {
+    color: #666;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.tracked-product-price {
     font-size: 1.4em;
-    margin-bottom: 15px;
+    font-weight: 700;
+    color: #e74c3c;
+    margin: 10px 0;
 }
 
-.dashboard .product .price {
-    font-size: 1.8em;
-    margin: 15px 0;
-}
-
-.dashboard .action-buttons {
-    margin-top: 20px;
+.tracked-product-actions {
+    margin-top: 15px;
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 8px;
 }
 
-.dashboard .action-buttons .btn {
-    font-size: 13px;
-    padding: 8px 16px;
+.tracked-product-actions .btn {
+    font-size: 12px;
+    padding: 6px 12px;
+}
+
+/* Alert sections */
+.alert-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.alert-section h6 {
+    color: #856404;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.alert-item[data-alert-status="triggered"] {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-item[data-alert-status="active"] {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+}
+
+.alert-item[data-alert-status="disabled"] {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+/* Empty state */
+.empty-state {
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 992px) {
+    .stat-card-col {
+        width: 180px !important;
+        max-width: 180px !important;
+    }
+    
+    .stat-card {
+        max-width: 180px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .stat-cards-row {
+        justify-content: center !important;
+    }
+    
+    .stat-card-col {
+        width: 150px !important;
+        max-width: 150px !important;
+    }
+    
+    .stat-card {
+        max-width: 150px !important;
+        height: 80px !important;
+        min-height: 80px !important;
+        max-height: 80px !important;
+    }
+    
+    .stat-card .card-body {
+        padding: 0.4rem !important;
+    }
+    
+    .stat-card i {
+        font-size: 1rem !important;
+    }
+    
+    .stat-card .card-title {
+        font-size: 1.1rem !important;
+    }
+    
+    .stat-card .card-text {
+        font-size: 0.65rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .stat-cards-row {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    
+    .stat-card-col {
+        width: 250px !important;
+        max-width: 250px !important;
+    }
+    
+    .stat-card {
+        max-width: 250px !important;
+    }
 }
