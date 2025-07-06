@@ -9,10 +9,15 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import Product, TrackedProduct, UserProfile, PriceAlert
 import re
 from django.utils.html import format_html
+import csv
+import io
+from django.utils import timezone
+
+from .email_utils import send_welcome_email  # Import the email utility
 
 def highlight_search_terms(text, search_query):
     """Highlight search terms in text"""
@@ -82,31 +87,54 @@ def product_detail(request, pk):
 
 @login_required
 def dashboard(request):
-    """Enhanced dashboard with price alerts"""
-    # Get user's tracked products with related data
-    user_tracked = TrackedProduct.objects.filter(
-        user=request.user,
-        is_active=True
-    ).select_related('product').prefetch_related('price_alerts')
+    user = request.user
     
-    # Get statistics
-    total_tracked = user_tracked.count()
-    total_alerts = PriceAlert.objects.filter(
-        tracked_product__user=request.user,
-        is_enabled=True
+    # Real calculations for your existing template variables
+    tracked_products = TrackedProduct.objects.filter(user=user, is_active=True).select_related('product')
+    
+    # Calculate real stats for your existing {{ variables }}
+    total_tracked = tracked_products.count()
+    
+    # Active alerts count - CORRECTED: using is_enabled instead of is_active
+    active_alerts = PriceAlert.objects.filter(
+        tracked_product__user=user, 
+        is_enabled=True  # ✅ Changed from is_active to is_enabled
     ).count()
     
-    # Get triggered alerts count
+    # Triggered alerts count  
     triggered_alerts = PriceAlert.objects.filter(
-        tracked_product__user=request.user,
+        tracked_product__user=user, 
         is_triggered=True
     ).count()
     
+    # Real savings calculation
+    total_savings = 0
+    triggered_alert_list = PriceAlert.objects.filter(
+        tracked_product__user=user, 
+        is_triggered=True
+    ).select_related('tracked_product__product')
+    
+    for alert in triggered_alert_list:
+        # Get the product's current price vs target price
+        current_price = alert.tracked_product.product.current_price
+        target_price = alert.target_price
+        
+        if current_price and target_price and current_price < target_price:
+            savings = target_price - current_price
+            total_savings += savings
+    
+    # Recent alerts for your existing template
+    recent_alerts = triggered_alert_list.order_by('-triggered_at')[:5]
+    
+    # Your existing template receives real data now
     context = {
-        'tracked_products': user_tracked,
         'total_tracked': total_tracked,
-        'total_alerts': total_alerts,
+        'total_alerts': active_alerts,
         'triggered_alerts': triggered_alerts,
+        'total_savings': total_savings,
+        'tracked_products': tracked_products,
+        'recent_alerts': recent_alerts,
+        'user': user,
     }
     
     return render(request, 'products/dashboard.html', context)
@@ -154,15 +182,22 @@ def remove_from_tracking(request, pk):
     return redirect('product_detail', pk=pk)
 
 def signup(request):
-    """Phase 3: User registration"""
+    """Phase 3: User registration with welcome email"""
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            
             # Create user profile
             UserProfile.objects.create(user=user)
+            
+            # Log in the user
             login(request, user)
-            messages.success(request, 'Welcome to Deal Radar! Your account has been created.')
+            
+            # Send welcome email
+            send_welcome_email(user)
+            
+            messages.success(request, 'Welcome to Deal Radar! Check your email for getting started tips.')
             return redirect('dashboard')
     else:
         form = UserCreationForm()
@@ -232,3 +267,125 @@ def reset_price_alert(request, pk):
     
     messages.success(request, f'Price alert for "{alert.tracked_product.product.name}" reset and reactivated.')
     return redirect('dashboard')
+
+@login_required
+def profile(request):
+    """User profile management page"""
+    user = request.user
+    
+    # Get or create user profile
+    profile, created = UserProfile.objects.get_or_create(user=user)
+    
+    if request.method == 'POST':
+        # Update user basic info
+        user.first_name = request.POST.get('first_name', '').strip()
+        user.last_name = request.POST.get('last_name', '').strip()
+        user.email = request.POST.get('email', '').strip()
+        user.save()
+        
+        # Update profile preferences
+        profile.email_notifications = request.POST.get('email_notifications') == 'on'
+        profile.notification_frequency = request.POST.get('notification_frequency', 'instant')
+        profile.save()
+        
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('profile')
+    
+    context = {
+        'user': user,
+        'profile': profile,
+    }
+    
+    return render(request, 'products/profile.html', context)
+
+@login_required
+def settings(request):
+    """Settings page for user preferences"""
+    user = request.user
+    
+    # Get or create user profile
+    profile, created = UserProfile.objects.get_or_create(user=user)
+    
+    if request.method == 'POST':
+        if 'update_email' in request.POST:
+            # Update email preferences
+            profile.email_notifications = request.POST.get('email_notifications') == 'on'
+            profile.notification_frequency = request.POST.get('notification_frequency', 'instant')
+            profile.save()
+            
+            messages.success(request, 'Email settings updated successfully!')
+            return redirect('settings')
+        
+        elif 'clear_data' in request.POST:
+            # Clear all user data
+            TrackedProduct.objects.filter(user=user).delete()
+            PriceAlert.objects.filter(tracked_product__user=user).delete()
+            
+            messages.success(request, 'All data cleared successfully!')
+            return redirect('settings')
+    
+    context = {
+        'user': user,
+        'profile': profile,
+    }
+    
+    return render(request, 'products/settings.html', context)
+
+@login_required
+def export_data(request):
+    """Export user data to Excel CSV"""
+    user = request.user
+    
+    # Create CSV response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="deal_radar_data_{user.username}.csv"'
+    
+    writer = csv.writer(response)
+    
+    # Write header
+    writer.writerow(['Product Name', 'URL', 'Current Price', 'Target Price', 'Site', 'Category', 'Date Added'])
+    
+    # Write tracked products
+    tracked_products = TrackedProduct.objects.filter(user=user).select_related('product')
+    for tracked in tracked_products:
+        writer.writerow([
+            tracked.product.name,
+            tracked.product.url,
+            tracked.product.current_price,
+            tracked.target_price,
+            tracked.product.site_name,
+            tracked.product.category,
+            tracked.created_at.strftime('%Y-%m-%d')
+        ])
+    
+    return response
+
+@login_required
+def export_json(request):
+    """Export user data to JSON"""
+    user = request.user
+    
+    # Get user data
+    tracked_products = TrackedProduct.objects.filter(user=user).select_related('product')
+    
+    data = {
+        'user': user.username,
+        'exported_at': timezone.now().isoformat(),
+        'tracked_products': []
+    }
+    
+    for tracked in tracked_products:
+        data['tracked_products'].append({
+            'product_name': tracked.product.name,
+            'url': tracked.product.url,
+            'current_price': float(tracked.product.current_price),
+            'target_price': float(tracked.target_price) if tracked.target_price else None,
+            'site_name': tracked.product.site_name,
+            'category': tracked.product.category,
+            'date_added': tracked.created_at.isoformat()
+        })
+    
+    response = JsonResponse(data, indent=2)
+    response['Content-Disposition'] = f'attachment; filename="deal_radar_data_{user.username}.json"'
+    
+    return response
