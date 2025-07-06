@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Welcome to Deal Radar</title>
+    <link rel="stylesheet" href="{% static 'css/email.css' %}">
+</head>
+<body class="email-body">
+    <div class="email-container">
+        <div class="email-header">
+            <h1>🎯 Welcome to Deal Radar!</h1>
+            <p>Hi {{ user.first_name|default:user.username }}, welcome to your smart shopping assistant!</p>
+        </div>
+        
+        <div class="email-content">
+            <h2>🎉 You're all set!</h2>
+            <p>Thank you for joining Deal Radar. Here's what you can do:</p>
+            
+            <div class="feature-box">
+                <h3>📦 Track Products</h3>
+                <p>Add products you're interested in and we'll monitor their prices for you.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h3>🔔 Set Price Alerts</h3>
+                <p>Get notified when prices drop below your target price.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h3>💰 Save Money</h3>
+                <p>Never miss a deal again with our smart price tracking.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h3>📊 Dashboard</h3>
+                <p>Monitor all your tracked products and alerts in one place.</p>
+            </div>
+            
+            <p>Ready to start saving money?</p>
+            
+            <a href="http://localhost:8000/dashboard/" class="email-btn">🚀 Go to Dashboard</a>
+        </div>
+        
+        <div class="email-footer">
+            <p>Happy shopping and saving!</p>
+            <p>© 2025 Deal Radar - Your Smart Shopping Assistant</p>
+        </div>
+    </div>
+</body>
+</html>
