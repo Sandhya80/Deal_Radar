@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Daily Summary - Deal Radar</title>
+    <link rel="stylesheet" href="{% static 'css/email.css' %}">
+</head>
+<body class="email-body">
+    <div class="email-container">
+        <div class="email-header">
+            <h1>📊 Daily Deal Radar Summary</h1>
+            <p>{{ date|date:"F d, Y" }}</p>
+            <p>Hi {{ user.first_name|default:user.username }}!</p>
+        </div>
+        
+        <div class="email-content">
+            {% if triggered_alerts %}
+                <h2>🔥 Today's Price Drops</h2>
+                {% for alert in triggered_alerts %}
+                    <div class="alert-box">
+                        <h3>{{ alert.tracked_product.product.name }}</h3>
+                        <p><strong>Target Price:</strong> £{{ alert.target_price }}</p>
+                        <p><strong>Current Price:</strong> £{{ alert.tracked_product.product.current_price }}</p>
+                        <p><strong>Savings:</strong> <span class="savings">£{{ alert.target_price|floatformat:2 }}</span></p>
+                        <p class="email-small">🏪 {{ alert.tracked_product.product.site_name }}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <h2>📦 Your Tracked Products ({{ tracked_products.count }})</h2>
+            {% for tracked in tracked_products %}
+                <div class="product-box">
+                    <h3>{{ tracked.product.name }}</h3>
+                    <p><strong>Current Price:</strong> £{{ tracked.product.current_price }}</p>
+                    {% if tracked.target_price %}
+                        <p><strong>Your Target:</strong> £{{ tracked.target_price }}</p>
+                    {% endif %}
+                    <p class="email-small email-text-muted">🏪 {{ tracked.product.site_name }} | 📂 {{ tracked.product.category }}</p>
+                </div>
+            {% endfor %}
+            
+            <a href="{{ site_url }}/dashboard/" class="email-btn">📊 View Dashboard</a>
+        </div>
+        
+        <div class="email-footer">
+            <p>Keep saving with Deal Radar!</p>
+            <p>© 2025 Deal Radar - Your Smart Shopping Assistant</p>
+        </div>
+    </div>
+</body>
+</html>
