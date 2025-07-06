@@ -22,4 +22,12 @@ urlpatterns = [
     path('toggle-alert/<int:pk>/', views.toggle_price_alert, name='toggle_price_alert'),
     path('delete-alert/<int:pk>/', views.delete_price_alert, name='delete_price_alert'),
     path('reset-alert/<int:pk>/', views.reset_price_alert, name='reset_price_alert'),
+
+    # New profile URL
+    path('profile/', views.profile, name='profile'),
+
+    # New settings and export URLs
+    path('settings/', views.settings, name='settings'),
+    path('export/data/', views.export_data, name='export_data'),
+    path('export/json/', views.export_json, name='export_json'),
 ]
