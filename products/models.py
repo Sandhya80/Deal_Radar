@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
 
 class Product(models.Model):
     """Product model for tracking items across e-commerce sites"""
@@ -47,15 +50,39 @@ class Product(models.Model):
         return dict(self.CATEGORY_CHOICES).get(self.category, self.category)
 
 class UserProfile(models.Model):
-    """Extended user profile for Phase 3"""
+    """User profile for notification preferences"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_notifications = models.BooleanField(default=True)
-    preferred_categories = models.CharField(max_length=500, blank=True)
+    notification_frequency = models.CharField(
+        max_length=20,
+        choices=[
+            ('instant', 'Instant'),
+            ('daily', 'Daily Summary'),
+            ('weekly', 'Weekly Summary'),
+        ],
+        default='instant'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.user.username}'s Profile"
+        return f"{self.user.username} - Profile"
+    
+    class Meta:
+        verbose_name = "User Profile"
+        verbose_name_plural = "User Profiles"
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    try:
+        instance.userprofile.save()
+    except UserProfile.DoesNotExist:
+        UserProfile.objects.create(user=instance)
 
 class TrackedProduct(models.Model):
     """Products that users are tracking for price changes"""
@@ -89,3 +116,18 @@ class PriceAlert(models.Model):
         """Check if current price meets target price"""
         current_price = self.tracked_product.product.current_price
         return current_price <= self.target_price
+    
+    def trigger_alert(self, current_price):
+        """Trigger the alert and send email notification"""
+        if not self.is_triggered and self.is_enabled:
+            old_price = self.target_price
+            self.is_triggered = True
+            self.triggered_at = timezone.now()
+            self.save()
+            
+            # Send email notification
+            from .email_utils import send_price_alert_email
+            send_price_alert_email(self, old_price, current_price)
+            
+            return True
+        return False
