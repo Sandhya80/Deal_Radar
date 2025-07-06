@@ -1,0 +1,249 @@
+/* Complete email CSS file */
+
+/* Base email styles */
+.email-body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.email-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.email-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.email-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.email-header p {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.email-content {
+    background: #f8f9fa;
+    padding: 30px;
+}
+
+.email-content h2 {
+    color: #333;
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.email-content p {
+    margin: 15px 0;
+    font-size: 16px;
+}
+
+.email-btn {
+    background: #667eea;
+    color: white !important;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 20px 0;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.email-btn:hover {
+    background: #5a6fd8;
+    text-decoration: none;
+}
+
+.email-footer {
+    background: #343a40;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.email-footer p {
+    margin: 10px 0;
+}
+
+/* Feature boxes for welcome email */
+.feature-box {
+    background: white;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feature-box h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.feature-box p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Alert and product boxes for daily summary */
+.alert-box {
+    background: white;
+    border-left: 4px solid #28a745;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alert-box h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.product-box {
+    background: white;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product-box h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.email-small {
+    font-size: 12px;
+    color: #666;
+}
+
+.email-text-muted {
+    color: #666;
+}
+
+/* Price alert template styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+}
+
+.header h1 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 16px;
+}
+
+.content {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 0 0 8px 8px;
+}
+
+.content h2 {
+    color: #333;
+    margin-top: 0;
+}
+
+.price-box {
+    background: white;
+    border-left: 4px solid #28a745;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.price-box p {
+    margin: 8px 0;
+}
+
+.btn {
+    background: #667eea;
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background: #5a6fd8;
+}
+
+.savings {
+    font-size: 24px;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.email-divider {
+    margin: 30px 0;
+    border: 0;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Responsive design */
+@media only screen and (max-width: 600px) {
+    .email-container, .container {
+        margin: 0 10px;
+    }
+    
+    .email-header, .email-content, .header, .content {
+        padding: 20px 15px;
+    }
+    
+    .price-box, .feature-box, .alert-box, .product-box {
+        padding: 15px;
+    }
+    
+    .email-btn, .btn {
+        display: block;
+        text-align: center;
+        margin: 20px 0;
+    }
+}
