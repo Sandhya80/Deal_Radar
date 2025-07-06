@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Settings - Deal Radar{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h4><i class="fas fa-cog"></i> Settings</h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-envelope"></i> Email Preferences</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="email_notifications" 
+                                                       name="email_notifications" {% if user.userprofile.email_notifications %}checked{% endif %}>
+                                                <label class="form-check-label" for="email_notifications">
+                                                    Enable email notifications
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="notification_frequency" class="form-label">Notification Frequency</label>
+                                            <select class="form-select" id="notification_frequency" name="notification_frequency">
+                                                <option value="instant" {% if user.userprofile.notification_frequency == 'instant' %}selected{% endif %}>Instant</option>
+                                                <option value="daily" {% if user.userprofile.notification_frequency == 'daily' %}selected{% endif %}>Daily Summary</option>
+                                                <option value="weekly" {% if user.userprofile.notification_frequency == 'weekly' %}selected{% endif %}>Weekly Summary</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <button type="submit" name="update_email" class="btn btn-primary">
+                                            <i class="fas fa-save"></i> Save Email Settings
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-download"></i> Data Export</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>Export your tracked products and alerts data.</p>
+                                    <a href="{% url 'export_data' %}" class="btn btn-success">
+                                        <i class="fas fa-file-excel"></i> Export to Excel
+                                    </a>
+                                    <a href="{% url 'export_json' %}" class="btn btn-info">
+                                        <i class="fas fa-file-code"></i> Export to JSON
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-trash"></i> Danger Zone</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-danger">
+                                        <strong>Warning:</strong> These actions cannot be undone.
+                                    </p>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#clearDataModal">
+                                        <i class="fas fa-trash"></i> Clear All Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Clear Data Modal -->
+<div class="modal fade" id="clearDataModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Clear All Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to clear all your tracked products and alerts?</p>
+                <p class="text-danger"><strong>This action cannot be undone.</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" name="clear_data" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Clear All Data
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
