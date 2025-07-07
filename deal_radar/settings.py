@@ -10,7 +10,7 @@ Core functionality:
 import os
 from decouple import config
 from pathlib import Path
-import dj_database_url  # Add this import
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -69,13 +69,10 @@ WSGI_APPLICATION = 'deal_radar.wsgi.application'
 # Try DATABASE_URL first (cloud providers), fallback to individual configs
 DATABASES = {
     'default': dj_database_url.config(
-        default=f"postgresql://{config('DB_USER', default='dealradar')}:"
-                f"{config('DB_PASSWORD', default='dealradar123')}@"
-                f"{config('DB_HOST', default='localhost')}:"
-                f"{config('DB_PORT', default='5432')}/"
-                f"{config('DB_NAME', default='deal_radar')}",
+        default='postgresql://dealradar:dealradar123@localhost:5432/deal_radar',
         conn_max_age=600,
         conn_health_checks=True,
+        ssl_require=True
     )
 }
 
