@@ -69,7 +69,6 @@ WSGI_APPLICATION = 'deal_radar.wsgi.application'
 # Try DATABASE_URL first (cloud providers), fallback to individual configs
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://dealradar:dealradar123@localhost:5432/deal_radar',
         conn_max_age=600,
         conn_health_checks=True,
         ssl_require=True
