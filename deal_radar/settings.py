@@ -205,3 +205,19 @@ else:
     SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+if os.environ.get('DYNO'):  # True on Heroku
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'root': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    }
+# else: keep your file-based logging for local development
