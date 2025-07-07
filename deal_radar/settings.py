@@ -1,14 +1,16 @@
 """
-Django settings for deal_radar project - Phase 2
+Django settings for deal_radar project - Phase 4 Production Ready
 
 Core functionality:
 - Product management and display
 - Basic admin interface
+- Production deployment ready
 """
 
 import os
 from decouple import config
 from pathlib import Path
+import dj_database_url  # Add this import
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-in-production')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.herokuapp.com,.railway.app', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # Application definition
 INSTALLED_APPS = [
@@ -39,6 +41,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Add WhiteNoise for production static files
+if not DEBUG:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
 ROOT_URLCONF = 'deal_radar.urls'
 
 TEMPLATES = [
@@ -59,19 +65,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'deal_radar.wsgi.application'
 
-# Database - PostgreSQL Configuration
+# Database - Enhanced for Production
+# Try DATABASE_URL first (cloud providers), fallback to individual configs
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='deal_radar'),
-        'USER': config('DB_USER', default='dealradar'),
-        'PASSWORD': config('DB_PASSWORD', default='dealradar123'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
-        'OPTIONS': {
-            'connect_timeout': 10,
-        },
-    }
+    'default': dj_database_url.config(
+        default=f"postgresql://{config('DB_USER', default='dealradar')}:"
+                f"{config('DB_PASSWORD', default='dealradar123')}@"
+                f"{config('DB_HOST', default='localhost')}:"
+                f"{config('DB_PORT', default='5432')}/"
+                f"{config('DB_NAME', default='deal_radar')}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # Password validation
@@ -96,10 +101,14 @@ TIME_ZONE = 'Europe/London'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, Images) - Enhanced for Production
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Production static files optimization
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
@@ -114,7 +123,6 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
 # Email Configuration (Ready for Phase 3 Price Alerts)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
@@ -135,7 +143,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
 
-# Logging Configuration
+# Logging Configuration - Enhanced for Production
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -154,6 +162,11 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'formatter': 'verbose',
+        },
     },
     'root': {
         'handlers': ['console'],
@@ -161,24 +174,24 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'] if not DEBUG else ['console'],
             'level': 'INFO',
             'propagate': False,
         },
         'products': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'] if not DEBUG else ['console'],
             'level': 'DEBUG',
             'propagate': False,
         },
     },
 }
 
-# Security Settings (Ready for Phase 4 Production)
+# Security Settings - Enhanced for Production
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
-# Development settings
+# Development vs Production settings
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     SECURE_SSL_REDIRECT = False
@@ -186,3 +199,9 @@ else:
     # Production settings (Phase 4)
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
