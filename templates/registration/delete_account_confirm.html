@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Account - Deal Radar{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-form">
+        <h2>Delete Your Account</h2>
+        <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="danger-btn">Yes, delete my account</button>
+            <a href="{% url 'dashboard' %}" class="btn">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
