@@ -5,14 +5,16 @@ from django.contrib.auth.models import User
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    username = forms.CharField(
-        max_length=50,
-        help_text="50 characters or fewer. Letters, digits and @/./+/-/_ only."
-    )
 
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("A user with that email already exists.")
+        return email
 
     def save(self, commit=True):
         user = super().save(commit=False)
