@@ -1,19 +1,12 @@
-"""
-Django settings for deal_radar project - Phase 4 Production Ready
-
-Core functionality:
-- Product management and display
-- Basic admin interface
-- Production deployment ready
-"""
-
+import environ
 import os
 from decouple import config
 from pathlib import Path
 import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Security
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-in-production')
@@ -68,12 +61,10 @@ WSGI_APPLICATION = 'deal_radar.wsgi.application'
 # Database - Enhanced for Production
 # Try DATABASE_URL first (cloud providers), fallback to individual configs
 DATABASES = {
-    'default': dj_database_url.config(
-        conn_max_age=600,
-        conn_health_checks=True,
-        ssl_require=True
-    )
+    'default': env.db(),  # This uses DATABASE_URL from .env
 }
+
+print("DATABASE_URL:", env('DATABASE_URL', default='NOT SET'))
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
