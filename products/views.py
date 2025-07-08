@@ -5,7 +5,7 @@ User authentication and personal tracking (SQLite-based)
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.db.models import Q
@@ -389,3 +389,14 @@ def export_json(request):
     response['Content-Disposition'] = f'attachment; filename="deal_radar_data_{user.username}.json"'
     
     return response
+
+@login_required
+def delete_account(request):
+    """Delete user account"""
+    if request.method == 'POST':
+        user = request.user
+        logout(request)
+        user.delete()
+        messages.success(request, "Your account has been deleted.")
+        return redirect('home')
+    return render(request, 'registration/delete_account_confirm.html')
