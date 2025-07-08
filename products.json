@@ -1,1 +1,310 @@
-[{"model": "products.product", "pk": 23, "fields": {"name": "Samsung Galaxy S24", "url": "https://example.com/samsung-s24", "current_price": "799.99", "price": "799.99", "target_price": "699.99", "site_name": "TechStore", "category": "Electronics", "description": "Latest Samsung flagship smartphone with AI features", "image_url": "https://example.com/images/samsung-s24.jpg", "is_active": true, "user": 2, "created_at": "2025-07-05T00:49:04.177Z", "updated_at": "2025-07-05T00:49:04.177Z"}}, {"model": "products.product", "pk": 24, "fields": {"name": "Nike Air Max 270", "url": "https://example.com/nike-air-max", "current_price": "112.71", "price": "129.99", "target_price": "99.99", "site_name": "SportShop", "category": "Fashion", "description": "Comfortable running shoes with Air Max technology", "image_url": "https://example.com/images/nike-air-max.jpg", "is_active": true, "user": 2, "created_at": "2025-07-05T00:49:04.179Z", "updated_at": "2025-07-06T03:48:41.442Z"}}, {"model": "products.product", "pk": 25, "fields": {"name": "MacBook Pro 16\"", "url": "https://example.com/macbook-pro", "current_price": "2499.99", "price": "2499.99", "target_price": "2199.99", "site_name": "AppleStore", "category": "Electronics", "description": "Apple MacBook Pro with M3 chip for professional work", "image_url": "https://example.com/images/macbook-pro.jpg", "is_active": true, "user": 2, "created_at": "2025-07-05T00:49:04.180Z", "updated_at": "2025-07-05T00:49:04.181Z"}}, {"model": "products.product", "pk": 26, "fields": {"name": "Instant Pot Duo 7-in-1", "url": "https://example.com/instant-pot", "current_price": "89.99", "price": "89.99", "target_price": "69.99", "site_name": "KitchenWorld", "category": "Home", "description": "Multi-functional pressure cooker for quick meals", "image_url": "https://example.com/images/instant-pot.jpg", "is_active": true, "user": 2, "created_at": "2025-07-05T00:49:04.182Z", "updated_at": "2025-07-05T00:49:04.182Z"}}, {"model": "products.product", "pk": 27, "fields": {"name": "Sony WH-1000XM5", "url": "https://example.com/sony-headphones", "current_price": "94.11", "price": "349.99", "target_price": "299.99", "site_name": "AudioHub", "category": "electronics", "description": "Premium noise-cancelling wireless headphones. A great add-on to your tech list.", "image_url": "https://example.com/images/sony-headphones.jpg", "is_active": true, "user": 2, "created_at": "2025-07-05T00:49:04.183Z", "updated_at": "2025-07-05T18:36:17.270Z"}}, {"model": "products.product", "pk": 28, "fields": {"name": "Dyson V15 Detect Vacuum", "url": "https://example.com/dyson-vacuum", "current_price": "182.02", "price": "649.99", "target_price": "549.99", "site_name": "HomeAppliances", "category": "Home", "description": "Advanced cordless vacuum with laser detection technology", "image_url": "https://example.com/images/dyson-vacuum.jpg", "is_active": true, "user": 2, "created_at": "2025-07-05T00:49:04.184Z", "updated_at": "2025-07-05T18:36:13.362Z"}}, {"model": "products.product", "pk": 29, "fields": {"name": "Amazon Echo Dot (5th Gen)", "url": "https://www.amazon.co.uk/dp/B09B8V1LZ3", "current_price": "60.90", "price": "49.99", "target_price": null, "site_name": "Amazon UK", "category": "ELECTRONICS", "description": "", "image_url": "", "is_active": true, "user": null, "created_at": "2025-07-05T18:00:10.840Z", "updated_at": "2025-07-06T03:48:41.439Z"}}, {"model": "products.product", "pk": 30, "fields": {"name": "Kindle Paperwhite", "url": "https://www.amazon.co.uk/dp/B08KTZ8249", "current_price": "57.64", "price": "139.99", "target_price": null, "site_name": "Amazon UK", "category": "ELECTRONICS", "description": "", "image_url": "", "is_active": true, "user": null, "created_at": "2025-07-05T18:00:10.855Z", "updated_at": "2025-07-05T18:36:26.203Z"}}, {"model": "products.product", "pk": 31, "fields": {"name": "Fire TV Stick 4K", "url": "https://www.amazon.co.uk/dp/B08XVYZ1Y5", "current_price": "23.83", "price": "54.99", "target_price": null, "site_name": "Amazon UK", "category": "ELECTRONICS", "description": "", "image_url": "", "is_active": true, "user": null, "created_at": "2025-07-05T18:00:10.864Z", "updated_at": "2025-07-06T03:48:41.431Z"}}, {"model": "products.userprofile", "pk": 1, "fields": {"user": 1, "email_notifications": true, "notification_frequency": "instant", "created_at": "2025-07-06T01:47:54.546Z", "updated_at": "2025-07-06T01:47:54.546Z"}}, {"model": "products.trackedproduct", "pk": 1, "fields": {"user": 1, "product": 28, "target_price": null, "is_active": true, "added_at": "2025-07-05T10:45:33.144Z"}}, {"model": "products.trackedproduct", "pk": 2, "fields": {"user": 1, "product": 27, "target_price": null, "is_active": true, "added_at": "2025-07-05T15:26:40.819Z"}}, {"model": "products.trackedproduct", "pk": 3, "fields": {"user": 1, "product": 25, "target_price": null, "is_active": true, "added_at": "2025-07-05T15:27:34.467Z"}}, {"model": "products.trackedproduct", "pk": 4, "fields": {"user": 3, "product": 29, "target_price": null, "is_active": true, "added_at": "2025-07-05T18:00:10.846Z"}}, {"model": "products.trackedproduct", "pk": 5, "fields": {"user": 3, "product": 30, "target_price": null, "is_active": true, "added_at": "2025-07-05T18:00:10.857Z"}}, {"model": "products.trackedproduct", "pk": 6, "fields": {"user": 3, "product": 31, "target_price": null, "is_active": true, "added_at": "2025-07-05T18:00:10.866Z"}}, {"model": "products.pricealert", "pk": 1, "fields": {"tracked_product": 1, "target_price": "500.00", "is_enabled": true, "is_triggered": true, "created_at": "2025-07-05T13:21:47.073Z", "triggered_at": "2025-07-05T18:36:13.367Z"}}, {"model": "products.pricealert", "pk": 2, "fields": {"tracked_product": 2, "target_price": "300.00", "is_enabled": true, "is_triggered": true, "created_at": "2025-07-05T15:27:03.647Z", "triggered_at": "2025-07-05T18:36:17.271Z"}}, {"model": "products.pricealert", "pk": 3, "fields": {"tracked_product": 4, "target_price": "200.00", "is_enabled": true, "is_triggered": true, "created_at": "2025-07-05T18:00:10.851Z", "triggered_at": "2025-07-05T20:15:35.525Z"}}, {"model": "products.pricealert", "pk": 4, "fields": {"tracked_product": 5, "target_price": "119.99", "is_enabled": true, "is_triggered": true, "created_at": "2025-07-05T18:00:10.861Z", "triggered_at": "2025-07-05T18:36:26.213Z"}}, {"model": "products.pricealert", "pk": 5, "fields": {"tracked_product": 6, "target_price": "44.99", "is_enabled": true, "is_triggered": true, "created_at": "2025-07-05T18:00:10.869Z", "triggered_at": "2025-07-05T20:11:44.459Z"}}]
+[
+    {
+        "model": "products.product",
+        "pk": 23,
+        "fields": {
+            "name": "Samsung Galaxy S24",
+            "url": "https://example.com/samsung-s24",
+            "current_price": "799.99",
+            "price": "799.99",
+            "target_price": "699.99",
+            "site_name": "TechStore",
+            "category": "Electronics",
+            "description": "Latest Samsung flagship smartphone with AI features",
+            "image_url": "https://example.com/images/samsung-s24.jpg",
+            "is_active": true,
+            "user": 2,
+            "created_at": "2025-07-05T00:49:04.177Z",
+            "updated_at": "2025-07-05T00:49:04.177Z"
+        }
+    },
+    {
+        "model": "products.product",
+        "pk": 24,
+        "fields": {
+            "name": "Nike Air Max 270",
+            "url": "https://example.com/nike-air-max",
+            "current_price": "112.71",
+            "price": "129.99",
+            "target_price": "99.99",
+            "site_name": "SportShop",
+            "category": "Fashion",
+            "description": "Comfortable running shoes with Air Max technology",
+            "image_url": "https://example.com/images/nike-air-max.jpg",
+            "is_active": true,
+            "user": 2,
+            "created_at": "2025-07-05T00:49:04.179Z",
+            "updated_at": "2025-07-06T03:48:41.442Z"
+        }
+    },
+    {
+        "model": "products.product",
+        "pk": 25,
+        "fields": {
+            "name": "MacBook Pro 16\"",
+            "url": "https://example.com/macbook-pro",
+            "current_price": "2499.99",
+            "price": "2499.99",
+            "target_price": "2199.99",
+            "site_name": "AppleStore",
+            "category": "Electronics",
+            "description": "Apple MacBook Pro with M3 chip for professional work",
+            "image_url": "https://example.com/images/macbook-pro.jpg",
+            "is_active": true,
+            "user": 2,
+            "created_at": "2025-07-05T00:49:04.180Z",
+            "updated_at": "2025-07-05T00:49:04.181Z"
+        }
+    },
+    {
+        "model": "products.product",
+        "pk": 26,
+        "fields": {
+            "name": "Instant Pot Duo 7-in-1",
+            "url": "https://example.com/instant-pot",
+            "current_price": "89.99",
+            "price": "89.99",
+            "target_price": "69.99",
+            "site_name": "KitchenWorld",
+            "category": "Home",
+            "description": "Multi-functional pressure cooker for quick meals",
+            "image_url": "https://example.com/images/instant-pot.jpg",
+            "is_active": true,
+            "user": 2,
+            "created_at": "2025-07-05T00:49:04.182Z",
+            "updated_at": "2025-07-05T00:49:04.182Z"
+        }
+    },
+    {
+        "model": "products.product",
+        "pk": 27,
+        "fields": {
+            "name": "Sony WH-1000XM5",
+            "url": "https://example.com/sony-headphones",
+            "current_price": "94.11",
+            "price": "349.99",
+            "target_price": "299.99",
+            "site_name": "AudioHub",
+            "category": "electronics",
+            "description": "Premium noise-cancelling wireless headphones. A great add-on to your tech list.",
+            "image_url": "https://example.com/images/sony-headphones.jpg",
+            "is_active": true,
+            "user": 2,
+            "created_at": "2025-07-05T00:49:04.183Z",
+            "updated_at": "2025-07-05T18:36:17.270Z"
+        }
+    },
+    {
+        "model": "products.product",
+        "pk": 28,
+        "fields": {
+            "name": "Dyson V15 Detect Vacuum",
+            "url": "https://example.com/dyson-vacuum",
+            "current_price": "182.02",
+            "price": "649.99",
+            "target_price": "549.99",
+            "site_name": "HomeAppliances",
+            "category": "Home",
+            "description": "Advanced cordless vacuum with laser detection technology",
+            "image_url": "https://example.com/images/dyson-vacuum.jpg",
+            "is_active": true,
+            "user": 2,
+            "created_at": "2025-07-05T00:49:04.184Z",
+            "updated_at": "2025-07-05T18:36:13.362Z"
+        }
+    },
+    {
+        "model": "products.product",
+        "pk": 29,
+        "fields": {
+            "name": "Amazon Echo Dot (5th Gen)",
+            "url": "https://www.amazon.co.uk/dp/B09B8V1LZ3",
+            "current_price": "60.90",
+            "price": "49.99",
+            "target_price": null,
+            "site_name": "Amazon UK",
+            "category": "ELECTRONICS",
+            "description": "",
+            "image_url": "",
+            "is_active": true,
+            "user": null,
+            "created_at": "2025-07-05T18:00:10.840Z",
+            "updated_at": "2025-07-06T03:48:41.439Z"
+        }
+    },
+    {
+        "model": "products.product",
+        "pk": 30,
+        "fields": {
+            "name": "Kindle Paperwhite",
+            "url": "https://www.amazon.co.uk/dp/B08KTZ8249",
+            "current_price": "57.64",
+            "price": "139.99",
+            "target_price": null,
+            "site_name": "Amazon UK",
+            "category": "ELECTRONICS",
+            "description": "",
+            "image_url": "",
+            "is_active": true,
+            "user": null,
+            "created_at": "2025-07-05T18:00:10.855Z",
+            "updated_at": "2025-07-05T18:36:26.203Z"
+        }
+    },
+    {
+        "model": "products.product",
+        "pk": 31,
+        "fields": {
+            "name": "Fire TV Stick 4K",
+            "url": "https://www.amazon.co.uk/dp/B08XVYZ1Y5",
+            "current_price": "23.83",
+            "price": "54.99",
+            "target_price": null,
+            "site_name": "Amazon UK",
+            "category": "ELECTRONICS",
+            "description": "",
+            "image_url": "",
+            "is_active": true,
+            "user": null,
+            "created_at": "2025-07-05T18:00:10.864Z",
+            "updated_at": "2025-07-06T03:48:41.431Z"
+        }
+    },
+    {
+        "model": "products.userprofile",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "email_notifications": true,
+            "notification_frequency": "instant",
+            "created_at": "2025-07-06T01:47:54.546Z",
+            "updated_at": "2025-07-06T01:47:54.546Z"
+        }
+    },
+    {
+        "model": "products.trackedproduct",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "product": 28,
+            "target_price": null,
+            "is_active": true,
+            "added_at": "2025-07-05T10:45:33.144Z"
+        }
+    },
+    {
+        "model": "products.trackedproduct",
+        "pk": 2,
+        "fields": {
+            "user": 1,
+            "product": 27,
+            "target_price": null,
+            "is_active": true,
+            "added_at": "2025-07-05T15:26:40.819Z"
+        }
+    },
+    {
+        "model": "products.trackedproduct",
+        "pk": 3,
+        "fields": {
+            "user": 1,
+            "product": 25,
+            "target_price": null,
+            "is_active": true,
+            "added_at": "2025-07-05T15:27:34.467Z"
+        }
+    },
+    {
+        "model": "products.trackedproduct",
+        "pk": 4,
+        "fields": {
+            "user": 3,
+            "product": 29,
+            "target_price": null,
+            "is_active": true,
+            "added_at": "2025-07-05T18:00:10.846Z"
+        }
+    },
+    {
+        "model": "products.trackedproduct",
+        "pk": 5,
+        "fields": {
+            "user": 3,
+            "product": 30,
+            "target_price": null,
+            "is_active": true,
+            "added_at": "2025-07-05T18:00:10.857Z"
+        }
+    },
+    {
+        "model": "products.trackedproduct",
+        "pk": 6,
+        "fields": {
+            "user": 3,
+            "product": 31,
+            "target_price": null,
+            "is_active": true,
+            "added_at": "2025-07-05T18:00:10.866Z"
+        }
+    },
+    {
+        "model": "products.pricealert",
+        "pk": 1,
+        "fields": {
+            "tracked_product": 1,
+            "target_price": "500.00",
+            "is_enabled": true,
+            "is_triggered": true,
+            "created_at": "2025-07-05T13:21:47.073Z",
+            "triggered_at": "2025-07-05T18:36:13.367Z"
+        }
+    },
+    {
+        "model": "products.pricealert",
+        "pk": 2,
+        "fields": {
+            "tracked_product": 2,
+            "target_price": "300.00",
+            "is_enabled": true,
+            "is_triggered": true,
+            "created_at": "2025-07-05T15:27:03.647Z",
+            "triggered_at": "2025-07-05T18:36:17.271Z"
+        }
+    },
+    {
+        "model": "products.pricealert",
+        "pk": 3,
+        "fields": {
+            "tracked_product": 4,
+            "target_price": "200.00",
+            "is_enabled": true,
+            "is_triggered": true,
+            "created_at": "2025-07-05T18:00:10.851Z",
+            "triggered_at": "2025-07-05T20:15:35.525Z"
+        }
+    },
+    {
+        "model": "products.pricealert",
+        "pk": 4,
+        "fields": {
+            "tracked_product": 5,
+            "target_price": "119.99",
+            "is_enabled": true,
+            "is_triggered": true,
+            "created_at": "2025-07-05T18:00:10.861Z",
+            "triggered_at": "2025-07-05T18:36:26.213Z"
+        }
+    },
+    {
+        "model": "products.pricealert",
+        "pk": 5,
+        "fields": {
+            "tracked_product": 6,
+            "target_price": "44.99",
+            "is_enabled": true,
+            "is_triggered": true,
+            "created_at": "2025-07-05T18:00:10.869Z",
+            "triggered_at": "2025-07-05T20:11:44.459Z"
+        }
+    }
+]

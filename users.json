@@ -1,0 +1,56 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$1000000$LW9e6ae5XNFtvgIxSrmAqE$xNkLGMXnUasJDf63lF6sxCvC5En0iBlLhpkUHD4TQsk=",
+            "last_login": "2025-07-05T09:49:54.163Z",
+            "is_superuser": true,
+            "username": "sandh",
+            "first_name": "",
+            "last_name": "",
+            "email": "sandhyaharsh@gmail.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2025-07-04T23:57:43.625Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$1000000$LW9e6ae5XNFtvgIxSrmAqE$xNkLGMXnUasJDf63lF6sxCvC5En0iBlLhpkUHD4TQsk=",
+            "last_login": null,
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "email": "admin@dealradar.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2025-07-05T00:29:16.697Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$1000000$HgTQym1D93JCajCNSntsVY$PrmH85f0a4eLZHD4Yn+UChkhh2o58beK1/EIQKFfkvw=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "testuser",
+            "first_name": "Test",
+            "last_name": "User",
+            "email": "your-real-email@gmail.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2025-07-05T18:00:09.606Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    }
+]
