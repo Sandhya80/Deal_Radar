@@ -22,9 +22,34 @@
                 </div>
             {% endif %}
 
-            <form method="post">
+            <form method="post" class="signup-form">
                 {% csrf_token %}
-                {{ form.as_p }}
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Username</label>
+                    {{ form.username }}
+                    {% if form.username.help_text %}
+                        <small class="help-text">{{ form.username.help_text|safe }}</small>
+                    {% endif %}
+                    {{ form.username.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">Password</label>
+                    {{ form.password1 }}
+                    {% if form.password1.help_text %}
+                        <small class="help-text">{{ form.password1.help_text|safe }}</small>
+                    {% endif %}
+                    {{ form.password1.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                    {{ form.password2 }}
+                    {{ form.password2.errors }}
+                </div>
                 <button type="submit" class="auth-btn auth-btn-signup">Create Account</button>
             </form>
             

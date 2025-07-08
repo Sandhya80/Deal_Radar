@@ -84,13 +84,20 @@
 }
 
 .auth-btn-signup {
-    background: #28a745;
-    color: white;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
 }
 
 .auth-btn-signup:hover {
-    background: #218838;
-    transform: translateY(-2px);
+    background: linear-gradient(90deg, #5a6fd8 0%, #6a4190 100%);
 }
 
 .auth-links {
@@ -135,4 +142,59 @@
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 10px;
+}
+
+/* Modern signup form styles */
+.signup-form {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(60, 60, 120, 0.12);
+    padding: 32px 28px;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.signup-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.signup-form label {
+    font-weight: 600;
+    color: #4b4b6b;
+    margin-bottom: 2px;
+}
+
+.signup-form input {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 15px;
+    background: #f8f9fa;
+    transition: border 0.2s;
+}
+
+.signup-form input:focus {
+    border-color: #667eea;
+    outline: none;
+    background: #fff;
+}
+
+.signup-form .help-text {
+    color: #888;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.signup-form .form-errors,
+.signup-form .form-group .errorlist {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 2px;
+    list-style: none;
+    padding-left: 0;
 }
