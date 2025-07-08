@@ -47,9 +47,6 @@ Performance Considerations:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Deal Radar{% endblock %}</title>
     
-    <!-- Favicon and app icons -->
-    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
-    
     <!-- Base styles -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     
@@ -59,6 +56,9 @@ Performance Considerations:
     <!-- Preload critical fonts for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/gif" href="{% static 'images/radar-animation.gif' %}">
 </head>
 <body>
     <!-- Skip to main content for accessibility -->
