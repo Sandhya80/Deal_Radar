@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    username = forms.CharField(
+        max_length=50,
+        help_text="50 characters or fewer. Letters, digits and @/./+/-/_ only."
+    )
 
     class Meta:
         model = User
