@@ -188,8 +188,8 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             
-            # Create user profile
-            UserProfile.objects.create(user=user)
+            # Only create UserProfile if it doesn't exist
+            UserProfile.objects.get_or_create(user=user)
             
             # Log in the user
             login(request, user)
