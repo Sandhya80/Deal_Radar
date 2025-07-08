@@ -39,7 +39,7 @@ def send_price_alert_email(alert, old_price, new_price):
         'savings': savings,
         'alert': alert,
         'site_name': 'Deal Radar',
-        'site_domain': settings.SITE_DOMAIN,
+        'site_url': settings.SITE_DOMAIN,
     }
     
     # Render HTML email
