@@ -15,37 +15,16 @@
                 <h2>Create Your Account</h2>
                 <p>Join Deal Radar to track your favorite products and get price alerts!</p>
             </div>
-            
+
+            {% if form.errors %}
+                <div class="form-errors">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
             <form method="post">
                 {% csrf_token %}
-                
-                <div class="form-group">
-                    <label for="{{ form.username.id_for_label }}">Username:</label>
-                    {{ form.username }}
-                    {% if form.username.help_text %}
-                        <div class="help-text">{{ form.username.help_text }}</div>
-                    {% endif %}
-                    {{ form.username.errors }}
-                </div>
-                
-                <div class="form-group">
-                    <label for="{{ form.password1.id_for_label }}">Password:</label>
-                    {{ form.password1 }}
-                    {% if form.password1.help_text %}
-                        <div class="help-text">{{ form.password1.help_text }}</div>
-                    {% endif %}
-                    {{ form.password1.errors }}
-                </div>
-                
-                <div class="form-group">
-                    <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
-                    {{ form.password2 }}
-                    {% if form.password2.help_text %}
-                        <div class="help-text">{{ form.password2.help_text }}</div>
-                    {% endif %}
-                    {{ form.password2.errors }}
-                </div>
-                
+                {{ form.as_p }}
                 <button type="submit" class="auth-btn auth-btn-signup">Create Account</button>
             </form>
             
