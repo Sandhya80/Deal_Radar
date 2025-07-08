@@ -10,6 +10,8 @@ from django.utils.html import strip_tags
 from django.utils import timezone
 from .models import UserProfile, PriceAlert, TrackedProduct
 
+dashboard_url = f"{settings.SITE_DOMAIN}/dashboard/"
+
 def send_price_alert_email(alert, old_price, new_price):
     """Send email notification for triggered price alerts"""
     user = alert.tracked_product.user
@@ -37,6 +39,7 @@ def send_price_alert_email(alert, old_price, new_price):
         'savings': savings,
         'alert': alert,
         'site_name': 'Deal Radar',
+        'site_domain': settings.SITE_DOMAIN,
     }
     
     # Render HTML email

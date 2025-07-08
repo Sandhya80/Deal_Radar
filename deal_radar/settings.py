@@ -13,6 +13,9 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-in-production'
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.herokuapp.com,my-dealradar-app-61098a40edc6.herokuapp.com', cast=lambda v: [s.strip() for s in v.split(',')])
 
+# Site domain
+SITE_DOMAIN = "https://my-dealradar-app-61098a40edc6.herokuapp.com"
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
