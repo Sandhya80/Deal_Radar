@@ -497,7 +497,7 @@ body {
 
 .nav-logout:hover {
     background: #dc3545;
-    color: white;
+    color: rgb(144, 127, 148);
 }
 
 .nav-login {
