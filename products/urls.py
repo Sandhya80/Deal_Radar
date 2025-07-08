@@ -30,4 +30,7 @@ urlpatterns = [
     path('settings/', views.settings, name='settings'),
     path('export/data/', views.export_data, name='export_data'),
     path('export/json/', views.export_json, name='export_json'),
+
+    # Account management URLs
+    path('delete-account/', views.delete_account, name='delete_account'),
 ]
