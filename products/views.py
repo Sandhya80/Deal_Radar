@@ -6,7 +6,7 @@ User authentication and personal tracking (SQLite-based)
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
@@ -184,7 +184,7 @@ def remove_from_tracking(request, pk):
 def signup(request):
     """Phase 3: User registration with welcome email"""
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             
@@ -200,7 +200,7 @@ def signup(request):
             messages.success(request, 'Welcome to Deal Radar! Check your email for getting started tips.')
             return redirect('dashboard')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     
     return render(request, 'registration/signup.html', {'form': form})
 
