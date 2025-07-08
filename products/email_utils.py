@@ -122,6 +122,7 @@ def send_daily_summary_email(user):
         'tracked_products': tracked_products,
         'date': today,
         'site_name': 'Deal Radar',
+        'site_url': settings.SITE_DOMAIN,  # <-- Add this line
     }
     
     html_message = render_to_string('emails/daily_summary.html', context)
