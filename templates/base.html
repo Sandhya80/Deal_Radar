@@ -114,7 +114,10 @@ Performance Considerations:
             <div class="nav-auth">
                 {% if user.is_authenticated %}
                     <span class="user-welcome">👋 {{ user.username }}</span>
-                    <a href="{% url 'logout' %}" class="nav-logout">Logout</a>
+                    <form action="{% url 'logout' %}" method="post" class="logout-form">
+    {% csrf_token %}
+    <button type="submit" class="nav-logout">Logout</button>
+</form>
                 {% else %}
                     <a href="{% url 'login' %}" class="nav-login">Login</a>
                     <a href="{% url 'signup' %}" class="nav-signup">Sign Up</a>

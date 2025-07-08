@@ -518,6 +518,10 @@ body {
     color: white;
 }
 
+.logout-form {
+    display: inline;
+}
+
 /* Enhanced messages */
 .message {
     position: relative;
@@ -963,3 +967,4 @@ main#main-content {
         font-size: 18px;
     }
 }
+
