@@ -542,6 +542,45 @@ body {
     font-size: 14px;
 }
 
+/* Supported Sites Section */
+.supported-sites {
+  padding: 2rem 0;
+  background: #fafafa;
+  text-align: center;
+}
+.supported-sites h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+.logo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+.logo-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  min-height: 80px;
+}
+.logo-card img {
+  max-height: 40px;
+  max-width: 120px;
+  object-fit: contain;
+}
+
 /* Mobile Responsive Footer */
 @media (max-width: 768px) {
     .footer-content {
