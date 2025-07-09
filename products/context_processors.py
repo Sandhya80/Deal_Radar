@@ -1,4 +1,4 @@
-from .models import Category
+from .models import Product
 
-def categories(request):
-    return {'categories': Category.objects.all()}
+def product_category_choices(request):
+    return {'product_category_choices': Product.CATEGORY_CHOICES}
