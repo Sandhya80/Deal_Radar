@@ -18,6 +18,7 @@ import io
 from django.utils import timezone
 
 from .email_utils import send_welcome_email  # Import the email utility
+from .scraper import scrape_product_data
 
 def highlight_search_terms(text, search_query):
     """Highlight search terms in text"""
@@ -410,3 +411,25 @@ def category_products(request, slug):
         'category': {'slug': slug, 'name': category_name},
         'products': products,
     })
+
+@login_required
+def add_product(request):
+    if request.method == 'POST':
+        url = request.POST['url']
+        category = request.POST['category']
+        target_price = request.POST.get('target_price')
+        try:
+            scraped = scrape_product_data(url)
+            product = Product.objects.create(
+                name=scraped['name'],
+                url=url,
+                current_price=scraped['current_price'],
+                category=category,
+                target_price=target_price
+            )
+            messages.success(request, "Product added and being tracked!")
+            return redirect('dashboard')
+        except Exception as e:
+            messages.error(request, f"Could not add product: {e}")
+    # Render your add product form here
+    return render(request, 'products/add_product.html')

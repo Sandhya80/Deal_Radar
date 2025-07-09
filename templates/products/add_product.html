@@ -29,9 +29,21 @@
             </div>
 
             <div class="form-group">
-                <label for="desired_price">Desired Price (£):</label>
-                <input type="number" step="0.01" id="desired_price" 
-                       name="desired_price" required placeholder="79.99">
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    {% for key, display in product_category_choices %}
+                        <option value="{{ key }}">{{ display }}</option>
+                    {% endfor %}
+                </select>
+                <div class="help-text">
+                    Select the category that best fits the product.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="target_price">Target Price (£):</label>
+                <input type="number" step="0.01" id="target_price" 
+                       name="target_price" placeholder="79.99">
                 <div class="help-text">
                     You'll get an alert when the price drops to or below this amount.
                 </div>

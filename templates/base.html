@@ -138,6 +138,11 @@ Performance Considerations:
         <!-- Main content area -->
         <main id="main-content" role="main">
             {% block content %}{% endblock %}
+            
+            <!-- Add Product Button - Shown on Dashboard or Home for Authenticated Users -->
+<a href="{% url 'add_product' %}" class="btn btn-success mb-3">
+    <i class="fas fa-plus"></i> Add Product to Track
+</a>
         </main>
     </div>
 

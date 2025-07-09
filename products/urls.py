@@ -36,4 +36,7 @@ urlpatterns = [
 
     # New category URL
     path('category/<slug:slug>/', views.category_products, name='category_products'),
+
+    # New product addition URL
+    path('add-product/', views.add_product, name='add_product'),
 ]
