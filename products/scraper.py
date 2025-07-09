@@ -22,8 +22,10 @@ def scrape_product_data(url):
         price = soup.select_one(".a-price .a-offscreen")
         if not price:
             price = soup.select_one("#priceblock_ourprice")
+        if not price:
+            price = soup.select_one("#priceblock_dealprice")
         if not name or not price:
-            raise Exception("Could not find product info on Amazon.")
+            raise Exception("amazon_not_supported")
         return {
             "name": name.text.strip(),
             "current_price": Decimal(price.text.strip().replace("£", "").replace("$", "").replace(",", ""))
