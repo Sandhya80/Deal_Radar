@@ -33,4 +33,7 @@ urlpatterns = [
 
     # Account management URLs
     path('delete-account/', views.delete_account, name='delete_account'),
+
+    # New category URL
+    path('category/<slug:slug>/', views.category_products, name='category_products'),
 ]

@@ -10,7 +10,7 @@ from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
-from .models import Product, TrackedProduct, UserProfile, PriceAlert
+from .models import Product, TrackedProduct, UserProfile, PriceAlert, Category
 import re
 from django.utils.html import format_html
 import csv
@@ -400,3 +400,11 @@ def delete_account(request):
         messages.success(request, "Your account has been deleted.")
         return redirect('home')
     return render(request, 'registration/delete_account_confirm.html')
+
+def category_products(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+    return render(request, 'products/category_products.html', {
+        'category': category,
+        'products': products,
+    })
