@@ -16,6 +16,9 @@ from django.utils.html import format_html
 import csv
 import io
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 from .email_utils import send_welcome_email  # Import the email utility
 from .scraper import scrape_product_data
@@ -430,6 +433,32 @@ def add_product(request):
             messages.success(request, "Product added and being tracked!")
             return redirect('dashboard')
         except Exception as e:
-            messages.error(request, f"Could not add product: {e}")
-    # Render your add product form here
+            error_message = str(e)
+            if error_message == "amazon_not_supported":
+                messages.error(
+                    request,
+                    mark_safe(
+                        "Sorry, Amazon is currently not supported due to technical restrictions. "
+                        f"Please try another store or <a href='{reverse('request_site_support')}'>request support</a>."
+                    )
+                )
+            elif "not supported yet" in error_message:
+                messages.error(
+                    request,
+                    mark_safe(
+                        "Sorry, this site is not supported yet. "
+                        f"Please <a href='{reverse('request_site_support')}'>request support for this store</a>."
+                    )
+                )
+            else:
+                messages.error(request, f"Could not add product: {error_message}")
     return render(request, 'products/add_product.html')
+
+@csrf_exempt
+def request_site_support(request):
+    if request.method == 'POST':
+        site_url = request.POST.get('site_url')
+        # You can save this to a model or send an email to admin
+        messages.success(request, "Thank you! We'll review your request soon.")
+        return redirect('add_product')
+    return render(request, 'products/request_site_support.html')

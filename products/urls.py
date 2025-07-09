@@ -39,4 +39,7 @@ urlpatterns = [
 
     # New product addition URL
     path('add-product/', views.add_product, name='add_product'),
+
+    # New site support URL
+    path('request-site-support/', views.request_site_support, name='request_site_support'),
 ]
