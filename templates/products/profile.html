@@ -3,61 +3,52 @@
 
 {% block title %}Profile - Deal Radar{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card shadow-sm">
-                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                    <h4><i class="fas fa-user-circle"></i> Profile Settings</h4>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 1rem 1rem 0 0;">
+                    <h4 class="mb-0"><i class="fas fa-user-circle"></i> Profile Settings</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                                 {{ message }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         {% endfor %}
                     {% endif %}
-                    
-                    <form method="post">
+
+                    <form method="post" class="row g-3">
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="first_name" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" 
-                                           value="{{ user.first_name }}">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="last_name" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" 
-                                           value="{{ user.last_name }}">
-                                </div>
-                            </div>
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
                         </div>
-                        
-                        <div class="mb-3">
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
+                        </div>
+                        <div class="col-12">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                   value="{{ user.email }}">
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
                         </div>
-                        
-                        <div class="mb-3">
+                        <div class="col-12">
                             <label class="form-label">Notification Preferences</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="email_notifications" 
-                                       name="email_notifications" {% if user.userprofile.email_notifications %}checked{% endif %}>
+                                <input class="form-check-input" type="checkbox" id="email_notifications" name="email_notifications" {% if user.userprofile.email_notifications %}checked{% endif %}>
                                 <label class="form-check-label" for="email_notifications">
                                     Email notifications for price alerts
                                 </label>
                             </div>
                         </div>
-                        
-                        <div class="mb-3">
+                        <div class="col-12">
                             <label for="notification_frequency" class="form-label">Notification Frequency</label>
                             <select class="form-select" id="notification_frequency" name="notification_frequency">
                                 <option value="instant" {% if user.userprofile.notification_frequency == 'instant' %}selected{% endif %}>Instant</option>
@@ -65,27 +56,28 @@
                                 <option value="weekly" {% if user.userprofile.notification_frequency == 'weekly' %}selected{% endif %}>Weekly Summary</option>
                             </select>
                         </div>
-                        
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                        <div class="col-12 d-flex justify-content-between align-items-center mt-3">
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left"></i> Back to Dashboard
                             </a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary px-4">
                                 <i class="fas fa-save"></i> Save Changes
                             </button>
                         </div>
                     </form>
-                    
-                    <hr>
-                    
-                    <h5 class="mt-4">Danger Zone</h5>
-                    <p class="text-danger">Deleting your account is permanent and cannot be undone. Please be certain before proceeding.</p>
-                    <form action="{% url 'delete_account' %}" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash-alt"></i> Delete My Account
-                        </button>
-                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="danger-zone p-3 rounded-3 bg-light border border-danger">
+                        <h5 class="text-danger mb-2">Danger Zone</h5>
+                        <p class="text-danger mb-3">Deleting your account is permanent and cannot be undone. Please be certain before proceeding.</p>
+                        <form action="{% url 'delete_account' %}" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i> Delete My Account
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
