@@ -127,50 +127,6 @@
     font-weight: 500;
 }
 
-/* Alert Section */
-.alert-section {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-}
-
-.alert-section h6 {
-    color: #856404;
-    font-weight: 600;
-}
-
-/* Alert Items */
-.alert-item {
-    border: 1px solid #dee2e6;
-    transition: all 0.3s ease;
-}
-
-.alert-item[data-alert-status="triggered"] {
-    background-color: #d4edda !important;
-    border-color: #c3e6cb;
-}
-
-.alert-item[data-alert-status="active"] {
-    background-color: #fff3cd !important;
-    border-color: #ffeaa7;
-}
-
-.alert-item[data-alert-status="disabled"] {
-    background-color: #f8f9fa !important;
-    border-color: #dee2e6;
-}
-
-.alert-item:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-/* Alert Badges */
-.alert-badge {
-    border-radius: 6px;
-}
-
 .badge {
     font-size: 0.8rem;
     font-weight: 500;
@@ -245,25 +201,36 @@
 }
 
 /* ===========================================
-   DASHBOARD STAT CARDS - COMPACT & COLORED
+   DASHBOARD STAT CARDS - CLEANED UP
    =========================================== */
 
-/* Reset and base styles for stat cards */
 .stat-cards-row {
-    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .stat-card-col {
-    padding: 0 8px;
+    flex: 0 0 auto;
+    width: 200px;
+    max-width: 200px;
+    padding: 0;
     margin-bottom: 1rem;
 }
 
 .stat-card {
+    width: 100%;
+    max-width: 200px;
     height: 100px;
+    min-height: 100px;
+    max-height: 100px;
     border: none;
     border-radius: 10px;
-    transition: all 0.3s ease;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    margin: 0;
+    color: white;
 }
 
 .stat-card .card-body {
@@ -273,16 +240,17 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    text-align: center;
 }
 
-.stat-card .card-body i {
+.stat-card i {
     font-size: 1.2rem;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.2rem;
     color: white;
 }
 
 .stat-card .card-title {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 700;
     margin-bottom: 0.1rem;
     line-height: 1;
@@ -290,137 +258,36 @@
 }
 
 .stat-card .card-text {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
     margin-bottom: 0;
     color: white;
     text-align: center;
 }
 
-/* Individual stat card colors - lighter gradients */
+/* Individual stat card colors - gradients */
 .stat-card-1 {
     background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
 }
-
 .stat-card-2 {
     background: linear-gradient(135deg, #f5c842 0%, #e6b800 100%);
 }
-
 .stat-card-3 {
     background: linear-gradient(135deg, #5cb85c 0%, #449d44 100%);
 }
-
 .stat-card-4 {
     background: linear-gradient(135deg, #5bc0de 0%, #46b8da 100%);
 }
 
-/* Hover effects */
+/* Hover effect */
 .stat-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
 /* ===========================================
-   TRACKED PRODUCTS SECTION
-   =========================================== */
-
-.tracked-product-item {
-    background: rgb(225, 234, 236);
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    border: 1px solid #c3dbf3;
-    transition: all 0.3s ease;
-}
-
-.tracked-product-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    border-color: #007bff;
-}
-
-.tracked-product-item h3 {
-    color: #333;
-    font-size: 1.3em;
-    margin: 0 0 10px 0;
-    font-weight: 600;
-    line-height: 1.3;
-}
-
-.tracked-product-meta {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.5;
-    margin: 10px 0;
-}
-
-.tracked-product-meta strong {
-    color: #333;
-    font-weight: 600;
-}
-
-.tracked-product-price {
-    font-size: 1.5em;
-    font-weight: 700;
-    color: #e74c3c;
-    margin: 12px 0;
-}
-
-.tracked-product-actions {
-    margin-top: 15px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.tracked-product-actions .btn {
-    font-size: 12px;
-    padding: 6px 12px;
-}
-
-/* ===========================================
    ALERT SECTION STYLING
    =========================================== */
-
-.alert-section {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-    margin-top: 10px;
-}
-
-.alert-section h6 {
-    color: #856404;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.alert-item {
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-}
-
-.alert-item[data-alert-status="triggered"] {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
-
-.alert-item[data-alert-status="active"] {
-    background-color: #fff3cd;
-    border-color: #ffeaa7;
-}
-
-.alert-item[data-alert-status="disabled"] {
-    background-color: #f8f9fa;
-    border-color: #dee2e6;
-}
-
-.alert-badge {
-    margin-bottom: 8px;
-}
 
 .price-alert-form .input-group {
     border-radius: 6px;
@@ -635,7 +502,23 @@
     max-width: 200px !important;
 }
 
-/* Tracked Products Section */
+/* Empty state */
+.empty-state {
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+/* Tracked Products Section - Cleaned Up */
+.tracked-product-item {
+    background: #dee1f0;                /* Soft blue background */
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    border: 1px solid #c3dbf3;
+    transition: all 0.3s ease;
+}
+
 .tracked-product-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
@@ -644,28 +527,36 @@
 
 .tracked-product-item h3 {
     color: #333;
-    font-size: 1.2em;
+    font-size: 1.3em;
     margin: 0 0 10px 0;
     font-weight: 600;
+    line-height: 1.3;
 }
 
 .tracked-product-meta {
     color: #666;
     font-size: 14px;
+    line-height: 1.5;
     margin: 10px 0;
 }
 
+.tracked-product-meta strong {
+    color: #333;
+    font-weight: 600;
+}
+
 .tracked-product-price {
-    font-size: 1.4em;
+    font-size: 1.5em;
     font-weight: 700;
     color: #e74c3c;
-    margin: 10px 0;
+    margin: 12px 0;
 }
 
 .tracked-product-actions {
     margin-top: 15px;
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .tracked-product-actions .btn {
@@ -673,18 +564,36 @@
     padding: 6px 12px;
 }
 
-/* Alert sections */
+/* ===========================================
+   ALERT SECTION - CLEANED UP
+   =========================================== */
+
 .alert-section {
     background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
+    padding: 18px 20px;
+    border-radius: 10px;
     border: 1px solid #e9ecef;
+    margin-top: 16px;
+    margin-bottom: 24px;
 }
 
 .alert-section h6 {
     color: #856404;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+}
+
+.alert-item {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: #fff;
+    margin-bottom: 14px;
+    padding: 14px 18px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .alert-item[data-alert-status="triggered"] {
@@ -702,70 +611,28 @@
     border-color: #dee2e6;
 }
 
-/* Empty state */
-.empty-state {
-    padding: 2rem 1rem;
-    text-align: center;
+.alert-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Responsive design */
-@media (max-width: 992px) {
-    .stat-card-col {
-        width: 180px !important;
-        max-width: 180px !important;
-    }
-    
-    .stat-card {
-        max-width: 180px !important;
-    }
+.alert-badge {
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: 500;
+    padding: 2px 8px;
+    margin-right: 8px;
+    background: #e2e3e5;
+    color: #333;
 }
 
-@media (max-width: 768px) {
-    .stat-cards-row {
-        justify-content: center !important;
+@media (max-width: 600px) {
+    .alert-section {
+        padding: 12px 6px;
     }
-    
-    .stat-card-col {
-        width: 150px !important;
-        max-width: 150px !important;
-    }
-    
-    .stat-card {
-        max-width: 150px !important;
-        height: 80px !important;
-        min-height: 80px !important;
-        max-height: 80px !important;
-    }
-    
-    .stat-card .card-body {
-        padding: 0.4rem !important;
-    }
-    
-    .stat-card i {
-        font-size: 1rem !important;
-    }
-    
-    .stat-card .card-title {
-        font-size: 1.1rem !important;
-    }
-    
-    .stat-card .card-text {
-        font-size: 0.65rem !important;
-    }
-}
-
-@media (max-width: 576px) {
-    .stat-cards-row {
-        flex-direction: column !important;
-        align-items: center !important;
-    }
-    
-    .stat-card-col {
-        width: 250px !important;
-        max-width: 250px !important;
-    }
-    
-    .stat-card {
-        max-width: 250px !important;
+    .alert-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 8px;
     }
 }
