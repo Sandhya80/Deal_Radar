@@ -64,7 +64,7 @@
 
 /* Search section styling */
 .search-container { 
-    background: rgb(216, 220, 231); 
+    background: rgb(216, 210, 223); 
     padding: 15px 20px; 
     border-radius: 16px; 
     margin-bottom: 40px; 
@@ -215,7 +215,7 @@ mark {
     text-align: center; 
     margin-top: 50px; 
     padding: 40px; 
-    background: white; 
+    background: rgb(216, 210, 223); 
     border-radius: 20px; 
     box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
