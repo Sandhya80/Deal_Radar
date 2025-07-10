@@ -636,16 +636,6 @@
 }
 
 /* Tracked Products Section */
-.tracked-product-item {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    border: 1px solid #e9ecef;
-    transition: all 0.3s ease;
-}
-
 .tracked-product-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
