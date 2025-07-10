@@ -80,7 +80,7 @@
 }
 
 .current-price .price {
-    color: #3a0a44;
+    color: #5b1169;
     font-size: 1.5em;
     font-weight: 700;
 }
@@ -173,12 +173,12 @@
 /* Price warning message */
 .price-warning {
     background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-    color: #856404;
+    color: #aa8924;
     padding: 12px 16px;
     border-radius: 8px;
     margin-top: 10px;
     font-size: 14px;
-    border-left: 4px solid #ffc107;
+    border-left: 4px solid #f8c837;
     animation: slideInDown 0.3s ease;
 }
 
