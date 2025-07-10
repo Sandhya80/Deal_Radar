@@ -11,8 +11,20 @@ HEADERS = {
     )
 }
 
+def parse_price(price_str):
+    """Safely parse a price string to Decimal, return None if invalid."""
+    try:
+        cleaned = price_str.replace("£", "").replace("$", "").replace(",", "").strip()
+        return Decimal(cleaned)
+    except Exception:
+        return None
+
 def scrape_product_data(url):
-    response = requests.get(url, headers=HEADERS, timeout=10)
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=10)
+        response.raise_for_status()
+    except Exception as e:
+        raise Exception("Could not fetch the product page. Please check the URL or your connection.") from e
     soup = BeautifulSoup(response.text, 'html.parser')
     domain = urlparse(url).netloc.lower()
 
@@ -26,7 +38,7 @@ def scrape_product_data(url):
             raise Exception("amazon_not_supported")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace("$", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     # Argos
@@ -37,7 +49,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on Argos.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     # Nike
@@ -50,7 +62,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on Nike.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace("$", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     # Costco
@@ -63,7 +75,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on Costco.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace("$", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     # TheWorks.co.uk
@@ -76,7 +88,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on TheWorks.co.uk.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     # JDSports
@@ -89,7 +101,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on JDSports.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     # Currys
@@ -102,7 +114,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on Currys.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     # appliancecity
@@ -115,7 +127,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on appliancecity.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
     
     # Atlantic Electrics
@@ -128,7 +140,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on Atlantic Electrics.")
         return {
             "name": title_div.text.strip(),
-            "current_price": Decimal(price_span.text.strip().replace("£", "").replace(",", ""))
+            "current_price": parse_price(price_span.text.strip())
         }
 
     # John Lewis
@@ -139,7 +151,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on John Lewis.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     # eBay
@@ -152,7 +164,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on eBay.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     # Next
@@ -165,7 +177,7 @@ def scrape_product_data(url):
             raise Exception("Could not find product info on Next.")
         return {
             "name": name.text.strip(),
-            "current_price": Decimal(price.text.strip().replace("£", "").replace(",", ""))
+            "current_price": parse_price(price.text.strip())
         }
 
     else:
