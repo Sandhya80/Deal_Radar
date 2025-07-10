@@ -17,19 +17,30 @@
         <p class="subtitle">Scanning for the best deals across the web</p>
     </div>
     
-    <div class="search-container">
-        <h2>🔍 Search Products</h2>
-        <form method="GET" class="search-form">
-            <input type="text" name="search" class="search-input" 
-                   placeholder="Search products..." value="{{ search_query }}">
-            <button type="submit" class="search-btn">Search</button>
-            <a href="/" class="btn btn-secondary">Clear</a>
-        </form>
-        {% if search_query %}
-            <p><strong>Found:</strong> {{ search_count }} results for "{{ search_query }}"</p>
-        {% endif %}
+    <!-- Search Products section -->
+    <div class="search-products">
+        <div class="search-container">
+            <h2>🔍 Search Products</h2>
+            <form method="GET" class="search-form">
+                <input type="text" name="search" class="search-input" 
+                       placeholder="Search products..." value="{{ search_query }}">
+                <button type="submit" class="search-btn">Search</button>
+                <a href="/" class="btn btn-secondary">Clear</a>
+            </form>
+            {% if search_query %}
+                <p><strong>Found:</strong> {{ search_count }} results for "{{ search_query }}"</p>
+            {% endif %}
+        </div>
     </div>
-    
+
+    <!-- Add Product Button - Shown on Dashboard or Home for Authenticated Users -->
+    {% if user.is_authenticated %}
+        <a href="{% url 'add_product' %}" class="btn btn-success mb-3">
+            <i class="fas fa-plus"></i> Add Product to Track
+        </a>
+    {% endif %}
+
+    <!-- All Products section -->
     <h2>🛍️ {% if search_query %}Search Results{% else %}All Products{% endif %}</h2>
     
     {% if products %}
