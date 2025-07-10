@@ -128,29 +128,29 @@
             <div class="footer-section">
                 <h4>Most Popular Stores</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Amazon UK</a></li>
-                    <li><a href="#">Argos</a></li>
-                    <li><a href="#">Currys</a></li>
-                    <li><a href="#">John Lewis</a></li>
-                    <li><a href="#">JD Sports</a></li>
-                    <li><a href="#">Costco</a></li>
-                    <li><a href="#">TheWorks</a></li>
-                    <li><a href="#">Next</a></li>
-                    <li><a href="#">eBay UK</a></li>
-                    <li><a href="#">Appliance City</a></li>
+                    <li><a href="https://www.amazon.co.uk/" target="_blank" rel="noopener">Amazon UK</a></li>
+                    <li><a href="https://www.argos.co.uk/" target="_blank" rel="noopener">Argos</a></li>
+                    <li><a href="https://www.currys.co.uk/" target="_blank" rel="noopener">Currys</a></li>
+                    <li><a href="https://www.johnlewis.com/" target="_blank" rel="noopener">John Lewis</a></li>
+                    <li><a href="https://www.jdsports.co.uk/" target="_blank" rel="noopener">JD Sports</a></li>
+                    <li><a href="https://www.costco.co.uk/" target="_blank" rel="noopener">Costco</a></li>
+                    <li><a href="https://www.theworks.co.uk/" target="_blank" rel="noopener">TheWorks</a></li>
+                    <li><a href="https://www.next.co.uk/" target="_blank" rel="noopener">Next</a></li>
+                    <li><a href="https://www.ebay.co.uk/" target="_blank" rel="noopener">eBay UK</a></li>
+                    <li><a href="https://www.appliancecity.co.uk/" target="_blank" rel="noopener">Appliance City</a></li>
                 </ul>
             </div>
             
             <div class="footer-section">
                 <h4>Most Popular Categories</h4>
                 <ul class="footer-links">
-                    <li><a href="{% url 'home' %}?category=electronics">📱 Electronics</a></li>
-                    <li><a href="{% url 'home' %}?category=clothing">👕 Fashion & Clothing</a></li>
-                    <li><a href="{% url 'home' %}?category=home">🏠 Home & Garden</a></li>
-                    <li><a href="{% url 'home' %}?category=books">📚 Books</a></li>
-                    <li><a href="{% url 'home' %}?category=sports">⚽ Sports & Outdoors</a></li>
-                    <li><a href="{% url 'home' %}?category=beauty">💄 Beauty & Health</a></li>
-                    <li><a href="{% url 'home' %}?category=gaming">🎮 Gaming</a></li>
+                    <li><a href="{% url 'category_products' 'electronics' %}">📱 Electronics</a></li>
+                    <li><a href="{% url 'category_products' 'clothing' %}">👕 Fashion & Clothing</a></li>
+                    <li><a href="{% url 'category_products' 'home' %}">🏠 Home & Garden</a></li>
+                    <li><a href="{% url 'category_products' 'books' %}">📚 Books</a></li>
+                    <li><a href="{% url 'category_products' 'sports' %}">⚽ Sports & Outdoors</a></li>
+                    <li><a href="{% url 'category_products' 'beauty' %}">💄 Beauty & Health</a></li>
+                    <li><a href="{% url 'category_products' 'gaming' %}">🎮 Gaming</a></li>
                 </ul>
             </div>
             
