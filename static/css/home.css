@@ -64,9 +64,9 @@
 
 /* Search section styling */
 .search-container { 
-    background: rgb(188, 178, 199); 
-    padding: 40px; 
-    border-radius: 20px; 
+    background: rgb(199, 193, 206); 
+    padding: 20px 24px; 
+    border-radius: 16px; 
     margin-bottom: 40px; 
     box-shadow: 0 8px 25px rgba(0,0,0,0.08); 
 }
