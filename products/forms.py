@@ -22,3 +22,14 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class TrackProductForm(forms.Form):
+    # ... other fields ...
+    target_price = forms.DecimalField(
+        label="Target Price (£)",
+        min_value=0,
+        decimal_places=2,
+        max_digits=10,
+        required=True,
+        error_messages={'invalid': 'Please enter a valid price (e.g., 79.99)'}
+    )

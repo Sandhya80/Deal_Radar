@@ -422,6 +422,12 @@ def add_product(request):
         category = request.POST['category']
         target_price = request.POST.get('target_price')
         try:
+            # Validate target_price as decimal
+            from decimal import Decimal, InvalidOperation
+            target_price = Decimal(target_price)
+            if target_price <= 0:
+                raise ValueError("Please enter a valid target price greater than 0.")
+
             scraped = scrape_product_data(url)
             product = Product.objects.create(
                 name=scraped['name'],
@@ -432,9 +438,10 @@ def add_product(request):
             )
             messages.success(request, "Product added and being tracked!")
             return redirect('dashboard')
+        except (InvalidOperation, ValueError):
+            messages.error(request, "Please enter a valid target price (e.g., 79.99).")
         except Exception as e:
-            error_message = str(e)
-            if error_message == "amazon_not_supported":
+            if e.args and e.args[0] == "amazon_not_supported":
                 messages.error(
                     request,
                     mark_safe(
@@ -442,7 +449,7 @@ def add_product(request):
                         f"Please try another store or <a href='{reverse('request_site_support')}'>request support</a>."
                     )
                 )
-            elif "not supported yet" in error_message:
+            elif e.args and "not supported yet" in e.args[0]:
                 messages.error(
                     request,
                     mark_safe(
@@ -451,7 +458,7 @@ def add_product(request):
                     )
                 )
             else:
-                messages.error(request, f"Could not add product: {error_message}")
+                messages.error(request, f"Could not add product: {str(e)}")
     return render(request, 'products/add_product.html')
 
 @csrf_exempt

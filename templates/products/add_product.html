@@ -41,12 +41,14 @@
             </div>
 
             <div class="form-group">
-                <label for="target_price">Target Price (£):</label>
-                <input type="number" step="0.01" id="target_price" 
-                       name="target_price" placeholder="79.99">
+                <label for="target_price">Target Price:</label>
+                <input type="number" step="0.01" min="0" id="target_price" name="target_price" required>
                 <div class="help-text">
-                    You'll get an alert when the price drops to or below this amount.
+                    Set your desired price for tracking. You'll get alerts when the product's price drops to this level.
                 </div>
+                {% if form.target_price.errors %}
+                    <div class="form-error">{{ form.target_price.errors }}</div>
+                {% endif %}
             </div>
 
             <div class="info-box">
@@ -54,9 +56,20 @@
                 In future phases, we'll automatically scrape product information and current prices.
             </div>
 
+            {% if form.errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div>{{ field.label }}: {{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <div class="form-actions">
                 <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-success">
                     ➕ Start Tracking
                 </button>
             </div>
