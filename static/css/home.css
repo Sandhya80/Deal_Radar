@@ -64,7 +64,7 @@
 
 /* Search section styling */
 .search-container { 
-    background: #dee1f0; 
+    background: #d6daec; 
     padding: 15px 20px; 
     border-radius: 16px; 
     margin-bottom: 40px; 
@@ -138,7 +138,7 @@ h2 {
 }
 
 .product { 
-    background: #dee1f0; 
+    background: #d6daec; 
     padding: 30px; 
     border-radius: 20px; 
     box-shadow: 0 8px 25px rgba(0,0,0,0.08); 
