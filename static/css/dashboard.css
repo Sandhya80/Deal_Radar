@@ -325,12 +325,12 @@
    =========================================== */
 
 .tracked-product-item {
-    background: white;
+    background: rgb(225, 234, 236);
     padding: 25px;
     border-radius: 12px;
     margin-bottom: 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    border: 1px solid #e9ecef;
+    border: 1px solid #c3dbf3;
     transition: all 0.3s ease;
 }
 
@@ -510,7 +510,7 @@
 
 /* Individual card colors */
 .stat-card-1 {
-    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%) !important;
+    background: linear-gradient(135deg, #d3b29c 0%, #eeb587 100%) !important;
 }
 
 .stat-card-2 {
