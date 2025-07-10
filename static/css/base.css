@@ -653,3 +653,28 @@ body {
         font-size: 18px;
     }
 }
+
+/* Skip Link Styles */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  background: #fff;
+  color: #333;
+  z-index: 1000;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: left 0.2s;
+}
+.skip-link:focus {
+  left: 16px;
+  top: 16px;
+  width: auto;
+  height: auto;
+  outline: 2px solid #764ba2;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
