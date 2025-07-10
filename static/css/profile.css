@@ -8,11 +8,11 @@
 }
 
 .danger-zone {
-    background: #fff0f3;
-    border: 1px solid #ffb3c6;
+    background: #9b8595;
+    border: 1px solid #a15467;
 }
 
 .btn-danger {
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
 }

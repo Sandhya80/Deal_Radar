@@ -138,11 +138,11 @@
 }
 
 .price-alert-form .form-control {
-    border-color: #ced4da;
+    border-color: #dae0e7;
 }
 
 .price-alert-form .form-control:focus {
-    border-color: #ffc107;
+    border-color: #f7d982;
     box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
 }
 
@@ -159,13 +159,13 @@
 }
 
 .btn-warning {
-    background-color: #ffc107;
-    border-color: #ffc107;
+    background-color: #f1d88a;
+    border-color: #f3ca4e;
     color: #212529;
 }
 
 .btn-warning:hover {
-    background-color: #e0a800;
+    background-color: #f3c22e;
     border-color: #d39e00;
 }
 
@@ -298,7 +298,7 @@
 }
 
 .price-alert-form .form-control:focus {
-    border-color: #ffc107;
+    border-color: #f8d467;
     box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
 }
 
@@ -473,19 +473,19 @@
 
 /* Individual card colors */
 .stat-card-1 {
-    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%) !important;
+    background: linear-gradient(135deg, #84b5ee 0%, #357abd 100%) !important;
 }
 
 .stat-card-2 {
-    background: linear-gradient(135deg, #f5c842 0%, #e6b800 100%) !important;
+    background: linear-gradient(135deg, #f0d586 0%, #e6b800 100%) !important;
 }
 
 .stat-card-3 {
-    background: linear-gradient(135deg, #5cb85c 0%, #449d44 100%) !important;
+    background: linear-gradient(135deg, #81eb81 0%, #449d44 100%) !important;
 }
 
 .stat-card-4 {
-    background: linear-gradient(135deg, #5bc0de 0%, #46b8da 100%) !important;
+    background: linear-gradient(135deg, #80d0e9 0%, #46b8da 100%) !important;
 }
 
 /* Hover effects */
@@ -548,7 +548,7 @@
 .tracked-product-price {
     font-size: 1.5em;
     font-weight: 700;
-    color: #e74c3c;
+    color: #3a0a44;
     margin: 12px 0;
 }
 
