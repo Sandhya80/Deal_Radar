@@ -545,7 +545,7 @@ body {
 /* Supported Sites Section */
 .supported-sites {
   padding: 2rem 0;
-  background: #fafafa;
+  background: #dee1f0; /* Light background for contrast */
   text-align: center;
 }
 .supported-sites h2 {
