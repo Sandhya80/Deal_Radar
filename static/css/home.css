@@ -138,7 +138,7 @@ h2 {
 }
 
 .product { 
-    background: rgb(221, 228, 233); 
+    background: #dee1f0; 
     padding: 30px; 
     border-radius: 20px; 
     box-shadow: 0 8px 25px rgba(0,0,0,0.08); 
