@@ -47,6 +47,13 @@
                                     Email notifications for price alerts
                                 </label>
                             </div>
+                            <!-- WhatsApp notifications checkbox -->
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="whatsapp_notifications" name="whatsapp_notifications" {% if user.userprofile.whatsapp_notifications %}checked{% endif %}>
+                                <label class="form-check-label" for="whatsapp_notifications">
+                                    WhatsApp notifications for price alerts
+                                </label>
+                            </div>
                         </div>
                         <div class="col-12">
                             <label for="notification_frequency" class="form-label">Notification Frequency</label>
@@ -55,6 +62,11 @@
                                 <option value="daily" {% if user.userprofile.notification_frequency == 'daily' %}selected{% endif %}>Daily Summary</option>
                                 <option value="weekly" {% if user.userprofile.notification_frequency == 'weekly' %}selected{% endif %}>Weekly Summary</option>
                             </select>
+                        </div>
+                        <!-- WhatsApp number input -->
+                        <div class="mt-2">
+                            <label for="whatsapp_number" class="form-label">WhatsApp Number</label>
+                            <input type="text" class="form-control" id="whatsapp_number" name="whatsapp_number" placeholder="e.g. +447525121082" value="{{ user.userprofile.whatsapp_number }}">
                         </div>
                         <div class="col-12 d-flex justify-content-between align-items-center mt-3">
                             <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
