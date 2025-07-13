@@ -383,6 +383,10 @@ def add_product(request):
         target_price = request.POST.get('target_price')
         category = request.POST.get('category')
 
+        if not existing_product_id and not product_url:
+            messages.error(request, "Please provide a product URL or select an existing product.")
+            return redirect('add_product')
+
         if existing_product_id:
             # User selected an existing product
             try:
