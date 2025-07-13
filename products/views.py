@@ -20,6 +20,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 import logging
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 from .email_utils import send_welcome_email  # Import the email utility
 from .scraper import scrape_product_data
@@ -374,52 +376,51 @@ def category_products(request, slug):
 
 @login_required
 def add_product(request):
+    """Phase 3.1: Add product page with category selection and improved UX"""
     if request.method == 'POST':
-        url = request.POST['url']
-        category = request.POST['category']
+        existing_product_id = request.POST.get('existing_product')
+        product_url = request.POST.get('product_url')
         target_price = request.POST.get('target_price')
-        try:
-            from decimal import Decimal, InvalidOperation
-            target_price = Decimal(target_price)
-            if target_price <= 0:
-                raise ValueError("Please enter a valid target price greater than 0.")
-            scraped = scrape_product_data(url)
-            product = Product.objects.create(
-                name=scraped['name'],
-                url=url,
-                current_price=scraped['current_price'],
-                category=category,
-                target_price=target_price
+        category = request.POST.get('category')
+
+        if existing_product_id:
+            # User selected an existing product
+            try:
+                product = Product.objects.get(id=existing_product_id)
+            except Product.DoesNotExist:
+                messages.error(request, "Selected product does not exist.")
+                return redirect('add_product')
+        elif product_url:
+            # User entered a new product URL
+            # (You may want to validate and create the product here)
+            product, created = Product.objects.get_or_create(
+                url=product_url,
+                defaults={'category': category}
             )
-            messages.success(request, "Product added and being tracked!")
-            logger.info(f"User {request.user.username} added product '{scraped['name']}' for tracking.")
-            return redirect('dashboard')
-        except (InvalidOperation, ValueError):
-            messages.error(request, "Please enter a valid target price (e.g., 79.99).")
-            logger.warning(f"User {request.user.username} entered invalid target price: {target_price}")
-        except Exception as e:
-            if e.args and e.args[0] == "amazon_not_supported":
-                messages.error(
-                    request,
-                    mark_safe(
-                        "Sorry, Amazon is currently not supported due to technical restrictions. "
-                        f"Please try another store or <a href='{reverse('request_site_support')}'>request support</a>."
-                    )
-                )
-                logger.info(f"User {request.user.username} tried to add unsupported Amazon product.")
-            elif e.args and "not supported yet" in e.args[0]:
-                messages.error(
-                    request,
-                    mark_safe(
-                        "Sorry, this site is not supported yet. "
-                        f"Please <a href='{reverse('request_site_support')}'>request support for this store</a>."
-                    )
-                )
-                logger.info(f"User {request.user.username} tried to add unsupported site: {url}")
-            else:
-                messages.error(request, f"Could not add product: {str(e)}")
-                logger.error(f"Error adding product for user {request.user.username}: {e}")
-    return render(request, 'products/add_product.html')
+        else:
+            messages.error(request, "Please provide a product URL or select an existing product.")
+            return redirect('add_product')
+
+        # Now create the tracked product (or alert) for this user
+        TrackedProduct.objects.create(
+            user=request.user,
+            product=product,
+            target_price=target_price,
+            is_active=True
+        )
+        messages.success(request, "Product added to your tracking list!")
+        return redirect('dashboard')
+
+    categories = Product.CATEGORY_CHOICES
+    products_by_category = {}
+    for key, _ in categories:
+        products_by_category[key] = list(Product.objects.filter(category=key).values('id', 'name'))
+
+    context = {
+        'categories': categories,
+        'products_by_category_json': json.dumps(products_by_category, cls=DjangoJSONEncoder),
+    }
+    return render(request, 'products/add_product.html', context)
 
 @csrf_exempt
 def request_site_support(request):
