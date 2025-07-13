@@ -706,3 +706,31 @@ body {
     box-shadow: 0 4px 16px rgba(140,166,219,0.18);
     text-decoration: none;
 }
+
+/* Stylish Dropdowns for Add Product Form */
+.form-select, select {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
+    border: 1.5px solid #b993d6;
+    border-radius: 8px;
+    color: #333;
+    padding: 10px 14px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(140,166,219,0.06);
+    margin-bottom: 10px;
+}
+
+.form-select:focus, select:focus {
+    border: 1.5px solid #764ba2;
+    box-shadow: 0 0 0 2px #b993d6;
+    background: linear-gradient(135deg, #e8f0ff 0%, #d1c4e9 100%);
+}
+
+.form-select:disabled, select:disabled {
+    background: #f3f3fa;
+    color: #aaa;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
