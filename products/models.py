@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Product(models.Model):
     """Product model for tracking items across e-commerce sites"""
@@ -37,15 +40,16 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
-    
+
     def save(self, *args, **kwargs):
         # Keep current_price and price in sync
         if self.current_price and not self.price:
             self.price = self.current_price
         elif self.price and not self.current_price:
             self.current_price = self.price
+        logger.debug(f"Saving product: {self.name} (Price: {self.price}, Current Price: {self.current_price})")
         super().save(*args, **kwargs)
-    
+
     def get_category_display_with_emoji(self):
         return dict(self.CATEGORY_CHOICES).get(self.category, self.category)
 
@@ -53,21 +57,23 @@ class UserProfile(models.Model):
     """User profile for notification preferences"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_notifications = models.BooleanField(default=True)
+    whatsapp_notifications = models.BooleanField(default=False)  # Add this
+    whatsapp_number = models.CharField(max_length=20, blank=True, null=True)  # Add this
     notification_frequency = models.CharField(
-        max_length=20,
+        max_length=10,
         choices=[
-            ('instant', 'Instant'),
+            ('immediate', 'Immediate'),
             ('daily', 'Daily Summary'),
             ('weekly', 'Weekly Summary'),
         ],
-        default='instant'
+        default='immediate'
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f"{self.user.username} - Profile"
-    
+
     class Meta:
         verbose_name = "User Profile"
         verbose_name_plural = "User Profiles"
@@ -76,13 +82,16 @@ class UserProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+        logger.info(f"Created UserProfile for new user: {instance.username}")
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     try:
         instance.userprofile.save()
+        logger.debug(f"Saved UserProfile for user: {instance.username}")
     except UserProfile.DoesNotExist:
         UserProfile.objects.create(user=instance)
+        logger.warning(f"UserProfile did not exist for user: {instance.username}, created new one.")
 
 class TrackedProduct(models.Model):
     """Products that users are tracking for price changes"""
@@ -111,23 +120,22 @@ class PriceAlert(models.Model):
     
     def __str__(self):
         return f"Alert: {self.tracked_product.product.name} - £{self.target_price}"
-    
+
     def check_price_drop(self):
-        """Check if current price meets target price"""
         current_price = self.tracked_product.product.current_price
+        logger.debug(f"Checking price drop for {self.tracked_product.product.name}: Current {current_price}, Target {self.target_price}")
         return current_price <= self.target_price
-    
+
     def trigger_alert(self, current_price):
-        """Trigger the alert and send email notification"""
         if not self.is_triggered and self.is_enabled:
             old_price = self.target_price
             self.is_triggered = True
             self.triggered_at = timezone.now()
             self.save()
-            
+            logger.info(f"Triggered alert for {self.tracked_product.product.name}: Old £{old_price}, New £{current_price}")
             # Send email notification
             from .email_utils import send_price_alert_email
             send_price_alert_email(self, old_price, current_price)
-            
             return True
+        logger.debug(f"Alert not triggered for {self.tracked_product.product.name}: Already triggered or not enabled.")
         return False
