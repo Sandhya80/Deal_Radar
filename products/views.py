@@ -19,9 +19,12 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+import logging
 
 from .email_utils import send_welcome_email  # Import the email utility
 from .scraper import scrape_product_data
+
+logger = logging.getLogger(__name__)
 
 def highlight_search_terms(text, search_query):
     """Highlight search terms in text"""
@@ -42,6 +45,7 @@ def home(request):
             Q(site_name__icontains=search_query) |
             Q(description__icontains=search_query)
         ).order_by('-created_at')
+        logger.info(f"User searched for '{search_query}' - {products.count()} results found.")
     else:
         products = Product.objects.all().order_by('-created_at')
     
@@ -93,44 +97,28 @@ def product_detail(request, pk):
 def dashboard(request):
     user = request.user
     
-    # Real calculations for your existing template variables
     tracked_products = TrackedProduct.objects.filter(user=user, is_active=True).select_related('product')
-    
-    # Calculate real stats for your existing {{ variables }}
     total_tracked = tracked_products.count()
-    
-    # Active alerts count - CORRECTED: using is_enabled instead of is_active
     active_alerts = PriceAlert.objects.filter(
         tracked_product__user=user, 
-        is_enabled=True  # ✅ Changed from is_active to is_enabled
+        is_enabled=True
     ).count()
-    
-    # Triggered alerts count  
     triggered_alerts = PriceAlert.objects.filter(
         tracked_product__user=user, 
         is_triggered=True
     ).count()
-    
-    # Real savings calculation
     total_savings = 0
     triggered_alert_list = PriceAlert.objects.filter(
         tracked_product__user=user, 
         is_triggered=True
     ).select_related('tracked_product__product')
-    
     for alert in triggered_alert_list:
-        # Get the product's current price vs target price
         current_price = alert.tracked_product.product.current_price
         target_price = alert.target_price
-        
         if current_price and target_price and current_price < target_price:
             savings = target_price - current_price
             total_savings += savings
-    
-    # Recent alerts for your existing template
     recent_alerts = triggered_alert_list.order_by('-triggered_at')[:5]
-    
-    # Your existing template receives real data now
     context = {
         'total_tracked': total_tracked,
         'total_alerts': active_alerts,
@@ -140,37 +128,36 @@ def dashboard(request):
         'recent_alerts': recent_alerts,
         'user': user,
     }
-    
+    logger.debug(f"Dashboard loaded for user {user.username}: {total_tracked} tracked, {active_alerts} active alerts.")
     return render(request, 'products/dashboard.html', context)
 
 @login_required 
 def add_to_tracking(request, pk):
     """Phase 3: Add product to user's tracking list"""
     product = get_object_or_404(Product, pk=pk)
-    
     tracked_product, created = TrackedProduct.objects.get_or_create(
         user=request.user,
         product=product,
         defaults={'is_active': True}
     )
-    
     if created:
         messages.success(request, f'Added "{product.name}" to your tracking list!')
+        logger.info(f'User {request.user.username} started tracking product "{product.name}".')
     else:
         if not tracked_product.is_active:
             tracked_product.is_active = True
             tracked_product.save()
             messages.success(request, f'Re-activated tracking for "{product.name}"!')
+            logger.info(f'User {request.user.username} re-activated tracking for "{product.name}".')
         else:
             messages.info(request, f'"{product.name}" is already in your tracking list.')
-    
+            logger.info(f'User {request.user.username} tried to add already tracked product "{product.name}".')
     return redirect('product_detail', pk=pk)
 
 @login_required
 def remove_from_tracking(request, pk):
     """Phase 3: Remove product from user's tracking list"""  
     product = get_object_or_404(Product, pk=pk)
-    
     try:
         tracked_product = TrackedProduct.objects.get(
             user=request.user, 
@@ -180,9 +167,10 @@ def remove_from_tracking(request, pk):
         tracked_product.is_active = False
         tracked_product.save()
         messages.success(request, f'Removed "{product.name}" from your tracking list.')
+        logger.info(f'User {request.user.username} removed product "{product.name}" from tracking.')
     except TrackedProduct.DoesNotExist:
         messages.error(request, 'Product not found in your tracking list.')
-    
+        logger.warning(f'User {request.user.username} tried to remove non-tracked product "{product.name}".')
     return redirect('product_detail', pk=pk)
 
 def signup(request):
@@ -191,28 +179,20 @@ def signup(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            
-            # Only create UserProfile if it doesn't exist
             UserProfile.objects.get_or_create(user=user)
-            
-            # Log in the user
             login(request, user)
-            
-            # Send welcome email
             send_welcome_email(user)
-            
+            logger.info(f"New user signed up: {user.username} ({user.email})")
             messages.success(request, 'Welcome to Deal Radar! Check your email for getting started tips.')
             return redirect('dashboard')
     else:
         form = CustomUserCreationForm()
-    
     return render(request, 'registration/signup.html', {'form': form})
 
 @login_required
 def create_price_alert(request, pk):
     """Create a price alert for a tracked product"""
     tracked_product = get_object_or_404(TrackedProduct, pk=pk, user=request.user)
-    
     if request.method == 'POST':
         target_price = request.POST.get('target_price')
         if target_price:
@@ -220,23 +200,25 @@ def create_price_alert(request, pk):
                 target_price = float(target_price)
                 if target_price <= 0:
                     messages.error(request, 'Target price must be greater than 0.')
+                    logger.warning(f"User {request.user.username} entered invalid target price: {target_price}")
                     return redirect('dashboard')
-                
                 alert, created = PriceAlert.objects.get_or_create(
                     tracked_product=tracked_product,
                     target_price=target_price,
                     defaults={'is_enabled': True, 'is_triggered': False}
                 )
-                
                 if created:
                     messages.success(request, f'Price alert set for £{target_price}! You\'ll be notified when the price drops.')
+                    logger.info(f"User {request.user.username} set new price alert for {tracked_product.product.name} at £{target_price}")
                 else:
                     messages.info(request, f'Price alert for £{target_price} already exists.')
+                    logger.info(f"User {request.user.username} tried to set duplicate price alert for {tracked_product.product.name} at £{target_price}")
             except ValueError:
                 messages.error(request, 'Please enter a valid price.')
+                logger.warning(f"User {request.user.username} entered non-numeric target price: {target_price}")
         else:
             messages.error(request, 'Please enter a target price.')
-    
+            logger.warning(f"User {request.user.username} submitted empty target price.")
     return redirect('dashboard')
 
 @login_required
@@ -245,10 +227,9 @@ def toggle_price_alert(request, pk):
     alert = get_object_or_404(PriceAlert, pk=pk, tracked_product__user=request.user)
     alert.is_enabled = not alert.is_enabled
     alert.save()
-    
     status = "enabled" if alert.is_enabled else "disabled"
     messages.success(request, f'Price alert for "{alert.tracked_product.product.name}" {status}.')
-    
+    logger.info(f"User {request.user.username} {status} price alert for {alert.tracked_product.product.name}.")
     return redirect('dashboard')
 
 @login_required
@@ -257,8 +238,8 @@ def delete_price_alert(request, pk):
     alert = get_object_or_404(PriceAlert, pk=pk, tracked_product__user=request.user)
     product_name = alert.tracked_product.product.name
     alert.delete()
-    
     messages.success(request, f'Price alert for "{product_name}" deleted.')
+    logger.info(f"User {request.user.username} deleted price alert for {product_name}.")
     return redirect('dashboard')
 
 @login_required
@@ -268,88 +249,65 @@ def reset_price_alert(request, pk):
     alert.is_triggered = False
     alert.triggered_at = None
     alert.save()
-    
     messages.success(request, f'Price alert for "{alert.tracked_product.product.name}" reset and reactivated.')
+    logger.info(f"User {request.user.username} reset price alert for {alert.tracked_product.product.name}.")
     return redirect('dashboard')
 
 @login_required
 def profile(request):
     """User profile management page"""
     user = request.user
-    
-    # Get or create user profile
     profile, created = UserProfile.objects.get_or_create(user=user)
-    
     if request.method == 'POST':
-        # Update user basic info
         user.first_name = request.POST.get('first_name', '').strip()
         user.last_name = request.POST.get('last_name', '').strip()
         user.email = request.POST.get('email', '').strip()
         user.save()
-        
-        # Update profile preferences
         profile.email_notifications = request.POST.get('email_notifications') == 'on'
         profile.notification_frequency = request.POST.get('notification_frequency', 'instant')
         profile.save()
-        
         messages.success(request, 'Profile updated successfully!')
+        logger.info(f"User {user.username} updated profile preferences.")
         return redirect('profile')
-    
     context = {
         'user': user,
         'profile': profile,
     }
-    
     return render(request, 'products/profile.html', context)
 
 @login_required
 def settings(request):
     """Settings page for user preferences"""
     user = request.user
-    
-    # Get or create user profile
     profile, created = UserProfile.objects.get_or_create(user=user)
-    
     if request.method == 'POST':
         if 'update_email' in request.POST:
-            # Update email preferences
             profile.email_notifications = request.POST.get('email_notifications') == 'on'
             profile.notification_frequency = request.POST.get('notification_frequency', 'instant')
             profile.save()
-            
             messages.success(request, 'Email settings updated successfully!')
+            logger.info(f"User {user.username} updated email settings.")
             return redirect('settings')
-        
         elif 'clear_data' in request.POST:
-            # Clear all user data
             TrackedProduct.objects.filter(user=user).delete()
             PriceAlert.objects.filter(tracked_product__user=user).delete()
-            
             messages.success(request, 'All data cleared successfully!')
+            logger.info(f"User {user.username} cleared all tracked products and alerts.")
             return redirect('settings')
-    
     context = {
         'user': user,
         'profile': profile,
     }
-    
     return render(request, 'products/settings.html', context)
 
 @login_required
 def export_data(request):
     """Export user data to Excel CSV"""
     user = request.user
-    
-    # Create CSV response
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="deal_radar_data_{user.username}.csv"'
-    
     writer = csv.writer(response)
-    
-    # Write header
     writer.writerow(['Product Name', 'URL', 'Current Price', 'Target Price', 'Site', 'Category', 'Date Added'])
-    
-    # Write tracked products
     tracked_products = TrackedProduct.objects.filter(user=user).select_related('product')
     for tracked in tracked_products:
         writer.writerow([
@@ -361,23 +319,19 @@ def export_data(request):
             tracked.product.category,
             tracked.created_at.strftime('%Y-%m-%d')
         ])
-    
+    logger.info(f"User {user.username} exported data as CSV.")
     return response
 
 @login_required
 def export_json(request):
     """Export user data to JSON"""
     user = request.user
-    
-    # Get user data
     tracked_products = TrackedProduct.objects.filter(user=user).select_related('product')
-    
     data = {
         'user': user.username,
         'exported_at': timezone.now().isoformat(),
         'tracked_products': []
     }
-    
     for tracked in tracked_products:
         data['tracked_products'].append({
             'product_name': tracked.product.name,
@@ -388,10 +342,9 @@ def export_json(request):
             'category': tracked.product.category,
             'date_added': tracked.created_at.isoformat()
         })
-    
     response = JsonResponse(data, indent=2)
     response['Content-Disposition'] = f'attachment; filename="deal_radar_data_{user.username}.json"'
-    
+    logger.info(f"User {user.username} exported data as JSON.")
     return response
 
 @login_required
@@ -400,16 +353,18 @@ def delete_account(request):
     if request.method == 'POST':
         user = request.user
         logout(request)
+        username = user.username
         user.delete()
         messages.success(request, "Your account has been deleted.")
+        logger.warning(f"User {username} deleted their account.")
         return redirect('home')
     return render(request, 'registration/delete_account_confirm.html')
 
 def category_products(request, slug):
-    # slug is the category key, e.g., 'electronics'
     category_dict = dict(Product.CATEGORY_CHOICES)
     category_name = category_dict.get(slug, slug)
     products = Product.objects.filter(category=slug)
+    logger.info(f"Category page viewed: {category_name} ({slug})")
     return render(request, 'products/category_products.html', {
         'category': {'slug': slug, 'name': category_name},
         'products': products,
@@ -422,12 +377,10 @@ def add_product(request):
         category = request.POST['category']
         target_price = request.POST.get('target_price')
         try:
-            # Validate target_price as decimal
             from decimal import Decimal, InvalidOperation
             target_price = Decimal(target_price)
             if target_price <= 0:
                 raise ValueError("Please enter a valid target price greater than 0.")
-
             scraped = scrape_product_data(url)
             product = Product.objects.create(
                 name=scraped['name'],
@@ -437,9 +390,11 @@ def add_product(request):
                 target_price=target_price
             )
             messages.success(request, "Product added and being tracked!")
+            logger.info(f"User {request.user.username} added product '{scraped['name']}' for tracking.")
             return redirect('dashboard')
         except (InvalidOperation, ValueError):
             messages.error(request, "Please enter a valid target price (e.g., 79.99).")
+            logger.warning(f"User {request.user.username} entered invalid target price: {target_price}")
         except Exception as e:
             if e.args and e.args[0] == "amazon_not_supported":
                 messages.error(
@@ -449,6 +404,7 @@ def add_product(request):
                         f"Please try another store or <a href='{reverse('request_site_support')}'>request support</a>."
                     )
                 )
+                logger.info(f"User {request.user.username} tried to add unsupported Amazon product.")
             elif e.args and "not supported yet" in e.args[0]:
                 messages.error(
                     request,
@@ -457,8 +413,10 @@ def add_product(request):
                         f"Please <a href='{reverse('request_site_support')}'>request support for this store</a>."
                     )
                 )
+                logger.info(f"User {request.user.username} tried to add unsupported site: {url}")
             else:
                 messages.error(request, f"Could not add product: {str(e)}")
+                logger.error(f"Error adding product for user {request.user.username}: {e}")
     return render(request, 'products/add_product.html')
 
 @csrf_exempt
@@ -467,5 +425,6 @@ def request_site_support(request):
         site_url = request.POST.get('site_url')
         # You can save this to a model or send an email to admin
         messages.success(request, "Thank you! We'll review your request soon.")
+        logger.info(f"Site support requested for: {site_url}")
         return redirect('add_product')
     return render(request, 'products/request_site_support.html')
