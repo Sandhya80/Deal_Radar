@@ -82,6 +82,16 @@
             </div>
         </nav>
 
+        <!-- My Account Button -->
+        <!-- This button is only visible when the user is authenticated -->
+        {% if user.is_authenticated %}
+    <div class="my-account-btn-container">
+        <a href="{% url 'profile' %}" class="my-account-btn">
+            <i class="fas fa-user-circle"></i> My Account
+        </a>
+    </div>
+{% endif %}
+
         <!-- Messages -->
         {% if messages %}
             <div class="messages" role="alert" aria-live="polite">

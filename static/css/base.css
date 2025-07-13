@@ -678,3 +678,31 @@ body {
   outline: 2px solid #764ba2;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
 }
+
+/* My Account Button Styles */
+.my-account-btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 18px 0 10px 0;
+}
+
+.my-account-btn {
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #b993d6 0%, #8ca6db 100%);
+    border: none;
+    border-radius: 6px;
+    padding: 10px 28px;
+    text-decoration: none;
+    transition: background 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 8px rgba(140,166,219,0.08);
+    font-size: 1.1rem;
+    display: inline-block;
+}
+
+.my-account-btn:hover, .my-account-btn:focus {
+    background: linear-gradient(135deg, #8ca6db 0%, #b993d6 100%);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(140,166,219,0.18);
+    text-decoration: none;
+}
