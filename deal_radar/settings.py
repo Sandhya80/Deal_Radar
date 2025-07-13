@@ -68,8 +68,6 @@ DATABASES = {
     'default': env.db(),  # This uses DATABASE_URL from .env
 }
 
-print("DATABASE_URL:", env('DATABASE_URL', default='NOT SET'))
-
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -120,6 +118,11 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Deal Radar <noreply@dealradar.com>')
+
+# Twilio Configuration for WhatsApp Alerts
+TWILIO_ACCOUNT_SID = config('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
+TWILIO_WHATSAPP_NUMBER = config('TWILIO_WHATSAPP_NUMBER')
 
 # Cache Configuration (Ready for Phase 3)
 CACHES = {
@@ -212,3 +215,4 @@ if os.environ.get('DYNO'):  # True on Heroku
         },
     }
 # else: keep the file-based logging for local development
+
