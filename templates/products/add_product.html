@@ -51,6 +51,22 @@
                 {% endif %}
             </div>
 
+            <div class="form-group mt-3">
+                <label for="category_select"><b>Or select from existing products:</b></label>
+                <select id="category_select" class="form-select mb-2">
+                    <option value="">Select Category</option>
+                    {% for key, display in categories %}
+                        <option value="{{ key }}">{{ display }}</option>
+                    {% endfor %}
+                </select>
+                <select id="product_select" name="existing_product" class="form-select" disabled>
+                    <option value="">Select Product</option>
+                </select>
+                <div class="form-text">
+                    Choose a category to see available products.
+                </div>
+            </div>
+
             <div class="info-box">
                 <strong>ℹ️ Phase 3 Note:</strong> Product details are entered manually. 
                 In future phases, we'll automatically scrape product information and current prices.
@@ -79,4 +95,25 @@
 
 {% block extra_js %}
     <script src="{% static 'js/forms.js' %}"></script>
+    <script>
+        const productsByCategory = {{ products_by_category_json|safe }};
+        const categorySelect = document.getElementById('category_select');
+        const productSelect = document.getElementById('product_select');
+
+        categorySelect.addEventListener('change', function() {
+            const selectedCategory = this.value;
+            productSelect.innerHTML = '<option value="">Select Product</option>';
+            if (selectedCategory && productsByCategory[selectedCategory]) {
+                productsByCategory[selectedCategory].forEach(function(product) {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.textContent = product.name;
+                    productSelect.appendChild(option);
+                });
+                productSelect.disabled = false;
+            } else {
+                productSelect.disabled = true;
+            }
+        });
+    </script>
 {% endblock %}
