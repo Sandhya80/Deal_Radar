@@ -24,7 +24,7 @@ from django.utils import timezone
 from django.conf import settings
 import logging
 
-from .models import Product, PriceHistory, TrackedProduct, DealAlert
+from .models import Product, PriceHistory, TrackedProduct, PriceAlert
 from users.models import UserProfile
 
 # Set up logging
@@ -272,22 +272,14 @@ def scrape_product_price(self, tracked_product_id):
                 price=new_price,
                 timestamp=timezone.now(),
                 source=result.get('source', 'Unknown')
-            )
+            )       
             
-            # Check for price drop alerts
-            if new_price <= tracked_product.desired_price:
-                # Create deal alert
-                deal_alert = DealAlert.objects.create(
-                    user=tracked_product.user,
-                    product=product,
-                    alert_price=new_price,
-                    target_price=tracked_product.desired_price,
-                    price_drop_amount=old_price - new_price if old_price else Decimal('0.00'),
-                    is_sent=False
-                )
-                
-                # Trigger notification (Phase 3 will implement actual sending)
-                logger.info(f"Price alert created for user {tracked_product.user.username}: {product.name} dropped to £{new_price}")
+            
+            # Check for price drop alerts using PriceAlert logic
+            alerts = PriceAlert.objects.filter(tracked_product=tracked_product, is_enabled=True, is_triggered=False)
+            for alert in alerts:
+                if alert.check_price_drop():
+                    alert.trigger_alert(product.current_price)
             
             return f"Success: £{old_price} → £{new_price} ({result['source']})"
         

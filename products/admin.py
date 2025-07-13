@@ -33,17 +33,24 @@ class TrackedProductAdmin(admin.ModelAdmin):
     list_display = ['user', 'product', 'target_price', 'is_active', 'added_at']
     list_filter = ['is_active', 'added_at']
     search_fields = ['user__username', 'product__name']
-    list_editable = ['is_active']
-    raw_id_fields = ['user', 'product']
+    list_editable = ['is_active']    
 
 @admin.register(PriceAlert)
 class PriceAlertAdmin(admin.ModelAdmin):
-    list_display = ['tracked_product', 'target_price', 'is_enabled', 'is_triggered', 'created_at']
-    list_filter = ['is_enabled', 'is_triggered', 'created_at']
-    search_fields = ['tracked_product__product__name', 'tracked_product__user__username']
-    list_editable = ['is_enabled']
-    readonly_fields = ['created_at', 'triggered_at']
-    raw_id_fields = ['tracked_product']
+    list_display = (
+        'tracked_product',
+        'target_price',
+        'is_triggered',
+        'is_enabled',
+        'triggered_at',  # Use 'triggered_at' instead of 'created_at'
+    )
+    list_filter = (
+        'is_triggered',
+        'is_enabled',
+        'triggered_at',  # Use 'triggered_at' instead of 'created_at'
+    )
+    search_fields = ('tracked_product__user__username', 'tracked_product__product__name')
+    readonly_fields = ('triggered_at',)  # Remove 'created_at'
     
     fieldsets = (
         ('Alert Configuration', {
@@ -51,10 +58,6 @@ class PriceAlertAdmin(admin.ModelAdmin):
         }),
         ('Status', {
             'fields': ('is_triggered', 'triggered_at')
-        }),
-        ('Timestamps', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
         }),
     )
     

@@ -64,9 +64,12 @@
                             </select>
                         </div>
                         <!-- WhatsApp number input -->
-                        <div class="mt-2">
+                        <div class="col-12">
                             <label for="whatsapp_number" class="form-label">WhatsApp Number</label>
                             <input type="text" class="form-control" id="whatsapp_number" name="whatsapp_number" placeholder="e.g. +447525121082" value="{{ user.userprofile.whatsapp_number }}">
+                            <div class="form-text">
+                                To receive WhatsApp alerts, message <b>join clothing-elephant</b> to <b>+1 415 523 8886</b> from your WhatsApp.
+                            </div>
                         </div>
                         <div class="col-12 d-flex justify-content-between align-items-center mt-3">
                             <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">

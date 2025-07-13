@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 import logging
+from .whatsapp_utils import send_whatsapp_alert
 
 logger = logging.getLogger(__name__)
 
@@ -108,11 +109,10 @@ class TrackedProduct(models.Model):
         return f"{self.user.username} tracking {self.product.name}"
 
 class PriceAlert(models.Model):
-    tracked_product = models.ForeignKey(TrackedProduct, on_delete=models.CASCADE, related_name='price_alerts')
+    tracked_product = models.ForeignKey('TrackedProduct', on_delete=models.CASCADE)
     target_price = models.DecimalField(max_digits=10, decimal_places=2)
-    is_enabled = models.BooleanField(default=True)
     is_triggered = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    is_enabled = models.BooleanField(default=True)
     triggered_at = models.DateTimeField(null=True, blank=True)
     
     class Meta:
@@ -127,15 +127,20 @@ class PriceAlert(models.Model):
         return current_price <= self.target_price
 
     def trigger_alert(self, current_price):
+        user_profile = self.tracked_product.user.userprofile
         if not self.is_triggered and self.is_enabled:
-            old_price = self.target_price
             self.is_triggered = True
             self.triggered_at = timezone.now()
             self.save()
-            logger.info(f"Triggered alert for {self.tracked_product.product.name}: Old £{old_price}, New £{current_price}")
-            # Send email notification
-            from .email_utils import send_price_alert_email
-            send_price_alert_email(self, old_price, current_price)
+            # WhatsApp alert
+            if user_profile.whatsapp_notifications and user_profile.whatsapp_number:
+                message = (
+                    f"Deal Radar Alert!\n\n"
+                    f"The product '{self.tracked_product.product.name}' has dropped to £{current_price}.\n"
+                    f"Your target price was £{self.target_price}.\n"
+                    f"View: {self.tracked_product.product.url}"
+                )
+                send_whatsapp_alert(user_profile.whatsapp_number, message)
+            # (Optional) Email alert logic can go here as well
             return True
-        logger.debug(f"Alert not triggered for {self.tracked_product.product.name}: Already triggered or not enabled.")
         return False

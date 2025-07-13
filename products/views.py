@@ -264,6 +264,8 @@ def profile(request):
         user.email = request.POST.get('email', '').strip()
         user.save()
         profile.email_notifications = request.POST.get('email_notifications') == 'on'
+        profile.whatsapp_notifications = request.POST.get('whatsapp_notifications') == 'on'
+        profile.whatsapp_number = request.POST.get('whatsapp_number', '').strip()
         profile.notification_frequency = request.POST.get('notification_frequency', 'instant')
         profile.save()
         messages.success(request, 'Profile updated successfully!')
