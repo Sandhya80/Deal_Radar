@@ -229,6 +229,9 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
+# STRIPE_WEBHOOK_SECRET is set in .env
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+
 STRIPE_PLANS = {
     "free": {
         "name": "Free",
@@ -252,4 +255,3 @@ STRIPE_PLANS = {
         "channels": ["email", "sms", "whatsapp"],
     },
 }
-

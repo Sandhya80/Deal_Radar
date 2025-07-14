@@ -45,4 +45,7 @@ urlpatterns = [
 
     # New checkout session URL
     path('create-checkout-session/<str:plan_key>/', views.create_checkout_session, name='create_checkout_session'),
+
+    # Stripe webhook URL
+    path('stripe/webhook/', views.stripe_webhook, name='stripe_webhook'),
 ]

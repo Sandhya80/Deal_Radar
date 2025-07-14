@@ -473,3 +473,81 @@ def create_checkout_session(request, plan_key):
         cancel_url=settings.SITE_DOMAIN + '/subscription/cancel/',
     )
     return JsonResponse({'sessionId': checkout_session.id})
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except (ValueError, stripe.error.SignatureVerificationError):
+        return HttpResponse(status=400)
+
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        customer_email = session.get('customer_email')
+        subscription_id = session.get('subscription')
+        customer_id = session.get('customer')
+        session_id = session.get('id')
+
+        # Fetch line items to get the price_id
+        try:
+            line_items = stripe.checkout.Session.list_line_items(session_id, limit=1)
+            price_id = line_items['data'][0]['price']['id']
+        except Exception:
+            price_id = None
+
+        # Map price_id to plan_key
+        plan_key = None
+        for key, plan in settings.STRIPE_PLANS.items():
+            if plan.get('price_id') == price_id:
+                plan_key = key
+                break
+
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        try:
+            user = User.objects.get(email=customer_email)
+            profile = user.userprofile
+            if plan_key:
+                profile.subscription_plan = plan_key
+            profile.stripe_customer_id = customer_id
+            profile.stripe_subscription_id = subscription_id
+            profile.subscription_status = 'active'
+            profile.save()
+        except User.DoesNotExist:
+            pass
+
+    elif event['type'] == 'customer.subscription.updated':
+        subscription = event['data']['object']
+        customer_id = subscription['customer']
+        status = subscription['status']
+        # Update UserProfile with new status
+        from .models import UserProfile
+        try:
+            profile = UserProfile.objects.get(stripe_customer_id=customer_id)
+            profile.subscription_status = status
+            profile.save()
+        except UserProfile.DoesNotExist:
+            pass
+
+    elif event['type'] == 'customer.subscription.deleted':
+        subscription = event['data']['object']
+        customer_id = subscription['customer']
+        # Mark subscription as canceled
+        from .models import UserProfile
+        try:
+            profile = UserProfile.objects.get(stripe_customer_id=customer_id)
+            profile.subscription_status = 'canceled'
+            profile.subscription_plan = 'free'
+            profile.save()
+        except UserProfile.DoesNotExist:
+            pass
+
+    # Add more event types as needed
+
+    return HttpResponse(status=200)
