@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 import logging
 from .whatsapp_utils import send_whatsapp_alert
+from cloudinary.models import CloudinaryField
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,7 @@ class Product(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='electronics')
     description = models.TextField(blank=True)
     image_url = models.URLField(blank=True)
+    image = CloudinaryField('image', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
