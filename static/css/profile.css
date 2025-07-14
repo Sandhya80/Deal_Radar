@@ -1,7 +1,7 @@
 /* Modern profile page tweaks */
 .card {
     border-radius: 1rem;
-    background: #b29dcc !important; /* Very light purple */
+    background: #aba1b8 !important; /* Very light purple */
 }
 
 .card-header {
@@ -9,8 +9,8 @@
 }
 
 .danger-zone {
-    background: #b29dcc !important; /* Even lighter purple for danger zone */
-    border: 1px solid #7c0d29;
+    background: #aba1b8 !important; /* Even lighter purple for danger zone */
+    border: 1px solid #d41746;
 }
 
 .btn-danger {
