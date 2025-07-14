@@ -16,8 +16,9 @@
             <p>Add a product to your personal tracking list and get price alerts</p>
         </div>
         
-        <form method="post" class="product-form">
+        <form method="post" enctype="multipart/form-data" class="product-form">
             {% csrf_token %}
+            {{ form.non_field_errors }}
             
             <!-- Option 1: Enter Product URL -->
             <div class="form-group">
@@ -68,6 +69,15 @@
                 <div class="form-text">
                     Choose a category to see available products.
                 </div>
+            </div>
+
+            <!-- Product Image Upload -->
+            <div class="form-group">
+                {{ form.image.label_tag }}
+                {{ form.image }}
+                {% if form.image.errors %}
+                    <div class="form-error">{{ form.image.errors }}</div>
+                {% endif %}
             </div>
 
             <div class="info-box">
