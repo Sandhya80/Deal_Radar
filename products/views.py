@@ -1,8 +1,3 @@
-"""
-Product Views for Deal Radar - Phase 3.1
-User authentication and personal tracking (SQLite-based)
-"""
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
