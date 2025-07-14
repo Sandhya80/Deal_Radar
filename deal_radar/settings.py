@@ -1,8 +1,11 @@
 import environ
 import os
 from decouple import config
+from dotenv import load_dotenv
 from pathlib import Path
 import dj_database_url
+
+load_dotenv()  # This will read your .env file
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
@@ -215,4 +218,11 @@ if os.environ.get('DYNO'):  # True on Heroku
         },
     }
 # else: keep the file-based logging for local development
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
