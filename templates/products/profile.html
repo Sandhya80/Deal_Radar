@@ -11,14 +11,16 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-7 col-md-9">
-            <div class="card shadow-lg border-0 rounded-4">
+
+            <!-- Profile Settings Card -->
+            <div class="card shadow-lg border-0 rounded-4 mb-4">
                 <div class="card-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 1rem 1rem 0 0;">
                     <h4 class="mb-0"><i class="fas fa-user-circle"></i> Profile Settings</h4>
                 </div>
                 <div class="card-body p-4">
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-3" role="alert">
                                 {{ message }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
@@ -27,19 +29,19 @@
 
                     <form method="post" class="row g-3">
                         {% csrf_token %}
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label for="first_name" class="form-label">First Name</label>
                             <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <label for="last_name" class="form-label">Last Name</label>
                             <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 mb-3">
                             <label class="form-label">Notification Preferences</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="email_notifications" name="email_notifications" {% if user.userprofile.email_notifications %}checked{% endif %}>
@@ -47,7 +49,6 @@
                                     Email notifications for price alerts
                                 </label>
                             </div>
-                            <!-- WhatsApp notifications checkbox -->
                             <div class="form-check mt-2">
                                 <input class="form-check-input" type="checkbox" id="whatsapp_notifications" name="whatsapp_notifications" {% if user.userprofile.whatsapp_notifications %}checked{% endif %}>
                                 <label class="form-check-label" for="whatsapp_notifications">
@@ -55,7 +56,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 mb-3">
                             <label for="notification_frequency" class="form-label">Notification Frequency</label>
                             <select class="form-select" id="notification_frequency" name="notification_frequency">
                                 <option value="instant" {% if user.userprofile.notification_frequency == 'instant' %}selected{% endif %}>Instant</option>
@@ -63,15 +64,14 @@
                                 <option value="weekly" {% if user.userprofile.notification_frequency == 'weekly' %}selected{% endif %}>Weekly Summary</option>
                             </select>
                         </div>
-                        <!-- WhatsApp number input -->
-                        <div class="col-12">
+                        <div class="col-12 mb-3">
                             <label for="whatsapp_number" class="form-label">WhatsApp Number</label>
                             <input type="text" class="form-control" id="whatsapp_number" name="whatsapp_number" placeholder="e.g. +441234567890" value="{{ user.userprofile.whatsapp_number }}">
-                            <div class="form-text">
+                            <div class="form-text mt-1">
                                 To receive WhatsApp alerts, message <b>join clothing-elephant</b> to <b>+1 415 523 8886</b> from your WhatsApp.
                             </div>
                         </div>
-                        <div class="col-12 d-flex justify-content-between align-items-center mt-3">
+                        <div class="col-12 d-flex justify-content-between align-items-center mt-4">
                             <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left"></i> Back to Dashboard
                             </a>
@@ -80,39 +80,42 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
 
-                    <hr class="my-4">
-
-                    <div class="danger-zone p-3 rounded-3 bg-light border border-danger">
-                        <h5 class="text-danger mb-2">Danger Zone</h5>
-                        <p class="text-danger mb-3">Deleting your account is permanent and cannot be undone. Please be certain before proceeding.</p>
-                        <form action="{% url 'delete_account' %}" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash-alt"></i> Delete My Account
-                            </button>
-                        </form>
+            <!-- Upgrade Plan Card -->
+            {% if profile.subscription_plan != 'premium' %}
+            <div class="card my-4 shadow-sm">
+                <div class="card-body py-4">
+                    <h4 class="mb-3">Upgrade Your Plan</h4>
+                    <p class="mb-3">Your current plan: <strong>{{ profile.subscription_plan|title }}</strong></p>
+                    <div class="d-flex gap-3">
+                        {% if profile.subscription_plan == 'free' %}
+                            <button id="checkout-basic" class="btn btn-primary">Upgrade to Basic (£2.99/mo)</button>
+                        {% endif %}
+                        <button id="checkout-premium" class="btn btn-success">Upgrade to Premium (£4.99/mo)</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-{% if profile.subscription_plan != 'premium' %}
-<div class="card my-4">
-    <div class="card-body">
-        <h4>Upgrade Your Plan</h4>
-        <p>Your current plan: <strong>{{ profile.subscription_plan|title }}</strong></p>
-        <div class="d-flex gap-3">
-            {% if profile.subscription_plan == 'free' %}
-                <button id="checkout-basic" class="btn btn-primary">Upgrade to Basic (£2.99/mo)</button>
             {% endif %}
-            <button id="checkout-premium" class="btn btn-success">Upgrade to Premium (£4.99/mo)</button>
+
+            <!-- Danger Zone Card -->
+            <div class="card my-4 shadow-sm">
+                <div class="danger-zone p-4 rounded-3 bg-light border border-danger">
+                    <h5 class="text-danger mb-2">Danger Zone</h5>
+                    <p class="text-danger mb-3">Deleting your account is permanent and cannot be undone. Please be certain before proceeding.</p>
+                    <form action="{% url 'delete_account' %}" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Delete My Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
-{% endif %}
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
