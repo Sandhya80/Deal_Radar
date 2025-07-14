@@ -288,7 +288,7 @@ def profile(request):
     return render(request, 'products/profile.html', context)
 
 @login_required
-def settings(request):
+def user_settings(request):
     """Settings page for user preferences"""
     user = request.user
     profile, created = UserProfile.objects.get_or_create(user=user)

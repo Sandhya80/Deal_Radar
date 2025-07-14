@@ -27,7 +27,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
 
     # New settings and export URLs
-    path('settings/', views.settings, name='settings'),
+    path('settings/', views.user_settings, name='settings'),
     path('export/data/', views.export_data, name='export_data'),
     path('export/json/', views.export_json, name='export_json'),
 
