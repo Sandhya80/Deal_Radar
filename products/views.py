@@ -9,7 +9,7 @@ from django.contrib.auth import login, logout
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from .models import Product, TrackedProduct, UserProfile, PriceAlert
 import re
 from django.utils.html import format_html
@@ -23,9 +23,12 @@ import logging
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
+import stripe
 
 from .email_utils import send_welcome_email  # Import the email utility
 from .scraper import scrape_product_data
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 logger = logging.getLogger(__name__)
 
@@ -285,6 +288,7 @@ def profile(request):
     context = {
         'user': user,
         'profile': profile,
+        'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,  # Add this line
     }
     return render(request, 'products/profile.html', context)
 
@@ -455,3 +459,22 @@ def request_site_support(request):
         logger.info(f"Site support requested for: {site_url}")
         return redirect('add_product')
     return render(request, 'products/request_site_support.html')
+
+@login_required
+def create_checkout_session(request, plan_key):
+    plan = settings.STRIPE_PLANS.get(plan_key)
+    if not plan or not plan['price_id']:
+        return HttpResponseBadRequest("Invalid plan selected.")
+
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price': plan['price_id'],
+            'quantity': 1,
+        }],
+        mode='subscription',
+        customer_email=request.user.email,
+        success_url=settings.SITE_DOMAIN + '/subscription/success/',
+        cancel_url=settings.SITE_DOMAIN + '/subscription/cancel/',
+    )
+    return JsonResponse({'sessionId': checkout_session.id})

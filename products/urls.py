@@ -42,4 +42,7 @@ urlpatterns = [
 
     # New site support URL
     path('request-site-support/', views.request_site_support, name='request_site_support'),
+
+    # New checkout session URL
+    path('create-checkout-session/<str:plan_key>/', views.create_checkout_session, name='create_checkout_session'),
 ]

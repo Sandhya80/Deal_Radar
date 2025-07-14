@@ -98,4 +98,41 @@
         </div>
     </div>
 </div>
+
+{% if profile.subscription_plan != 'premium' %}
+<div class="card my-4">
+    <div class="card-body">
+        <h4>Upgrade Your Plan</h4>
+        <p>Your current plan: <strong>{{ profile.subscription_plan|title }}</strong></p>
+        <div class="d-flex gap-3">
+            {% if profile.subscription_plan == 'free' %}
+                <button id="checkout-basic" class="btn btn-primary">Upgrade to Basic (£2.99/mo)</button>
+            {% endif %}
+            <button id="checkout-premium" class="btn btn-success">Upgrade to Premium (£4.99/mo)</button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    {% if profile.subscription_plan == 'free' %}
+    document.getElementById('checkout-basic').addEventListener('click', function () {
+        fetch("{% url 'create_checkout_session' 'basic' %}")
+            .then(response => response.json())
+            .then(data => {
+                var stripe = Stripe("{{ STRIPE_PUBLISHABLE_KEY }}");
+                stripe.redirectToCheckout({ sessionId: data.sessionId });
+            });
+    });
+    {% endif %}
+    document.getElementById('checkout-premium').addEventListener('click', function () {
+        fetch("{% url 'create_checkout_session' 'premium' %}")
+            .then(response => response.json())
+            .then(data => {
+                var stripe = Stripe("{{ STRIPE_PUBLISHABLE_KEY }}");
+                stripe.redirectToCheckout({ sessionId: data.sessionId });
+            });
+    });
+</script>
 {% endblock %}
