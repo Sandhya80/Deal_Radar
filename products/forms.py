@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, Product
 import logging
 
 logger = logging.getLogger(__name__)
@@ -58,3 +58,11 @@ class UserProfileForm(forms.ModelForm):
         widgets = {
             'whatsapp_number': forms.TextInput(attrs={'placeholder': 'e.g. +447525121082'}),
         }
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [
+            'name', 'url', 'current_price', 'price', 'target_price',
+            'site_name', 'category', 'description', 'image'
+        ]
