@@ -22,6 +22,7 @@ from django.urls import reverse
 import logging
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from django.conf import settings
 
 from .email_utils import send_welcome_email  # Import the email utility
 from .scraper import scrape_product_data
@@ -135,7 +136,15 @@ def dashboard(request):
 
 @login_required 
 def add_to_tracking(request, pk):
-    """Phase 3: Add product to user's tracking list"""
+    user_profile = request.user.userprofile
+    plan = settings.STRIPE_PLANS[user_profile.subscription_plan]
+    product_limit = plan['product_limit']
+    active_tracked_count = request.user.tracked_products.filter(is_active=True).count()
+
+    if product_limit is not None and active_tracked_count >= product_limit:
+        messages.error(request, f"You have reached your product limit ({product_limit}) for your current plan. Upgrade to track more products.")
+        return redirect('dashboard')
+
     product = get_object_or_404(Product, pk=pk)
     tracked_product, created = TrackedProduct.objects.get_or_create(
         user=request.user,
@@ -377,6 +386,17 @@ def category_products(request, slug):
 @login_required
 def add_product(request):
     """Phase 3.1: Add product page with category selection and improved UX"""
+    user_profile = request.user.userprofile
+    plan = settings.STRIPE_PLANS[user_profile.subscription_plan]
+    product_limit = plan['product_limit']
+
+    # Count active tracked products for this user
+    active_tracked_count = request.user.tracked_products.filter(is_active=True).count()
+
+    if product_limit is not None and active_tracked_count >= product_limit:
+        messages.error(request, f"You have reached your product limit ({product_limit}) for your current plan. Upgrade to track more products.")
+        return redirect('dashboard')
+
     if request.method == 'POST':
         existing_product_id = request.POST.get('existing_product')
         product_url = request.POST.get('product_url')

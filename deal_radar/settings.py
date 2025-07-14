@@ -226,3 +226,30 @@ CLOUDINARY_STORAGE = {
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+
+STRIPE_PLANS = {
+    "free": {
+        "name": "Free",
+        "price_id": None,  # No Stripe price for free
+        "price": 0,
+        "product_limit": 3,
+        "channels": ["email"],
+    },
+    "basic": {
+        "name": "Basic",
+        "price_id": "price_1RkmsUGUqXX8ygsesxqfEPab",  # From Stripe
+        "price": 2.99,
+        "product_limit": 10,
+        "channels": ["email", "sms"],
+    },
+    "premium": {
+        "name": "Premium",
+        "price_id": "price_1RkmtZGUqXX8ygsel2Xsowfx",  # From Stripe
+        "price": 4.99,
+        "product_limit": None,  # Unlimited
+        "channels": ["email", "sms", "whatsapp"],
+    },
+}
+

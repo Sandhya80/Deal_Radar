@@ -71,6 +71,12 @@ class UserProfile(models.Model):
         ],
         default='immediate'
     )
+    subscription_plan = models.CharField(
+        max_length=20,
+        choices=[('free', 'Free'), ('basic', 'Basic'), ('premium', 'Premium')],
+        default='free'
+    )
+    stripe_subscription_id = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
