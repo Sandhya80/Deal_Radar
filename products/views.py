@@ -283,7 +283,7 @@ def profile(request):
     context = {
         'user': user,
         'profile': profile,
-        'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,  # Add this line
+        'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,
     }
     return render(request, 'products/profile.html', context)
 

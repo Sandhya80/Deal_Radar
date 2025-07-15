@@ -242,14 +242,14 @@ STRIPE_PLANS = {
     },
     "basic": {
         "name": "Basic",
-        "price_id": "price_1RkmsUGUqXX8ygsesxqfEPab",  # From Stripe
+        "price_id": "price_1Rl75p2eZ8a3DqWzLnBz5BmS",  # From Stripe
         "price": 2.99,
         "product_limit": 10,
         "channels": ["email", "sms"],
     },
     "premium": {
         "name": "Premium",
-        "price_id": "price_1RkmtZGUqXX8ygsel2Xsowfx",  # From Stripe
+        "price_id": "price_1Rl76G2eZ8a3DqWzyK9xEcLH",  # From Stripe
         "price": 4.99,
         "product_limit": None,  # Unlimited
         "channels": ["email", "sms", "whatsapp"],
