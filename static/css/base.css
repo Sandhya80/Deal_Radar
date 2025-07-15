@@ -734,3 +734,17 @@ body {
     cursor: not-allowed;
     opacity: 0.7;
 }
+
+.supported-sites-heading {
+    text-align: center;
+    display: block;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
