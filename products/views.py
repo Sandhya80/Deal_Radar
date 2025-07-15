@@ -267,24 +267,13 @@ def reset_price_alert(request, pk):
 def profile(request):
     """User profile management page"""
     user = request.user
-    profile, created = UserProfile.objects.get_or_create(user=user)
-    if request.method == 'POST':
-        user.first_name = request.POST.get('first_name', '').strip()
-        user.last_name = request.POST.get('last_name', '').strip()
-        user.email = request.POST.get('email', '').strip()
-        user.save()
-        profile.email_notifications = request.POST.get('email_notifications') == 'on'
-        profile.whatsapp_notifications = request.POST.get('whatsapp_notifications') == 'on'
-        profile.whatsapp_number = request.POST.get('whatsapp_number', '').strip()
-        profile.notification_frequency = request.POST.get('notification_frequency', 'instant')
-        profile.save()
-        messages.success(request, 'Profile updated successfully!')
-        logger.info(f"User {user.username} updated profile preferences.")
-        return redirect('profile')
+    # Always fetch the latest UserProfile from the database
+    profile = UserProfile.objects.get(user=user)
     context = {
         'user': user,
         'profile': profile,
         'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,
+        # Add other context variables as needed
     }
     return render(request, 'products/profile.html', context)
 

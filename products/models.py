@@ -6,6 +6,8 @@ from django.utils import timezone
 import logging
 from .whatsapp_utils import send_whatsapp_alert
 from cloudinary.models import CloudinaryField
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 logger = logging.getLogger(__name__)
 
