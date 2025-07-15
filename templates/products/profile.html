@@ -113,6 +113,16 @@
                 </div>
             </div>
 
+            <!-- Billing Management Button -->
+            {% if profile.stripe_customer_id %}
+            <div class="card my-4 shadow-sm">
+                <div class="card-body py-4">
+                    <h4 class="mb-3">Billing Management</h4>
+                    <button id="manage-billing" class="btn btn-outline-dark mt-2">Manage Billing</button>
+                </div>
+            </div>
+            {% endif %}
+
         </div>
     </div>
 </div>
@@ -120,22 +130,36 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     {% if profile.subscription_plan == 'free' %}
-    document.getElementById('checkout-basic').addEventListener('click', function () {
+    document.getElementById('checkout-basic')?.addEventListener('click', function () {
         fetch("{% url 'create_checkout_session' 'basic' %}")
             .then(response => response.json())
-            .then(data => {
+            .then((data) => {
                 var stripe = Stripe("{{ STRIPE_PUBLISHABLE_KEY }}");
                 stripe.redirectToCheckout({ sessionId: data.sessionId });
             });
     });
     {% endif %}
-    document.getElementById('checkout-premium').addEventListener('click', function () {
+    document.getElementById('checkout-premium')?.addEventListener('click', function () {
         fetch("{% url 'create_checkout_session' 'premium' %}")
             .then(response => response.json())
             .then(data => {
                 var stripe = Stripe("{{ STRIPE_PUBLISHABLE_KEY }}");
                 stripe.redirectToCheckout({ sessionId: data.sessionId });
             });
+    });
+    document.getElementById('manage-billing')?.addEventListener('click', function () {
+        fetch("{% url 'billing_portal' %}", {
+            method: 'POST',
+            headers: {'X-CSRFToken': '{{ csrf_token }}'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                alert('Could not open billing portal.');
+            }
+        });
     });
 </script>
 {% endblock %}

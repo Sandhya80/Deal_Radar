@@ -48,4 +48,7 @@ urlpatterns = [
 
     # Stripe webhook URL
     path('stripe/webhook/', views.stripe_webhook, name='stripe_webhook'),
+
+    # New billing portal URL
+    path('billing-portal/', views.create_stripe_portal_session, name='billing_portal'),
 ]

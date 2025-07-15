@@ -484,8 +484,11 @@ def stripe_webhook(request):
         event = stripe.Webhook.construct_event(
             payload, sig_header, endpoint_secret
         )
-    except (ValueError, stripe.error.SignatureVerificationError):
+    except (ValueError, stripe.error.SignatureVerificationError) as e:
+        logger.error(f"Stripe webhook signature verification failed: {e}")
         return HttpResponse(status=400)
+
+    logger.info(f"Stripe webhook received: {event['type']}")
 
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
@@ -498,7 +501,8 @@ def stripe_webhook(request):
         try:
             line_items = stripe.checkout.Session.list_line_items(session_id, limit=1)
             price_id = line_items['data'][0]['price']['id']
-        except Exception:
+        except Exception as e:
+            logger.error(f"Error fetching line items for session {session_id}: {e}")
             price_id = None
 
         # Map price_id to plan_key
@@ -519,35 +523,61 @@ def stripe_webhook(request):
             profile.stripe_subscription_id = subscription_id
             profile.subscription_status = 'active'
             profile.save()
+            logger.info(f"User {user.username} upgraded to {plan_key} plan via Stripe Checkout.")
         except User.DoesNotExist:
-            pass
+            logger.warning(f"No user found with email {customer_email} for Stripe session {session_id}")
 
     elif event['type'] == 'customer.subscription.updated':
         subscription = event['data']['object']
         customer_id = subscription['customer']
         status = subscription['status']
-        # Update UserProfile with new status
         from .models import UserProfile
         try:
             profile = UserProfile.objects.get(stripe_customer_id=customer_id)
             profile.subscription_status = status
             profile.save()
+            logger.info(f"Subscription {subscription['id']} updated for customer {customer_id}: status={status}")
         except UserProfile.DoesNotExist:
-            pass
+            logger.warning(f"No UserProfile found for customer {customer_id} on subscription update.")
 
     elif event['type'] == 'customer.subscription.deleted':
         subscription = event['data']['object']
         customer_id = subscription['customer']
-        # Mark subscription as canceled
         from .models import UserProfile
         try:
             profile = UserProfile.objects.get(stripe_customer_id=customer_id)
             profile.subscription_status = 'canceled'
             profile.subscription_plan = 'free'
             profile.save()
+            logger.info(f"Subscription {subscription['id']} canceled for customer {customer_id}. Downgraded to free plan.")
         except UserProfile.DoesNotExist:
-            pass
+            logger.warning(f"No UserProfile found for customer {customer_id} on subscription deletion.")
+
+    elif event['type'] == 'invoice.payment_failed':
+        invoice = event['data']['object']
+        subscription_id = invoice.get('subscription')
+        customer_id = invoice.get('customer')
+        from .models import UserProfile
+        try:
+            profile = UserProfile.objects.get(stripe_customer_id=customer_id)
+            profile.subscription_status = 'past_due'
+            profile.save()
+            logger.warning(f"Payment failed for subscription {subscription_id} (customer {customer_id}). Marked as past_due.")
+        except UserProfile.DoesNotExist:
+            logger.error(f"Payment failed webhook: No UserProfile for customer {customer_id}")
 
     # Add more event types as needed
 
     return HttpResponse(status=200)
+
+@login_required
+@require_POST
+def create_stripe_portal_session(request):
+    user_profile = request.user.userprofile
+    if not user_profile.stripe_customer_id:
+        return JsonResponse({'error': 'No Stripe customer ID found.'}, status=400)
+    session = stripe.billing_portal.Session.create(
+        customer=user_profile.stripe_customer_id,
+        return_url=settings.SITE_DOMAIN + '/profile/',
+    )
+    return JsonResponse({'url': session.url})
