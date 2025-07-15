@@ -34,6 +34,8 @@ class Command(BaseCommand):
                 
                 old_price = product.current_price
                 product.current_price = new_price
+                # Optionally update product.price as well if you want to simulate both
+                # product.price = new_price
                 product.save()
                 
                 updated_count += 1

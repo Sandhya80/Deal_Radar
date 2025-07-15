@@ -25,15 +25,14 @@ class Product(models.Model):
         ('toys', '🧸 Toys & Games'),
     ]
     
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=255)
     url = models.URLField()
-    current_price = models.DecimalField(max_digits=10, decimal_places=2)
-    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  # Add this for compatibility
-    target_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    site_name = models.CharField(max_length=100)
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='electronics')
-    description = models.TextField(blank=True)
-    image_url = models.URLField(blank=True)
+    site_name = models.CharField(max_length=255)
+    category = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    current_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    image_url = models.URLField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     image = CloudinaryField('image', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products', null=True, blank=True)

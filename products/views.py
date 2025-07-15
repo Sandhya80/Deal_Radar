@@ -405,12 +405,30 @@ def add_product(request):
                 messages.error(request, "Selected product does not exist.")
                 return redirect('add_product')
         elif product_url:
-            # User entered a new product URL
-            # (You may want to validate and create the product here)
-            product, created = Product.objects.get_or_create(
-                url=product_url,
-                defaults={'category': category}
-            )
+            try:
+                scraped = scrape_product_data(product_url)
+                product, created = Product.objects.get_or_create(
+                    url=product_url,
+                    defaults={
+                        'name': scraped.get('name', ''),
+                        'price': scraped.get('price'),
+                        'current_price': scraped.get('current_price'),
+                        'image_url': scraped.get('image_url'),
+                        'description': scraped.get('description', ''),
+                        'category': category,
+                        'site_name': site_name,
+                    }
+                )
+                if not created:
+                    product.name = scraped.get('name', product.name)
+                    product.price = scraped.get('price', product.price)
+                    product.current_price = scraped.get('current_price', product.current_price)
+                    product.image_url = scraped.get('image_url', product.image_url)
+                    product.description = scraped.get('description', product.description)
+                    product.save()
+            except Exception as e:
+                messages.error(request, f"Could not scrape product info: {e}")
+                return redirect('add_product')
         else:
             messages.error(request, "Please provide a product URL or select an existing product.")
             return redirect('add_product')

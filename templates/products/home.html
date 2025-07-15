@@ -56,12 +56,15 @@
                             {{ product.name }}
                         {% endif %}
                     </h3>
-                    {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-img">
                     {% else %}
                         <img src="{% static 'images/placeholder.png' %}" alt="No image" class="product-img">
                     {% endif %}
-                    <div class="price">£{{ product.current_price|default:"Not set" }}</div>
+                    {% if product.price and product.price > product.current_price %}
+                        <span class="old-price">Was £{{ product.price }}</span>
+                    {% endif %}
+                    <span class="price">£{{ product.current_price|default:"Not set" }}</span>
                     <p><strong>🏪 Site:</strong> {{ product.site_name|default:"Not specified" }}</p>
                     <p><strong>📂 Category:</strong> {{ product.category|default:"Uncategorized" }}</p>
                     <p>{{ product.description|truncatechars:100 }}</p>

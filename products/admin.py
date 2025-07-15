@@ -3,7 +3,7 @@ from .models import Product, TrackedProduct, PriceAlert, UserProfile
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'current_price', 'target_price', 'category', 'site_name', 'is_active', 'created_at']
+    list_display = ['name', 'current_price', 'price', 'category', 'site_name', 'is_active', 'created_at']
     list_filter = ['category', 'site_name', 'is_active', 'created_at']
     search_fields = ['name', 'description']
     list_editable = ['is_active']
@@ -14,7 +14,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('name', 'description', 'url', 'image_url')
         }),
         ('Pricing', {
-            'fields': ('current_price', 'price', 'target_price')
+            'fields': ('current_price', 'price')
         }),
         ('Categorization', {
             'fields': ('category', 'site_name')
