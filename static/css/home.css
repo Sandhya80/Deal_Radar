@@ -288,6 +288,8 @@ mark {
     color: #5a4fcf;
     margin-bottom: 2rem;
     letter-spacing: 2px;
+    width: 100%;
+    display: block;
 }
 
 .how-it-works-cards {
