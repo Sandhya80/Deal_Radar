@@ -333,7 +333,26 @@ mark {
     margin: 0;
 }
 
+/* Responsive design */
+@media (max-width: 1100px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+}
+
 @media (max-width: 900px) {
+    .header {
+        padding: 40px 10px;
+    }
+    .header h1 {
+        font-size: 2.2em;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .radar-icon {
+        width: 48px;
+        height: 48px;
+    }
     .how-it-works-cards {
         flex-direction: column;
         align-items: center;
@@ -343,29 +362,63 @@ mark {
         width: 95vw;
         max-width: 400px;
     }
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .product {
+        padding: 20px 10px;
+    }
+    .logo-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+    }
+    .logo-card img {
+        max-width: 80px;
+        height: auto;
+    }
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
     .header h1 {
         font-size: 2.5em;
         flex-direction: column;
         gap: 15px;
     }
-    
     .radar-icon {
         width: 50px;
         height: 50px;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
     .header h1 {
         font-size: 2em;
     }
-    
     .radar-icon {
         width: 40px;
         height: 40px;
+    }
+    .product-img {
+        width: 100%;
+        max-width: 220px;
+        height: auto;
+        min-height: 120px;
+    }
+    .search-form {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .search-btn, .btn, .btn-small {
+        width: 100%;
+        font-size: 1em !important;
+        padding: 12px 0 !important;
+    }
+    .search-input {
+        width: 100%;
+        font-size: 1em;
+    }
+    .admin-controls, .empty-state {
+        padding: 20px 5px;
     }
 }
