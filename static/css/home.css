@@ -274,6 +274,75 @@ mark {
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
+/* --- HOW IT WORKS SECTION --- */
+.how-it-works-section {
+    background: #e6e6fa;
+    padding: 2.5rem 0 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.how-it-works-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #5a4fcf;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+}
+
+.how-it-works-cards {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.how-it-works-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(90,79,207,0.07);
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    width: 320px;
+    max-width: 90vw;
+    text-align: center;
+    transition: box-shadow 0.2s;
+}
+
+.how-it-works-card:hover {
+    box-shadow: 0 4px 24px rgba(90,79,207,0.15);
+}
+
+.how-it-works-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #5a4fcf;
+}
+
+.how-it-works-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #5a4fcf;
+}
+
+.how-it-works-card p {
+    color: #444;
+    font-size: 1rem;
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .how-it-works-cards {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    .how-it-works-card {
+        width: 95vw;
+        max-width: 400px;
+    }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .header h1 {
