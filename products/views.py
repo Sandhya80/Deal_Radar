@@ -275,6 +275,7 @@ def profile(request):
         'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,
         # Add other context variables as needed
     }
+    logger.debug(f"Profile page loaded for {user.username}: plan={profile.subscription_plan}")
     return render(request, 'products/profile.html', context)
 
 @login_required
