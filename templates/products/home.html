@@ -110,11 +110,13 @@
         </div>
     {% endif %}
     
-    <div class="admin-controls">
-        <h3>🔧 Admin Controls</h3>
-        <a href="/admin/" class="btn btn-primary">🎛️ Admin Panel</a>
-        <a href="/admin/products/product/add/" class="btn btn-primary">➕ Add Product</a>
-    </div>
+    {% if user.is_superuser or user.is_staff %}
+        <div class="admin-controls">
+            <h3>🔧 Admin Controls</h3>
+            <a href="/admin/" class="btn btn-primary">🎛️ Admin Panel</a>
+            <a href="/admin/products/product/add/" class="btn btn-primary">➕ Add Product</a>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block extra_js %}
