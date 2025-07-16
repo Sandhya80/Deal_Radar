@@ -799,6 +799,46 @@ body {
     }
 }
 
+/* Reduce navbar thickness for small screens */
+@media (max-width: 900px) {
+    .nav-bar {
+        padding: 6px 8px;      /* Reduced padding */
+        min-height: 44px;      /* Reduced min-height */
+        height: auto;
+    }
+    .nav-brand {
+        margin-bottom: 6px;    /* Less margin */
+    }
+    .navbar-radar {
+        width: 24px;           /* Smaller logo */
+        height: 24px;
+    }
+    .brand-text {
+        font-size: 1em;        /* Smaller brand text */
+    }
+    .nav-toggle {
+        padding: 6px;
+    }
+    .nav-center {
+        top: 44px;             /* Match reduced navbar height */
+        padding: 10px 0;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 600px) {
+    body {
+        padding-top: 60px;     /* Lower padding to match thinner navbar */
+    }
+    .nav-bar {
+        padding: 4px 2px;
+        min-height: 40px;
+    }
+    .nav-center {
+        top: 40px;
+    }
+}
+
 /* Hamburger styles */
 .nav-toggle {
     display: none;
