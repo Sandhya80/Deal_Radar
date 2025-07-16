@@ -799,10 +799,89 @@ body {
     }
 }
 
+/* Hamburger styles */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    margin-left: auto;
+}
+
+.hamburger {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: #fff;
+    position: relative;
+    border-radius: 2px;
+}
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: #fff;
+    position: absolute;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+.hamburger::before {
+    top: -9px;
+}
+.hamburger::after {
+    top: 9px;
+}
+
+/* Responsive Navbar */
+@media (max-width: 900px) {
+    .nav-toggle {
+        display: block;
+    }
+    .nav-center {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: linear-gradient(135deg, rgba(83,54,116,0.98) 0%, rgba(48,63,159,0.98) 100%);
+        position: absolute;
+        top: 60px;
+        left: 0;
+        z-index: 999;
+        padding: 20px 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .nav-bar.active .nav-center {
+        display: flex;
+    }
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .nav-auth {
+        flex-direction: column;
+        width: 100%;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .my-account-btn-container {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        justify-content: center;
+    }
+    .container {
+        padding-top: 10px;
+    }
+}
+
 /* Extra: Prevent overlap for very small screens */
 @media (max-width: 600px) {
     body {
-        padding-top: 120px; /* Increase if navbar stacks and grows taller */
+        padding-top: 120px;
     }
     .nav-bar {
         padding: 12px 4px;

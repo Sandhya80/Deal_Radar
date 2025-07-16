@@ -5,27 +5,16 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Deal Radar{% endblock %}</title>
-    
-    <!-- Base styles -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    
-    <!-- Page-specific styles -->
     {% block extra_css %}{% endblock %}
-    
-    <!-- Preload critical fonts for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Favicon -->
     <link rel="icon" type="image/gif" href="{% static 'images/radar-animation.gif' %}">
 </head>
 <body>
-    <!-- Skip to main content for accessibility -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
-    
     <div class="container">
         <!-- Navigation -->
-        <!-- Enhanced Navigation with Proper Alignment -->
         <nav class="nav-bar" role="navigation" aria-label="Main navigation">
             <!-- Left: Brand -->
             <div class="nav-brand">
@@ -34,25 +23,23 @@
                     <span class="brand-text">Deal Radar</span>
                 </a>
             </div>
-            
+            <!-- Hamburger Button for Small Screens -->
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
             <!-- Center: Categories + Navigation Links -->
             <div class="nav-center">
-                <!-- Categories Dropdown -->
                 <div class="categories-dropdown">
                     <button class="dropdown-btn" type="button">
                         📂 Categories <span class="dropdown-arrow">▼</span>
                     </button>
                     <div class="dropdown-content">
                         {% for key, display in product_category_choices %}
-        <a href="{% url 'category_products' key %}">
-            {{ display }}
-        </a>
-    {% endfor %}
-    <a href="{% url 'home' %}">🔍 All Categories</a>
+                            <a href="{% url 'category_products' key %}">{{ display }}</a>
+                        {% endfor %}
+                        <a href="{% url 'home' %}">🔍 All Categories</a>
                     </div>
                 </div>
-                
-                <!-- Navigation Links -->
                 <div class="nav-links">
                     <a href="{% url 'home' %}" 
                        class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
@@ -66,33 +53,27 @@
                     {% endif %}
                 </div>
             </div>
-            
             <!-- Right: Authentication -->
             <div class="nav-auth">
                 {% if user.is_authenticated %}
                     <span class="user-welcome">👋 {{ user.username }}</span>
                     <form action="{% url 'logout' %}" method="post" class="logout-form">
-    {% csrf_token %}
-    <button type="submit" class="nav-logout">Logout</button>
-</form>
+                        {% csrf_token %}
+                        <button type="submit" class="nav-logout">Logout</button>
+                    </form>
                 {% else %}
                     <a href="{% url 'login' %}" class="nav-login">Login</a>
                     <a href="{% url 'signup' %}" class="nav-signup">Sign Up</a>
                 {% endif %}
             </div>
         </nav>
-
-        <!-- My Account Button -->
-        <!-- This button is only visible when the user is authenticated -->
         {% if user.is_authenticated %}
-    <div class="my-account-btn-container">
-        <a href="{% url 'profile' %}" class="my-account-btn">
-            <i class="fas fa-user-circle"></i> My Account
-        </a>
-    </div>
-{% endif %}
-
-        <!-- Messages -->
+        <div class="my-account-btn-container">
+            <a href="{% url 'profile' %}" class="my-account-btn">
+                <i class="fas fa-user-circle"></i> My Account
+            </a>
+        </div>
+        {% endif %}
         {% if messages %}
             <div class="messages" role="alert" aria-live="polite">
                 {% for message in messages %}
@@ -103,18 +84,11 @@
                 {% endfor %}
             </div>
         {% endif %}
-
-        <!-- Main content area -->
         <main id="main-content" role="main">
             {% block content %}{% endblock %}
-            
         </main>
     </div>
-
-    <!-- Supported Stores Section -->
     {% include "supported_sites.html" %}
-
-    <!-- Professional Footer - Inspired by PriceDrops -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section footer-brand-section">
@@ -190,11 +164,17 @@
             <p>&copy; 2025 Deal Radar. All rights reserved. | Built with 💜 for deal hunters</p>
         </div>
     </footer>
-
-    <!-- Base JavaScript -->
     <script src="{% static 'js/base.js' %}"></script>
-    
-    <!-- Page-specific JavaScript -->
+    <!-- Hamburger toggle script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const navToggle = document.querySelector('.nav-toggle');
+        const navBar = document.querySelector('.nav-bar');
+        navToggle.addEventListener('click', function() {
+            navBar.classList.toggle('active');
+        });
+    });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
