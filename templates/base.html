@@ -27,7 +27,7 @@
             <button class="nav-toggle" aria-label="Toggle navigation">
                 <span class="hamburger"></span>
             </button>
-            <!-- Center: Categories + Navigation Links -->
+            <!-- Center: Categories + Navigation Links + Auth -->
             <div class="nav-center">
                 <div class="categories-dropdown">
                     <button class="dropdown-btn" type="button">
@@ -52,19 +52,18 @@
                         </a>
                     {% endif %}
                 </div>
-            </div>
-            <!-- Right: Authentication -->
-            <div class="nav-auth">
-                {% if user.is_authenticated %}
-                    <span class="user-welcome">👋 {{ user.username }}</span>
-                    <form action="{% url 'logout' %}" method="post" class="logout-form">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-logout">Logout</button>
-                    </form>
-                {% else %}
-                    <a href="{% url 'login' %}" class="nav-login">Login</a>
-                    <a href="{% url 'signup' %}" class="nav-signup">Sign Up</a>
-                {% endif %}
+                <div class="nav-auth">
+                    {% if user.is_authenticated %}
+                        <span class="user-welcome">👋 {{ user.username }}</span>
+                        <form action="{% url 'logout' %}" method="post" class="logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-logout">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="nav-login">Login</a>
+                        <a href="{% url 'signup' %}" class="nav-signup">Sign Up</a>
+                    {% endif %}
+                </div>
             </div>
         </nav>
         {% if user.is_authenticated %}

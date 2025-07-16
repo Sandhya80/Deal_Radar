@@ -60,6 +60,7 @@ body {
     min-height: 60px;
     height: auto; /* Allow height to grow */
     flex-wrap: wrap;
+    border-bottom: 1px solid rgba(168, 181, 255, 0.2);
 }
 
 /* Brand Section - Left */
@@ -306,6 +307,97 @@ body {
 /* Logout form inline */
 .logout-form {
     display: inline;
+}
+
+/* Hamburger styles */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    margin-left: auto;
+}
+
+.hamburger {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: #fff;
+    position: relative;
+    border-radius: 2px;
+}
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: #fff;
+    position: absolute;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+.hamburger::before {
+    top: -9px;
+}
+.hamburger::after {
+    top: 9px;
+}
+
+/* Responsive Navbar */
+@media (max-width: 900px) {
+    body {
+        padding-top: 44px; /* Match reduced navbar height */
+    }
+    .nav-bar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 6px 8px;
+        min-height: 44px;
+        height: auto;
+    }
+    .nav-toggle {
+        display: block;
+        padding: 6px;
+    }
+    .nav-center {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: linear-gradient(135deg, rgba(83,54,116,0.98) 0%, rgba(48,63,159,0.98) 100%);
+        position: absolute;
+        top: 44px;
+        left: 0;
+        z-index: 999;
+        padding: 10px 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .nav-bar.active .nav-center {
+        display: flex;
+    }
+    .nav-links,
+    .nav-auth {
+        flex-direction: column;
+        width: 100%;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 600px) {
+    body {
+        padding-top: 40px; /* Lower padding to match thinner navbar */
+    }
+    .nav-bar {
+        padding: 2px 4px;
+        min-height: 36px;
+    }
+    .nav-center {
+        top: 36px;
+    }
 }
 
 /* Professional Footer - Dark Purple Theme */
@@ -629,7 +721,7 @@ body {
 
 @media (max-width: 480px) {
     body {
-        padding-top: 60px;
+        padding-top: 40px;
     }
     .container {
         padding: 8px;
@@ -735,200 +827,4 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
-}
-
-/* --- Responsive Navigation Bar --- */
-.nav-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background: linear-gradient(135deg, rgba(83, 54, 116, 0.95) 0%, rgba(48, 63, 159, 0.95) 100%);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 40px;
-    color: white;
-    min-height: 60px;
-    height: auto; /* Allow height to grow */
-    flex-wrap: wrap;
-}
-
-/* Ensure main content is not hidden under navbar */
-body {
-    padding-top: 80px; /* Adjust if navbar height changes on mobile */
-}
-
-@media (max-width: 900px) {
-    .nav-bar {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 12px 10px;
-        height: auto;
-        min-height: unset;
-    }
-    .nav-brand {
-        margin-bottom: 10px;
-    }
-    .nav-center {
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-        align-items: flex-start;
-        margin-bottom: 10px;
-    }
-    .nav-links {
-        flex-direction: column;
-        width: 100%;
-    }
-    .nav-auth {
-        margin-left: 0;
-        width: 100%;
-        justify-content: flex-end;
-        margin-bottom: 10px;
-    }
-    .my-account-btn-container {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        justify-content: center;
-    }
-    .container {
-        padding-top: 10px;
-    }
-}
-
-/* Reduce navbar thickness for small screens */
-@media (max-width: 900px) {
-    .nav-bar {
-        padding: 6px 8px;      /* Reduced padding */
-        min-height: 44px;      /* Reduced min-height */
-        height: auto;
-    }
-    .nav-brand {
-        margin-bottom: 6px;    /* Less margin */
-    }
-    .navbar-radar {
-        width: 24px;           /* Smaller logo */
-        height: 24px;
-    }
-    .brand-text {
-        font-size: 1em;        /* Smaller brand text */
-    }
-    .nav-toggle {
-        padding: 6px;
-    }
-    .nav-center {
-        top: 44px;             /* Match reduced navbar height */
-        padding: 10px 0;
-    }
-}
-
-/* For very small screens */
-@media (max-width: 600px) {
-    body {
-        padding-top: 60px;     /* Lower padding to match thinner navbar */
-    }
-    .nav-bar {
-        padding: 4px 2px;
-        min-height: 40px;
-    }
-    .nav-center {
-        top: 40px;
-    }
-}
-
-/* Hamburger styles */
-.nav-toggle {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    margin-left: auto;
-}
-
-.hamburger {
-    display: block;
-    width: 28px;
-    height: 3px;
-    background: #fff;
-    position: relative;
-    border-radius: 2px;
-}
-.hamburger::before,
-.hamburger::after {
-    content: '';
-    display: block;
-    width: 28px;
-    height: 3px;
-    background: #fff;
-    position: absolute;
-    border-radius: 2px;
-    transition: 0.3s;
-}
-.hamburger::before {
-    top: -9px;
-}
-.hamburger::after {
-    top: 9px;
-}
-
-/* Responsive Navbar */
-@media (max-width: 900px) {
-    .nav-toggle {
-        display: block;
-    }
-    .nav-center {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background: linear-gradient(135deg, rgba(83,54,116,0.98) 0%, rgba(48,63,159,0.98) 100%);
-        position: absolute;
-        top: 60px;
-        left: 0;
-        z-index: 999;
-        padding: 20px 0;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    }
-    .nav-bar.active .nav-center {
-        display: flex;
-    }
-    .nav-links {
-        flex-direction: column;
-        width: 100%;
-        align-items: flex-start;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
-    .nav-auth {
-        flex-direction: column;
-        width: 100%;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    .my-account-btn-container {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        justify-content: center;
-    }
-    .container {
-        padding-top: 10px;
-    }
-}
-
-/* Extra: Prevent overlap for very small screens */
-@media (max-width: 600px) {
-    body {
-        padding-top: 120px;
-    }
-    .nav-bar {
-        padding: 12px 4px;
-    }
-}
-
-/* Optional: Add a subtle border or shadow to separate navbar visually */
-.nav-bar {
-    border-bottom: 1px solid rgba(168, 181, 255, 0.2);
 }
