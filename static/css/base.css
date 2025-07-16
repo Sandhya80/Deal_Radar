@@ -51,16 +51,15 @@ body {
     right: 0;
     z-index: 1000;
     background: linear-gradient(135deg, rgba(83, 54, 116, 0.95) 0%, rgba(48, 63, 159, 0.95) 100%);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(173, 181, 189, 0.3);
-    transition: all 0.3s ease;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 12px 40px;
     color: white;
-    height: 60px;
+    min-height: 60px;
+    height: auto; /* Allow height to grow */
+    flex-wrap: wrap;
 }
 
 /* Brand Section - Left */
@@ -738,35 +737,79 @@ body {
     text-fill-color: transparent;
 }
 
-/* Responsive Navigation and Supported Sites */
+/* --- Responsive Navigation Bar --- */
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: linear-gradient(135deg, rgba(83, 54, 116, 0.95) 0%, rgba(48, 63, 159, 0.95) 100%);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 40px;
+    color: white;
+    min-height: 60px;
+    height: auto; /* Allow height to grow */
+    flex-wrap: wrap;
+}
+
+/* Ensure main content is not hidden under navbar */
+body {
+    padding-top: 80px; /* Adjust if navbar height changes on mobile */
+}
+
 @media (max-width: 900px) {
     .nav-bar {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
         padding: 12px 10px;
         height: auto;
+        min-height: unset;
+    }
+    .nav-brand {
+        margin-bottom: 10px;
     }
     .nav-center {
         flex-direction: column;
         gap: 10px;
         width: 100%;
         align-items: flex-start;
+        margin-bottom: 10px;
+    }
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
     }
     .nav-auth {
         margin-left: 0;
         width: 100%;
         justify-content: flex-end;
+        margin-bottom: 10px;
+    }
+    .my-account-btn-container {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        justify-content: center;
+    }
+    .container {
+        padding-top: 10px;
     }
 }
 
+/* Extra: Prevent overlap for very small screens */
 @media (max-width: 600px) {
-    .logo-grid {
-        flex-direction: column;
-        gap: 1rem;
+    body {
+        padding-top: 120px; /* Increase if navbar stacks and grows taller */
     }
-    .logo-card {
-        min-width: 0;
-        width: 90vw;
-        margin: 0 auto;
+    .nav-bar {
+        padding: 12px 4px;
     }
+}
+
+/* Optional: Add a subtle border or shadow to separate navbar visually */
+.nav-bar {
+    border-bottom: 1px solid rgba(168, 181, 255, 0.2);
 }
