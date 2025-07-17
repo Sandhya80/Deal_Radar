@@ -215,89 +215,13 @@ erDiagram
     }
 ```
 
----
+### 📑 Database Schema Explained
 
-## 🏗️ Architecture Overview
-
-```
-Frontend (Bootstrap + Django Templates)
-    ↕
-Django Views + Django REST Framework
-    ↕
-PostgreSQL (Users, Products, Price History)
-    ↕
-Celery Workers (Price Scraping, Alerts)
-    ↕
-Redis (Task Queue)
-    ↕
-Notifications (Email/SMS/WhatsApp)
-    ↕
-Stripe (Billing)
-    ↕
-Cloudinary (Image Storage)
-```
-
----
-
-## ✨ Features Overview
-
-### Phase 1: Foundation
-- [x] User authentication system (register, login, logout)
-- [x] Product tracking models and price history
-- [x] Basic dashboard UI and CRUD for products
-- [x] Responsive Bootstrap UI
-
-### Phase 2: MVP Functionality
-- [x] Web scraping for supported sites
-- [x] Price drop detection and history
-- [x] Dashboard with real data and search/filter
-- [x] Admin tools for scraping and product management
-
-### Phase 3: Automation & Alerts
-- [x] Email and WhatsApp/SMS notifications
-- [x] Celery task scheduling for scraping and alerts
-- [x] User alert preferences (frequency, channels)
-- [x] Daily/weekly summary emails
-
-### Phase 4: Polish & Monetization
-- [x] Stripe subscription system (Free/Basic/Premium)
-- [x] Billing management and upgrade/downgrade
-- [x] Unit and integration testing
-- [x] Security hardening and accessibility
-- [x] Final deployment and documentation
-
----
-
-## 🛠️ Tech Stack
-
-- **Backend**: Django 5.0, Django REST Framework
-- **Database**: PostgreSQL, Heroku Postgres
-- **Frontend**: Bootstrap 5, HTML5, CSS3, JavaScript
-- **Task Queue**: Celery + Redis
-- **Scraping**: BeautifulSoup
-- **Notifications**: Twilio (SMS/WhatsApp), SMIP (Email)
-- **Payments**: Stripe
-- **Deployment**: Heroku with GitHub integration
-- **Storage**: Cloudinary (for images)
-
----
-
-## 📋 Assessment Criteria Alignment
-
-- **Authentication & Role-Based Access**: Django Auth + User Profiles
-- **Database Design & CRUD**: PostgreSQL + Django ORM
-- **Front-End Design & UX**: Bootstrap + Responsive Design
-- **Version Control**: Git + GitHub
-- **Deployment**: Heroku Ready
-- **Custom Data Modeling**: Product/Price/User Models
-- **Security**: Environment Variables + HTTPS
-
----
-
-## 🤝 Support
-
-For questions or issues, please create an issue in this repository.
-
----
-
-**Built with Django, Celery, Stripe, and AI assistance for debugging**
+- **USER**: Stores user account information (username, email, password).
+- **USER_PROFILE**: Extends user info with notification preferences, WhatsApp number, and subscription plan.
+- **SUBSCRIPTION_PLAN**: Lists available subscription plans (name, price, Stripe plan ID).
+- **PRODUCT**: Contains product details (name, URL, site, image, category, timestamps).
+- **CATEGORY**: Defines product categories (name, emoji).
+- **PRODUCT_TRACKING**: Links users to products they are tracking, with target price and notes.
+- **PRICE_HISTORY**: Records historical prices for each product over time.
+- **PRICE_ALERT**: Stores alerts for users when a product hits their target price, including status
