@@ -1,16 +1,38 @@
 # Deal Radar
 
 **Never Miss a Deal Again!**  
-A Django-based web application that tracks product prices across e-commerce platforms and sends real-time alerts when deals are available.
+Deal Radar is a robust Django-based web application that empowers users to track product prices across major e-commerce platforms and receive real-time alerts when deals are available. With a modern, responsive interface and automated background processing, Deal Radar ensures you never miss a price drop on your favorite products.
+
+---
+
+## 🔄 App Workflow Overview
+
+1. **Add Products to Track:**  
+   Add products by pasting a URL from a supported e-commerce site or by selecting from existing products in the database.
+
+2. **Set Target Price:**  
+   Specify a target price for each product. You’ll be notified when the product reaches or drops below this price.
+
+3. **Automated Price Tracking:**  
+   The system regularly scrapes product pages using background Celery tasks to check for price changes.
+
+4. **Receive Alerts:**  
+   When a product’s price drops to or below your target, Deal Radar sends real-time alerts via email, WhatsApp, or SMS (based on your preferences).
+
+5. **Dashboard & Management:**  
+   View all tracked products, manage alerts, and see your savings and triggered alerts on a personalized dashboard.
+
+6. **Subscription & Billing:**  
+   Unlock premium features (like more frequent checks or additional notification channels) via Stripe-powered subscriptions.
 
 ---
 
 ## 🚦 Project Status
 
-**Phase 1: Foundation & Authentication** ✅ *Complete*  
-**Phase 2: MVP Functionality** ✅ *Complete*  
-**Phase 3: Automation & Alerts** ✅ *Complete*  
-**Phase 4: Polish & Monetization** ✅ *Complete*  
+- **Phase 1: Foundation & Authentication** ✅ Complete  
+- **Phase 2: MVP Functionality** ✅ Complete  
+- **Phase 3: Automation & Alerts** ✅ Complete  
+- **Phase 4: Polish & Monetization** ✅ Complete  
 
 ---
 
@@ -18,17 +40,17 @@ A Django-based web application that tracks product prices across e-commerce plat
 
 ### Phase 1: Foundation & Authentication
 
-- Django project structure with modular apps: `users`, `products`, `notifications`, `subscriptions`
+- Modular Django apps: `users`, `products`, `notifications`, `subscriptions`
 - Comprehensive code documentation and comments
 - Dependency management (`requirements.txt`, `.env.example`, `.gitignore`)
 - Database models for users, products, price history, and alerts
 - User authentication (registration, login, logout) with Django AllAuth
 - Profile management with notification preferences and subscription tiers
-- Bootstrap 5 responsive UI with base, dashboard, and CRUD templates
+- Responsive Bootstrap 5 UI with base, dashboard, and CRUD templates
 
 ### Phase 2: MVP Functionality
 
-- Automated web scraping engine for supported e-commerce sites (Amazon, eBay, Argos, etc.)
+- Automated web scraping for supported e-commerce sites (Amazon, eBay, Argos, etc.)
 - Celery background task system for scheduled scraping and notifications
 - Redis integration for task queue management
 - Enhanced dashboard with real-time scraping status and product updates
@@ -102,6 +124,99 @@ celery -A deal_radar beat -l info
 
 ---
 
+## 🐞 Debugging Methods Used
+
+- **Django Debug Toolbar**: For inspecting SQL queries, cache usage, and template context.
+- **Python Logging**: Configured in `settings.py` for error, warning, and info logs.
+- **Custom Error Pages**: User-friendly error templates for 404/500.
+- **Unit Tests**: Django’s test framework for core logic and integration.
+- **Manual Testing**: Django shell (`python manage.py shell`) and admin panel for data validation.
+- **Celery Task Monitoring**: Celery logs and Flower (optional) for background task debugging.
+- **AI Assistance**: GitHub Copilot for code review, suggestions, and troubleshooting.
+
+---
+
+## 🗄️ Database Schema
+
+Below is a simplified schema of the main tables and relationships in Deal Radar:
+
+```mermaid
+erDiagram
+    USER ||--o{ PRODUCT_TRACKING : tracks
+    USER ||--o{ PRICE_ALERT : creates
+    USER ||--|| USER_PROFILE : has
+    USER_PROFILE }|..|{ SUBSCRIPTION_PLAN : subscribes
+    PRODUCT ||--o{ PRODUCT_TRACKING : is_tracked
+    PRODUCT ||--o{ PRICE_HISTORY : has
+    PRODUCT_TRACKING ||--o{ PRICE_ALERT : has
+    PRODUCT ||--o{ PRICE_ALERT : alerts_for
+    PRODUCT }|..|{ CATEGORY : belongs_to
+
+    USER {
+        int id PK
+        string username
+        string email
+        string password
+    }
+    USER_PROFILE {
+        int id PK
+        int user_id FK
+        bool email_notifications
+        bool whatsapp_notifications
+        string notification_frequency
+        string whatsapp_number
+        int subscription_plan_id FK
+    }
+    SUBSCRIPTION_PLAN {
+        int id PK
+        string name
+        decimal price
+        string stripe_plan_id
+    }
+    PRODUCT {
+        int id PK
+        string name
+        string url
+        string site_name
+        string image_url
+        int category_id FK
+        datetime created_at
+        datetime updated_at
+    }
+    CATEGORY {
+        int id PK
+        string name
+        string emoji
+    }
+    PRODUCT_TRACKING {
+        int id PK
+        int user_id FK
+        int product_id FK
+        decimal target_price
+        string notes
+        datetime created_at
+    }
+    PRICE_HISTORY {
+        int id PK
+        int product_id FK
+        decimal price
+        datetime checked_at
+    }
+    PRICE_ALERT {
+        int id PK
+        int user_id FK
+        int product_id FK
+        int tracking_id FK
+        decimal target_price
+        bool is_triggered
+        bool is_enabled
+        datetime created_at
+        datetime triggered_at
+    }
+```
+
+---
+
 ## 🏗️ Architecture Overview
 
 ```
@@ -156,14 +271,14 @@ Cloudinary (Image Storage)
 ## 🛠️ Tech Stack
 
 - **Backend**: Django 5.0, Django REST Framework
-- **Database**: PostgreSQL
+- **Database**: PostgreSQL, Heroku Postgres
 - **Frontend**: Bootstrap 5, HTML5, CSS3, JavaScript
 - **Task Queue**: Celery + Redis
-- **Scraping**: BeautifulSoup, Selenium
-- **Notifications**: Twilio (SMS/WhatsApp), SMTP (Email)
+- **Scraping**: BeautifulSoup
+- **Notifications**: Twilio (SMS/WhatsApp), SMIP (Email)
 - **Payments**: Stripe
-- **Deployment**: Heroku (or similar)
-- **Storage**: Cloudinary (Images)
+- **Deployment**: Heroku with GitHub integration
+- **Storage**: Cloudinary (for images)
 
 ---
 
