@@ -38,16 +38,16 @@ import sys
 def main():
     """
     Run administrative tasks.
-    
+
     This function sets up the Django environment and executes the requested
     management command with proper error handling and environment validation.
-    
+
     Process:
     1. Set default Django settings module
     2. Import Django's command-line execution function
     3. Execute the requested command with provided arguments
     4. Handle common setup errors with helpful messages
-    
+
     Error Cases:
     - Django not installed or not in PYTHONPATH
     - Virtual environment not activated
@@ -56,19 +56,22 @@ def main():
     """
     # Set default settings module for Deal Radar project
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'deal_radar.settings')
-    
+
     try:
+        # Import Django's command-line execution function
         from django.core.management import execute_from_command_line
     except ImportError as exc:
+        # Handle ImportError if Django is not installed or not in PYTHONPATH
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    
-    # Execute the requested Django management command
+
+    # Execute the requested Django management command with provided arguments
     execute_from_command_line(sys.argv)
 
 
+# Entry point for the script
 if __name__ == '__main__':
     main()
