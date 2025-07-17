@@ -225,3 +225,75 @@ erDiagram
 - **PRODUCT_TRACKING**: Links users to products they are tracking, with target price and notes.
 - **PRICE_HISTORY**: Records historical prices for each product over time.
 - **PRICE_ALERT**: Stores alerts for users when a product hits their target price, including status
+
+---
+
+## 🗂️ Files Involved & Workflow
+
+**How the database schema maps to your project files and workflow:**
+
+- **Models (Database Tables)**
+  - `products/models.py`: `Product`, `Category`, `ProductTracking`, `PriceHistory`, `PriceAlert`
+  - `users/models.py`: `UserProfile`
+  - `subscriptions/models.py`: `SubscriptionPlan`
+  - Django’s built-in `User` model: from `django.contrib.auth.models`
+
+- **Views (Business Logic & Workflow)**
+  - `products/views.py`: Add/track products, dashboard, product detail, price history, alerts
+  - `users/views.py`: Profile management, authentication, notification preferences
+  - `subscriptions/views.py`: Subscription and billing management
+
+- **Forms (User Input)**
+  - `products/forms.py`: Product add/edit, tracking, alert forms
+  - `users/forms.py`: Profile update, notification settings
+  - `subscriptions/forms.py`: Subscription plan selection
+
+- **Templates (Frontend/UI)**
+  - `templates/products/`: `add_product.html`, `dashboard.html`, `product_detail.html`, `home.html`, etc.
+  - `templates/users/`: `profile.html`, `login.html`, `signup.html`
+  - `templates/subscriptions/`: `billing.html`, `upgrade.html`
+  - `templates/base.html`: Main layout and navigation
+
+- **Celery Tasks (Background Processing)**
+  - `products/tasks.py`: Price scraping, alert sending
+
+**Typical Workflow:**
+
+1. **User Registration/Login**  
+   - `users/views.py`, `users/forms.py`, `templates/registration/signup.html`, `login.html`
+   - Uses Django’s `User` model and `UserProfile`
+
+2. **Add Product to Track**  
+   - `products/views.py` (`add_product` view), `products/forms.py` (`AddProductForm`), `templates/products/add_product.html`
+   - Models: `Product`, `ProductTracking`, `Category`
+
+3. **Set Target Price & Preferences**  
+   - `products/forms.py`, `users/forms.py`
+   - Models: `ProductTracking`, `UserProfile`
+
+4. **Automated Price Tracking**  
+   - `products/tasks.py` (Celery)
+   - Updates `PriceHistory`, checks for `PriceAlert` triggers
+
+5. **Receive Alerts**  
+   - `products/tasks.py` (Celery)
+   - Sends notifications via Twilio/SMIP
+   - Updates `PriceAlert`
+
+6. **Dashboard & Management**  
+   - `products/views.py` (`dashboard` view), `templates/products/dashboard.html`
+   - Shows tracked products, price history, alerts
+
+7. **Subscription & Billing**  
+   - `subscriptions/views.py`, `subscriptions/forms.py`
+   - Models: `SubscriptionPlan`, `UserProfile`
+   - `templates/subscriptions/billing.html`
+
+**Example File Paths:**
+
+- `d:\Sandhya_H\Deal_Radar\products\models.py`
+- `d:\Sandhya_H\Deal_Radar\users\models.py`
+- `d:\Sandhya_H\Deal_Radar\subscriptions\models.py`
+- `d:\Sandhya_H\Deal_Radar\products\views.py`
+- `d:\Sandhya_H\Deal_Radar\templates\products\add_product.html`
+- `d:\Sandhya_H\Deal_Radar\products\tasks.py`
