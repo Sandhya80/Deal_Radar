@@ -9,7 +9,10 @@
 
 {% block content %}
 <div class="container-fluid py-4">
-    <!-- Dashboard Header -->
+    <!-- =========================
+         Dashboard Header
+         Shows dashboard title and navigation
+    ========================== -->
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -21,7 +24,10 @@
         </div>
     </div>
 
-    <!-- Stats Cards Row - Compact Width -->
+    <!-- =========================
+         Stats Cards Row
+         Shows tracked products, alerts, triggered alerts, and savings
+    ========================== -->
     <div class="stat-cards-row">
         <div class="stat-card-col">
             <div class="card stat-card stat-card-1">
@@ -61,7 +67,10 @@
         </div>
     </div>
 
-    <!-- Tracked Products Section -->
+    <!-- =========================
+         Tracked Products Section
+         Lists all products the user is tracking and their alerts
+    ========================== -->
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm">
@@ -90,6 +99,7 @@
                                         <h6 class="text-warning mb-2">
                                             <i class="fas fa-bell"></i> Set Price Alert
                                         </h6>
+                                        <!-- Price alert form for this product -->
                                         <form method="POST" action="{% url 'create_price_alert' tracked.id %}" class="mb-3">
                                             {% csrf_token %}
                                             <div class="input-group">
@@ -102,6 +112,7 @@
                                                 </button>
                                             </div>
                                         </form>
+                                        <!-- List of price alerts for this product -->
                                         {% for alert in tracked.price_alerts.all %}
                                         <div class="alert-badge mb-2">
                                             <div class="d-flex justify-content-between align-items-center p-2 rounded alert-item" 
@@ -147,6 +158,7 @@
                         </div>
                         {% endfor %}
                     {% else %}
+                        <!-- Empty state if no tracked products -->
                         <div class="text-center py-5 empty-state">
                             <i class="fas fa-search fa-4x text-muted mb-4"></i>
                             <h4 class="text-muted mb-3">No tracked products yet</h4>

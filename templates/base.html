@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Deal Radar{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -12,9 +12,16 @@
     <link rel="icon" type="image/gif" href="{% static 'images/radar-animation.gif' %}">
 </head>
 <body>
+    <!-- =========================
+         Accessibility Skip Link
+         Allows keyboard users to skip to main content
+    ========================== -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <div class="container">
-        <!-- Navigation -->
+        <!-- =========================
+             Navigation Bar
+             Brand, categories, navigation links, and auth controls
+        ========================== -->
         <nav class="nav-bar" role="navigation" aria-label="Main navigation">
             <!-- Left: Brand -->
             <div class="nav-brand">
@@ -29,6 +36,7 @@
             </button>
             <!-- Center: Categories + Navigation Links + Auth -->
             <div class="nav-center">
+                <!-- Categories Dropdown -->
                 <div class="categories-dropdown">
                     <button class="dropdown-btn" type="button">
                         📂 Categories <span class="dropdown-arrow">▼</span>
@@ -40,6 +48,7 @@
                         <a href="{% url 'home' %}">🔍 All Categories</a>
                     </div>
                 </div>
+                <!-- Navigation Links -->
                 <div class="nav-links">
                     <a href="{% url 'home' %}" 
                        class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
@@ -52,6 +61,7 @@
                         </a>
                     {% endif %}
                 </div>
+                <!-- Auth Controls -->
                 <div class="nav-auth">
                     {% if user.is_authenticated %}
                         <span class="user-welcome">👋 {{ user.username }}</span>
@@ -66,6 +76,7 @@
                 </div>
             </div>
         </nav>
+        <!-- My Account Button for logged-in users -->
         {% if user.is_authenticated %}
         <div class="my-account-btn-container">
             <a href="{% url 'profile' %}" class="my-account-btn">
@@ -73,6 +84,7 @@
             </a>
         </div>
         {% endif %}
+        <!-- Django Messages -->
         {% if messages %}
             <div class="messages" role="alert" aria-live="polite">
                 {% for message in messages %}
@@ -83,11 +95,17 @@
                 {% endfor %}
             </div>
         {% endif %}
+        <!-- Main Content Block -->
         <main id="main-content" role="main">
             {% block content %}{% endblock %}
         </main>
     </div>
+    <!-- Supported Sites Section -->
     {% include "supported_sites.html" %}
+    <!-- =========================
+         Footer
+         Brand, links, social, and legal info
+    ========================== -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section footer-brand-section">
@@ -163,8 +181,11 @@
             <p>&copy; 2025 Deal Radar. All rights reserved. | Built with 💜 for deal hunters</p>
         </div>
     </footer>
+    <!-- =========================
+         Base JS and Hamburger Toggle
+         Handles navigation and UI interactions
+    ========================== -->
     <script src="{% static 'js/base.js' %}"></script>
-    <!-- Hamburger toggle script -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const navToggle = document.querySelector('.nav-toggle');

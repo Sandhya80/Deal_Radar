@@ -12,7 +12,10 @@
     <div class="row justify-content-center">
         <div class="col-lg-7 col-md-9">
 
-            <!-- Profile Settings Card -->
+            <!-- =========================
+                 Profile Settings Card
+                 User can update name, email, and notification preferences
+            ========================== -->
             <div class="card shadow-lg border-0 rounded-4 mb-4">
                 <div class="card-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 1rem 1rem 0 0;">
                     <h4 class="mb-0"><i class="fas fa-user-circle"></i> Profile Settings</h4>
@@ -83,7 +86,10 @@
                 </div>
             </div>
 
-            <!-- Upgrade Plan Card -->
+            <!-- =========================
+                 Upgrade Plan Card
+                 Shown if user is not on premium plan
+            ========================== -->
             {% if profile.subscription_plan != 'premium' %}
             <div class="card my-4 shadow-sm">
                 <div class="card-body py-4">
@@ -99,7 +105,10 @@
             </div>
             {% endif %}
 
-            <!-- Danger Zone Card -->
+            <!-- =========================
+                 Danger Zone Card
+                 For account deletion
+            ========================== -->
             <div class="card my-4 shadow-sm">
                 <div class="danger-zone p-4 rounded-3 bg-light border border-danger">
                     <h5 class="text-danger mb-2">Danger Zone</h5>
@@ -113,7 +122,10 @@
                 </div>
             </div>
 
-            <!-- Billing Management Button -->
+            <!-- =========================
+                 Billing Management Card
+                 Shown if user has a Stripe customer ID
+            ========================== -->
             {% if profile.stripe_customer_id %}
             <div class="card my-4 shadow-sm">
                 <div class="card-body py-4">
@@ -127,6 +139,7 @@
     </div>
 </div>
 
+<!-- Stripe integration for plan upgrades and billing portal -->
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     {% if profile.subscription_plan == 'free' %}

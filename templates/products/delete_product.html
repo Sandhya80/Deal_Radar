@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+    <!-- Back link to dashboard -->
     <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
     
     <div class="delete-container">
@@ -16,6 +17,7 @@
             <p>Are you sure you want to stop tracking this product?</p>
         </div>
         
+        <!-- Product info summary -->
         <div class="product-info">
             <h3>{{ product_name }}</h3>
             <div class="product-details">
@@ -35,11 +37,13 @@
             </div>
         </div>
         
+        <!-- Warning box for destructive action -->
         <div class="warning-box">
             <h4>⚠️ Warning</h4>
             <p>This action cannot be undone. You will stop receiving price alerts for this product.</p>
         </div>
         
+        <!-- Confirm delete form -->
         <form method="post" class="delete-form">
             {% csrf_token %}
             <div class="form-actions">

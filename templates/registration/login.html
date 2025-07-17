@@ -10,12 +10,20 @@
 {% block content %}
     <div class="auth-container">
         <div class="auth-form">
+            <!-- =========================
+                 Login Header
+                 Shows app name and intro
+            ========================== -->
             <div class="auth-header">
                 <h1>🎯 Deal Radar</h1>
                 <h2>Welcome Back!</h2>
                 <p>Sign in to access your personal tracking dashboard</p>
             </div>
             
+            <!-- =========================
+                 Login Form
+                 User authentication form
+            ========================== -->
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
@@ -34,6 +42,10 @@
                 <input type="hidden" name="next" value="{{ next }}">
             </form>
             
+            <!-- =========================
+                 Auth Links
+                 Navigation for signup/home
+            ========================== -->
             <div class="auth-links">
                 <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
                 <p><a href="{% url 'home' %}">← Back to Homepage</a></p>
@@ -43,5 +55,6 @@
 {% endblock %}
 
 {% block extra_js %}
+    <!-- JS for form enhancements -->
     <script src="{% static 'js/auth.js' %}"></script>
 {% endblock %}

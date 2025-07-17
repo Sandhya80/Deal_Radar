@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+    <!-- Back link to dashboard for easy navigation -->
     <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
     
     <div class="form-container">
@@ -16,11 +17,12 @@
             <p>Add a product to your personal tracking list and get price alerts</p>
         </div>
         
+        <!-- Product Add Form: Allows user to add a new product to track -->
         <form method="post" enctype="multipart/form-data" class="product-form">
             {% csrf_token %}
             {{ form.non_field_errors }}
             
-            <!-- Option 1: Enter Product URL -->
+            <!-- Option 1: Enter Product URL manually -->
             <div class="form-group">
                 <label for="product_url">Product URL:</label>
                 <input type="text" name="product_url" id="product_url" class="form-control" placeholder="https://amazon.com/product-page or https://ebay.com/item/..." autocomplete="off">
@@ -29,7 +31,7 @@
                 </div>
             </div>
 
-            <!-- Option 1: Category for new product -->
+            <!-- Option 1: Select Category for new product -->
             <div class="form-group">
                 <label for="category">Category:</label>
                 <select id="category" name="category">
@@ -42,7 +44,7 @@
                 </div>
             </div>
 
-            <!-- Target Price -->
+            <!-- Target Price input for price alert -->
             <div class="form-group">
                 <label for="target_price">Target Price:</label>
                 <input type="number" step="0.01" min="0" id="target_price" name="target_price" required>
@@ -54,7 +56,7 @@
                 {% endif %}
             </div>
 
-            <!-- Option 2: Select from existing products -->
+            <!-- Option 2: Select from existing products by category -->
             <div class="form-group mt-4">
                 <label class="fw-bold">Or select from existing products:</label>
                 <select id="category_select" class="form-select mb-2">
@@ -71,7 +73,7 @@
                 </div>
             </div>
 
-            <!-- Product Image Upload -->
+            <!-- Product Image Upload (optional) -->
             <div class="form-group">
                 {{ form.image.label_tag }}
                 {{ form.image }}
@@ -80,11 +82,13 @@
                 {% endif %}
             </div>
 
+            <!-- Info box for manual entry note -->
             <div class="info-box">
                 <strong>ℹ️ Phase 3 Note:</strong> Product details are entered manually. 
                 In future phases, we'll automatically scrape product information and current prices.
             </div>
 
+            <!-- Display all form errors if any -->
             {% if form.errors %}
                 <div class="form-errors">
                     {{ form.non_field_errors }}
@@ -96,6 +100,7 @@
                 </div>
             {% endif %}
 
+            <!-- Form action buttons for submit/cancel -->
             <div class="form-actions">
                 <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-success">
@@ -108,6 +113,7 @@
 
 {% block extra_js %}
     <script>
+        // JS logic for dynamic product/category selection
         const productsByCategory = {{ products_by_category_json|safe }};
         const categorySelect = document.getElementById('category_select');
         const productSelect = document.getElementById('product_select');

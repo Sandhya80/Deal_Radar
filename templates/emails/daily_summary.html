@@ -4,20 +4,30 @@
 <head>
     <meta charset="utf-8">
     <title>Daily Summary - Deal Radar</title>
+    <!-- Email CSS for consistent styling across clients -->
     <link rel="stylesheet" href="{% static 'css/email.css' %}">
 </head>
 <body class="email-body">
     <div class="email-container">
+        <!-- =========================
+             Email Header
+             Shows summary title, date, and user greeting
+        ========================== -->
         <div class="email-header">
             <h1>📊 Daily Deal Radar Summary</h1>
             <p>{{ date|date:"F d, Y" }}</p>
             <p>Hi {{ user.first_name|default:user.username }}!</p>
         </div>
         
+        <!-- =========================
+             Email Content
+             Lists triggered alerts and tracked products
+        ========================== -->
         <div class="email-content">
             {% if triggered_alerts %}
                 <h2>🔥 Today's Price Drops</h2>
                 {% for alert in triggered_alerts %}
+                    <!-- Alert Box: Shows product and price drop info -->
                     <div class="alert-box">
                         <h3>{{ alert.tracked_product.product.name }}</h3>
                         <p><strong>Target Price:</strong> £{{ alert.target_price }}</p>
@@ -30,6 +40,7 @@
             
             <h2>📦 Your Tracked Products ({{ tracked_products.count }})</h2>
             {% for tracked in tracked_products %}
+                <!-- Product Box: Shows tracked product info -->
                 <div class="product-box">
                     <h3>{{ tracked.product.name }}</h3>
                     <p><strong>Current Price:</strong> £{{ tracked.product.current_price }}</p>
@@ -40,9 +51,14 @@
                 </div>
             {% endfor %}
             
+            <!-- Call-to-action button to dashboard -->
             <a href="{{ site_url }}/dashboard/" class="email-btn">📊 View Dashboard</a>
         </div>
         
+        <!-- =========================
+             Email Footer
+             Closing message and copyright
+        ========================== -->
         <div class="email-footer">
             <p>Keep saving with Deal Radar!</p>
             <p>© 2025 Deal Radar - Your Smart Shopping Assistant</p>

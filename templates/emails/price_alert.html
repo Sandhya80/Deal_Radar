@@ -4,19 +4,29 @@
 <head>
     <meta charset="utf-8">
     <title>Price Alert - Deal Radar</title>
+    <!-- Email CSS for consistent styling across clients -->
     <link rel="stylesheet" href="{% static 'css/email.css' %}">
 </head>
 <body>
     <div class="container">
+        <!-- =========================
+             Email Header
+             Shows alert title and user greeting
+        ========================== -->
         <div class="header">
             <h1>🎯 Deal Radar Price Alert</h1>
             <p>Great news, {{ user.first_name|default:user.username }}!</p>
         </div>
         
+        <!-- =========================
+             Email Content
+             Shows price drop details and product info
+        ========================== -->
         <div class="content">
             <h2>Price Drop Alert!</h2>
             <p>The price for <strong>{{ product.name }}</strong> has dropped!</p>
             
+            <!-- Price Box: Shows old price, new price, and savings -->
             <div class="price-box">
                 <p><strong>Previous Price:</strong> £{{ old_price }}</p>
                 <p><strong>New Price:</strong> £{{ new_price }}</p>
@@ -25,10 +35,12 @@
             
             <p>Don't miss out on this deal!</p>
             
+            <!-- Call-to-action buttons -->
             <a href="{{ product.url }}" class="btn">🛒 View Product</a>
             <a href="{{ site_domain }}/dashboard/">View your dashboard</a>
             
             <hr class="email-divider">
+            <!-- Footer note about why user received this email -->
             <p class="email-small">You're receiving this email because you set up a price alert for this product on Deal Radar.</p>
         </div>
     </div>

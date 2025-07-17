@@ -7,11 +7,16 @@
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-md-10 mx-auto">
+            <!-- =========================
+                 Settings Card
+                 Contains email preferences, data export, and danger zone
+            ========================== -->
             <div class="card shadow-sm">
                 <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                     <h4><i class="fas fa-cog"></i> Settings</h4>
                 </div>
                 <div class="card-body">
+                    <!-- Display Django messages -->
                     {% if messages %}
                         {% for message in messages %}
                             <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
@@ -22,6 +27,7 @@
                     {% endif %}
                     
                     <div class="row">
+                        <!-- Email Preferences -->
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
@@ -57,6 +63,7 @@
                             </div>
                         </div>
                         
+                        <!-- Data Export -->
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
@@ -75,6 +82,7 @@
                         </div>
                     </div>
                     
+                    <!-- Danger Zone: Clear all data -->
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="card">
@@ -93,6 +101,7 @@
                         </div>
                     </div>
                     
+                    <!-- Back to dashboard button -->
                     <div class="mt-4">
                         <a href="{% url 'dashboard' %}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Back to Dashboard
@@ -104,7 +113,10 @@
     </div>
 </div>
 
-<!-- Clear Data Modal -->
+<!-- =========================
+     Clear Data Modal
+     Confirms destructive action
+========================== -->
 <div class="modal fade" id="clearDataModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">

@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+    <!-- Back link to dashboard -->
     <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
     
     <div class="edit-container">
@@ -16,6 +17,7 @@
             <p>Update your price alert settings for this product</p>
         </div>
         
+        <!-- Product info summary -->
         <div class="product-info">
             <h3>{{ tracked_product.product.name }}</h3>
             <p class="product-url">
@@ -32,6 +34,7 @@
             </div>
         </div>
         
+        <!-- Edit tracking form -->
         <form method="post" class="edit-form">
             {% csrf_token %}
             
@@ -45,11 +48,13 @@
                 </div>
             </div>
 
+            <!-- Info box about price alerts -->
             <div class="info-box">
                 <h4>💡 How Price Alerts Work</h4>
                 <p>We'll monitor this product and notify you immediately when the price reaches your target. You can change this target price anytime.</p>
             </div>
 
+            <!-- Form action buttons -->
             <div class="form-actions">
                 <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">

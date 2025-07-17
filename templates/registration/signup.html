@@ -10,18 +10,30 @@
 {% block content %}
     <div class="auth-container">
         <div class="auth-form">
+            <!-- =========================
+                 Signup Header
+                 Shows app name and intro
+            ========================== -->
             <div class="auth-header">
                 <h1>🎯 Deal Radar</h1>
                 <h2>Create Your Account</h2>
                 <p>Join Deal Radar to track your favorite products and get price alerts!</p>
             </div>
 
+            <!-- =========================
+                 Form Errors
+                 Shows validation errors if any
+            ========================== -->
             {% if form.errors %}
                 <div class="form-errors">
                     {{ form.errors }}
                 </div>
             {% endif %}
 
+            <!-- =========================
+                 Signup Form
+                 User registration form
+            ========================== -->
             <form method="post" class="signup-form">
                 {% csrf_token %}
                 <div class="form-group">
@@ -53,6 +65,10 @@
                 <button type="submit" class="auth-btn auth-btn-signup">Create Account</button>
             </form>
             
+            <!-- =========================
+                 Auth Links
+                 Navigation for login/home
+            ========================== -->
             <div class="auth-links">
                 <p>Already have an account? <a href="{% url 'login' %}">Sign in here</a></p>
                 <p><a href="{% url 'home' %}">← Back to Homepage</a></p>
@@ -62,5 +78,6 @@
 {% endblock %}
 
 {% block extra_js %}
+    <!-- JS for password strength and form enhancements -->
     <script src="{% static 'js/auth.js' %}"></script>
 {% endblock %}

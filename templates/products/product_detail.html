@@ -8,12 +8,14 @@
 {% endblock %}
 
 {% block content %}
+    <!-- Back link to all products -->
     <a href="{% url 'home' %}" class="back-link">← Back to Products</a>
     
     <div class="product-detail">
         <h1>{{ product.name }}</h1>
         <div class="product-price">£{{ product.current_price }}</div>
         
+        <!-- Product meta information -->
         <div class="product-meta">
             <p><strong>🏪 Site:</strong> {{ product.site_name|default:"Not specified" }}</p>
             <p><strong>📂 Category:</strong> {{ product.category|default:"Uncategorized" }}</p>
@@ -21,11 +23,13 @@
             <p><strong>🔄 Updated:</strong> {{ product.updated_at|date:"F d, Y \a\t h:i A" }}</p>
         </div>
         
+        <!-- Product description section -->
         <div class="product-description">
             <h3>📝 Description</h3>
             <p>{{ product.description|default:"No description available." }}</p>
         </div>
         
+        <!-- Tracking section: shows different UI for tracked/untracked/authenticated/anonymous -->
         {% if user.is_authenticated %}
             <div class="tracking-section {% if is_tracked %}tracking-active{% endif %}">
                 <h3>📊 Personal Tracking</h3>
@@ -65,6 +69,7 @@
             </div>
         {% endif %}
         
+        <!-- Action buttons for external site and back -->
         <div class="action-buttons">
             <a href="{{ product.url }}" target="_blank" class="btn btn-primary">🔗 Visit Original Site</a>
             <a href="{% url 'home' %}" class="btn btn-secondary">← Back to All Products</a>
