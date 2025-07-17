@@ -1,149 +1,157 @@
 # Deal Radar
 
-**Never Miss a Deal Again!** - A Django-based web application that tracks product prices across e-commerce platforms and sends real-time alerts when deals are available.
+**Never Miss a Deal Again!**  
+A Django-based web application that tracks product prices across e-commerce platforms and sends real-time alerts when deals are available.
 
-## Project Status
+---
 
-**Phase 1: Foundation & Authentication** *Complete*
+## 🚦 Project Status
 
-### Phase 1 Completed Features
+**Phase 1: Foundation & Authentication** ✅ *Complete*  
+**Phase 2: MVP Functionality** ✅ *Complete*  
+**Phase 3: Automation & Alerts** ✅ *Complete*  
+**Phase 4: Polish & Monetization** ✅ *Complete*  
 
-1. **Django Project Structure**
-   - Main project: `deal_radar`
-   - Apps: `users`, `products`, `notifications`, `subscriptions`
-   - Comprehensive code documentation and comments
+---
 
-2. **Dependencies Configuration**
-   - `requirements.txt` with all necessary packages
-   - Environment configuration with detailed `.env.example`
-   - Proper `.gitignore` setup
+## ✅ Completed Features by Phase
 
-3. **Database Models & Migrations**
-   - User authentication and profiles with subscription tiers
-   - Product tracking system with price history
-   - Deal alerts system with notification preferences
-   - All migrations created and applied
+### Phase 1: Foundation & Authentication
 
-4. **Authentication System**
-   - Django AllAuth integration for advanced authentication
-   - User registration, login, logout functionality
-   - Profile management with notification preferences
-   - Subscription tier management (Free/Premium)
+- Django project structure with modular apps: `users`, `products`, `notifications`, `subscriptions`
+- Comprehensive code documentation and comments
+- Dependency management (`requirements.txt`, `.env.example`, `.gitignore`)
+- Database models for users, products, price history, and alerts
+- User authentication (registration, login, logout) with Django AllAuth
+- Profile management with notification preferences and subscription tiers
+- Bootstrap 5 responsive UI with base, dashboard, and CRUD templates
 
-5. **Basic UI Framework**
-   - Bootstrap 5 integration with responsive design
-   - Base template with navigation and styling
-   - Dashboard template for product management
-   - Product add/edit/delete templates
+### Phase 2: MVP Functionality
 
-6. **Code Documentation**
-   - Comprehensive comments in all major files
-   - Business logic explanations
-   - Phase implementation strategy documented
-   - API endpoint documentation
+- Automated web scraping engine for supported e-commerce sites (Amazon, eBay, Argos, etc.)
+- Celery background task system for scheduled scraping and notifications
+- Redis integration for task queue management
+- Enhanced dashboard with real-time scraping status and product updates
+- Admin tools for manual scraping and product management
+- Product search, category browsing, and filtering
 
-### Ready for Phase 2
+### Phase 3: Automation & Alerts
 
-All foundation components are in place and fully documented. The application now has:
+- Email notifications for price drops and triggered alerts
+- SMS/WhatsApp integration via Twilio for instant alerts
+- Celery task scheduling for periodic scraping and alert delivery
+- User-configurable alert preferences (frequency, channels)
+- Daily/weekly summary emails for tracked products and triggered alerts
 
-- Working authentication system
-- Complete database schema
-- Basic CRUD operations for products
-- Responsive UI framework
-- Comprehensive code documentation
+### Phase 4: Polish & Monetization
 
-**Current State**: Phase 2 core implementation complete - automated price scraping system ready for Redis setup and testing.
+- Stripe subscription system for premium features
+- Billing management and upgrade/downgrade flows
+- Unit and integration testing for core features
+- Security hardening (environment variables, HTTPS, input validation)
+- Final deployment to Heroku (or similar cloud platform)
+- Cloudinary integration for product image storage
+- UI/UX polish and accessibility improvements
 
-**Phase 2 Status**: 
-- ✅ Web scraping engine implemented
-- ✅ Celery background task system configured  
-- ✅ Enhanced dashboard with scraping status
-- ✅ Admin testing tools available
-- ⏳ Requires Redis server setup (see PHASE2_MANUAL_SETUP.md)
+---
 
-1. **Database Models**
-   - User authentication and profiles
-   - Product tracking system
-   - Price history tracking
-   - Deal alerts system
+## 🚀 Getting Started
 
-2. **Basic UI Framework**
-   - Bootstrap 5 integration
-   - Responsive base template
-   - Home page template
+### 1. Install Dependencies & Setup Environment
 
-### Next Steps (Day 1 Completion)
+```bash
+# Create virtual environment
+python -m venv deal_radar_env
+deal_radar_env\Scripts\activate  # Windows
 
-1. **Install Dependencies & Setup Environment**
+# Install dependencies
+pip install -r requirements.txt
 
-   ```bash
-   # Create virtual environment
-   python -m venv deal_radar_env
-   deal_radar_env\Scripts\activate  # Windows
-   
-   # Install dependencies
-   pip install -r requirements.txt
-   
-   # Setup environment
-   copy .env.example .env
-   # Edit .env with your database credentials
-   ```
+# Setup environment
+copy .env.example .env
+# Edit .env with your database and API credentials
+```
 
-2. **Database Setup**
+### 2. Database Setup
 
-   ```bash
-   # Create and run migrations
-   python manage.py makemigrations
-   python manage.py migrate
-   
-   # Create superuser
-   python manage.py createsuperuser
-   ```
+```bash
+# Create and run migrations
+python manage.py makemigrations
+python manage.py migrate
 
-3. **Run Development Server**
+# Create superuser
+python manage.py createsuperuser
+```
 
-   ```bash
-   python manage.py runserver
-   ```
+### 3. Run Development Server
 
-## Architecture Overview
+```bash
+python manage.py runserver
+```
 
+### 4. Start Celery Worker (for background tasks)
+
+```bash
+celery -A deal_radar worker -l info
+celery -A deal_radar beat -l info
+```
+
+### 5. (Optional) Start Redis Server
+
+- Ensure Redis is running for Celery task queue.
+
+---
+
+## 🏗️ Architecture Overview
+
+```
 Frontend (Bootstrap + Django Templates)
     ↕
 Django Views + Django REST Framework
     ↕
 PostgreSQL (Users, Products, Price History)
     ↕
-Celery Workers (Price Scraping Tasks)
+Celery Workers (Price Scraping, Alerts)
+    ↕
+Redis (Task Queue)
     ↕
 Notifications (Email/SMS/WhatsApp)
+    ↕
+Stripe (Billing)
+    ↕
+Cloudinary (Image Storage)
 ```
 
-## Features Overview
+---
 
-### Phase 1 (Days 1-3): Foundation
-- [x] User authentication system
-- [x] Product tracking models
-- [x] Basic dashboard UI
-- [x] CRUD operations for products
+## ✨ Features Overview
 
-### Phase 2 (Days 4-7): MVP Functionality
-- [ ] Web scraping implementation
-- [ ] Price drop detection
-- [ ] Dashboard with real data
-- [ ] Heroku deployment
+### Phase 1: Foundation
+- [x] User authentication system (register, login, logout)
+- [x] Product tracking models and price history
+- [x] Basic dashboard UI and CRUD for products
+- [x] Responsive Bootstrap UI
 
-### Phase 3 (Days 8-10): Automation & Alerts
-- [ ] Email notifications
-- [ ] SMS/WhatsApp integration
-- [ ] Celery task scheduling
-- [ ] Alert preferences
+### Phase 2: MVP Functionality
+- [x] Web scraping for supported sites
+- [x] Price drop detection and history
+- [x] Dashboard with real data and search/filter
+- [x] Admin tools for scraping and product management
 
-### Phase 4 (Days 11-14): Polish & Monetization
-- [ ] Stripe subscription system
-- [ ] Unit testing
-- [ ] Security hardening
-- [ ] Final deployment
+### Phase 3: Automation & Alerts
+- [x] Email and WhatsApp/SMS notifications
+- [x] Celery task scheduling for scraping and alerts
+- [x] User alert preferences (frequency, channels)
+- [x] Daily/weekly summary emails
+
+### Phase 4: Polish & Monetization
+- [x] Stripe subscription system (Free/Basic/Premium)
+- [x] Billing management and upgrade/downgrade
+- [x] Unit and integration testing
+- [x] Security hardening and accessibility
+- [x] Final deployment and documentation
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -154,10 +162,12 @@ Notifications (Email/SMS/WhatsApp)
 - **Scraping**: BeautifulSoup, Selenium
 - **Notifications**: Twilio (SMS/WhatsApp), SMTP (Email)
 - **Payments**: Stripe
-- **Deployment**: Heroku
+- **Deployment**: Heroku (or similar)
 - **Storage**: Cloudinary (Images)
 
-## Assessment Criteria Alignment
+---
+
+## 📋 Assessment Criteria Alignment
 
 - **Authentication & Role-Based Access**: Django Auth + User Profiles
 - **Database Design & CRUD**: PostgreSQL + Django ORM
@@ -167,9 +177,12 @@ Notifications (Email/SMS/WhatsApp)
 - **Custom Data Modeling**: Product/Price/User Models
 - **Security**: Environment Variables + HTTPS
 
-## Support
+---
 
-For questions about this project, please create an issue in this repository.
+## 🤝 Support
+
+For questions or issues, please create an issue in this repository.
 
 ---
-**Built with using Django & AI assistance for debugging**
+
+**Built with Django, Celery, Stripe, and AI assistance for debugging**
