@@ -1,4 +1,10 @@
-/* Edit product page - matching your beautiful design */
+/* Edit product page styles.
+- Form layout, product info, price display, and responsive design.
+*/
+
+/* Edit Container
+   - Main wrapper for edit form.
+*/
 .edit-container {
     max-width: 700px;
     margin: 0 auto;
@@ -28,6 +34,9 @@
     margin: 0;
 }
 
+/* Product Info
+   - Section for product details and link.
+*/
 .product-info {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     padding: 30px;
@@ -60,6 +69,9 @@
     text-decoration: underline;
 }
 
+/* Price Display
+   - Shows current price in a highlighted box.
+*/
 .price-display {
     background: white;
     padding: 20px;
@@ -85,6 +97,9 @@
     font-weight: 700;
 }
 
+/* Edit Form
+   - Styles for form elements.
+*/
 .edit-form .form-group {
     margin-bottom: 30px;
 }
@@ -121,6 +136,9 @@
     line-height: 1.4;
 }
 
+/* Info Box
+   - For warnings or tips.
+*/
 .info-box {
     background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
     padding: 25px;
@@ -143,6 +161,9 @@
     line-height: 1.5;
 }
 
+/* Form Actions
+   - Button group for save/cancel.
+*/
 .form-actions {
     display: flex;
     gap: 20px;
@@ -157,6 +178,9 @@
     min-width: 150px;
 }
 
+/* Back Link
+   - Link to navigate back.
+*/
 .back-link {
     display: inline-block;
     margin-bottom: 30px;
@@ -170,7 +194,9 @@
     text-decoration: underline;
 }
 
-/* Price warning message */
+/* Price Warning
+   - Highlighted warning for price issues.
+*/
 .price-warning {
     background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
     color: #aa8924;
@@ -193,7 +219,9 @@
     }
 }
 
-/* Responsive design */
+/* Responsive Design
+   - Adjusts layout for mobile screens.
+*/
 @media (max-width: 768px) {
     .form-actions {
         flex-direction: column;

@@ -36,25 +36,20 @@ import os
 from celery import Celery
 
 # Set the default Django settings module for the 'celery' program.
-# This ensures Celery uses the same configuration as the Django application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'deal_radar.settings')
 
 # Create Celery application instance
-# Name should match the Django project name for consistency
 app = Celery('deal_radar')
 
 # Configure Celery using Django settings
-# Using a string here means the worker doesn't have to serialize
-# the configuration object to child processes.
-# The 'CELERY' namespace separates Celery settings from other Django settings
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Automatically discover task modules from all registered Django apps
-# This looks for 'tasks.py' files in each Django app and imports task functions
 app.autodiscover_tasks()
 
 # Task Routing Configuration (Phase 2+)
-# Route different types of tasks to specific queues for better resource management
+# Example: Route different types of tasks to specific queues for better resource management
+# Uncomment and configure if needed:
 # app.conf.task_routes = {
 #     'products.tasks.scrape_product_price': {'queue': 'scraping'},
 #     'notifications.tasks.send_email_alert': {'queue': 'notifications'},
@@ -65,25 +60,25 @@ app.autodiscover_tasks()
 # Task Configuration
 app.conf.update(
     # Task execution settings
-    task_serializer='json',           # Use JSON for task serialization
-    accept_content=['json'],          # Only accept JSON content
-    result_serializer='json',         # Serialize results as JSON
-    timezone='UTC',                   # Use UTC timezone for consistency
-    enable_utc=True,                  # Enable UTC timezone handling
-    
+    task_serializer='json',
+    accept_content=['json'],
+    result_serializer='json',
+    timezone='UTC',
+    enable_utc=True,
+
     # Task routing and retry settings
-    task_default_retry_delay=60,      # Retry failed tasks after 60 seconds
-    task_max_retries=3,               # Maximum retry attempts
-    task_acks_late=True,              # Acknowledge tasks after completion
-    worker_prefetch_multiplier=1,     # Process one task at a time for accuracy
-    
+    task_default_retry_delay=60,
+    task_max_retries=3,
+    task_acks_late=True,
+    worker_prefetch_multiplier=1,
+
     # Result backend settings
-    result_expires=3600,              # Results expire after 1 hour
-    result_persistent=True,           # Persist results in Redis
-    
+    result_expires=3600,
+    result_persistent=True,
+
     # Beat scheduler settings (for periodic tasks)
     beat_schedule={
-        # Example scheduled tasks for Phase 2+
+        # Example scheduled tasks for Phase 2+ (uncomment and configure in production)
         # 'scrape-all-products': {
         #     'task': 'products.tasks.scrape_all_products',
         #     'schedule': crontab(minute=0, hour='*/2'),  # Every 2 hours
@@ -103,39 +98,24 @@ app.conf.update(
 def debug_task(self):
     """
     Debug task for testing Celery functionality
-    
+
     This task is used for testing and debugging the Celery setup.
     It prints the task request information and can be used to verify
     that workers are running correctly and can process tasks.
-    
+
     Usage:
     - Call from Django shell: debug_task.delay()
     - Monitor worker logs for output
     - Verify task completion in Redis/result backend
-    
+
     Args:
         self: Task instance (automatically provided by bind=True)
-    
+
     Returns:
         str: Debug information about the task request
     """
     print(f'Request: {self.request!r}')
     return f'Debug task executed successfully. Request ID: {self.request.id}'
 
-
-# Example task definitions for future phases:
-
-# @app.task(bind=True, autoretry_for=(Exception,), retry_kwargs={'max_retries': 3})
-# def scrape_product_price(self, product_id):
-#     """Scrape current price for a specific product"""
-#     pass
-
-# @app.task(bind=True, autoretry_for=(Exception,), retry_kwargs={'max_retries': 2})
-# def send_price_alert(self, user_id, product_id, old_price, new_price):
-#     """Send price drop alert to user via their preferred channels"""
-#     pass
-
-# @app.task
-# def generate_daily_report():
-#     """Generate daily analytics report for admin dashboard"""
-#     pass
+# All actual Celery tasks are implemented in their respective app's tasks.py files.
+# Example task definitions below have been removed for clarity, as they are now present in

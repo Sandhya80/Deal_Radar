@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Edit product page loaded');
     
-    // Animation on load
+    // Animation on load for edit container
     const container = document.querySelector('.edit-container');
     if (container) {
         container.style.opacity = '0';
@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
 
-    // Price input enhancements
+    // Price input enhancements and real-time validation
     const priceInput = document.querySelector('#desired_price');
     const currentPriceElement = document.querySelector('.current-price .price');
     
     if (priceInput && currentPriceElement) {
         const currentPrice = parseFloat(currentPriceElement.textContent.replace('£', ''));
         
-        // Real-time validation and feedback
+        // Real-time validation and feedback for target price
         priceInput.addEventListener('input', function() {
             const desiredPrice = parseFloat(this.value);
             
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Format price on blur
+        // Format price on blur for currency
         priceInput.addEventListener('blur', function() {
             const value = parseFloat(this.value);
             if (value) {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Form submission enhancement
+    // Form submission enhancement (loading state)
     const editForm = document.querySelector('.edit-form');
     const submitButton = document.querySelector('button[type="submit"]');
     
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Enhanced button interactions
+    // Enhanced button hover interactions
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach(btn => {
         btn.addEventListener('mouseenter', function() {
@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Show warning if target price is higher than current price
 function showPriceWarning(desired, current) {
     let warning = document.querySelector('.price-warning');
     if (!warning) {
@@ -88,6 +89,7 @@ function showPriceWarning(desired, current) {
     warning.innerHTML = `⚠️ Your target price (£${desired.toFixed(2)}) is higher than the current price (£${current.toFixed(2)}). You'll be alerted immediately!`;
 }
 
+// Remove price warning if not needed
 function hidePriceWarning() {
     const warning = document.querySelector('.price-warning');
     if (warning) {

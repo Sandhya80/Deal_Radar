@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Deal Radar Home Page Loaded');
     
-    // Enhanced product card hover effects
+    // Enhanced product card hover effects for visual feedback
     const productCards = document.querySelectorAll('.product');
     productCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Search input enhancements
+    // Search input focus/blur enhancements for better UX
     const searchInput = document.querySelector('.search-input');
     if (searchInput) {
         searchInput.addEventListener('focus', function() {
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Button hover effects
+    // Button hover effects for all buttons on home page
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach(btn => {
         btn.addEventListener('mouseenter', function() {

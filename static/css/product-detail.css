@@ -1,3 +1,41 @@
+/*
+Product detail page styles.
+- Product info, price, meta, description, and tracking section.
+- Responsive and visually distinct for product focus.
+*/
+
+/* Product Detail Card
+   - Main container for product info.
+*/
+
+/* Product Price
+   - Large, bold price display.
+*/
+
+/* Product Meta
+   - Section for site, category, and brand info.
+*/
+
+/* Product Description
+   - Section for product description.
+*/
+
+/* Tracking Section
+   - Shows tracking status and signup prompt.
+*/
+
+/* Action Buttons
+   - Styles for add/remove tracking, alerts, etc.
+*/
+
+/* Back Link
+   - Styled link to return to previous page.
+*/
+
+/* Tracking Status Message
+   - Highlights when a product is actively tracked.
+*/
+
 /* Product detail specific styles */
 .product-detail {
     background: white;

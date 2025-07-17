@@ -1,3 +1,41 @@
+/* Home page styles for Deal Radar.
+- Header with animated radar icon.
+- Product grid, search, empty state, and "How it works" section.
+- Responsive design for all screen sizes.
+*/
+
+/* Header
+   - Large gradient background, animated radar icon, and subtitle.
+*/
+
+/* Search Section
+   - Styled search bar and button for product search.
+*/
+
+/* Product Grid
+   - Responsive grid for displaying product cards.
+*/
+
+/* Product Card
+   - Card styling, hover effects, price, and tracking badge.
+*/
+
+/* Empty State
+   - Shown when no products match the search/filter.
+*/
+
+/* Admin Controls
+   - Special section for admin actions.
+*/
+
+/* "How it works" Section
+   - Explains app workflow with cards and icons.
+*/
+
+/* Responsive Design
+   - Adjusts grid, header, and controls for mobile/tablet.
+*/
+
 /* Home page - matching your beautiful original design */
 
 /* Header with inline radar animation */

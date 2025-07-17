@@ -2,13 +2,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Dashboard loaded successfully');
     
-    // Initialize dashboard
+    // Initialize dashboard UI and event handlers
     initializeDashboard();
     
-    // Force stat card dimensions after page load
+    // Force stat card dimensions after page load for consistent layout
     setTimeout(forceStatCardDimensions, 100);
     
-    // Animate stat cards on load
+    // Animate stat cards on load for visual appeal
     animateStatCards();
 });
 
@@ -22,11 +22,11 @@ function initializeDashboard() {
     // Handle alert form submissions
     handleAlertForms();
     
-    // Handle confirmation dialogs
+    // Handle confirmation dialogs for destructive actions
     handleConfirmationDialogs();
 }
 
-// Force stat card dimensions to be compact WIDTH
+// Force stat card dimensions to be compact WIDTH for uniformity
 function forceStatCardDimensions() {
     // Force stat cards to be compact WIDTH
     const statCards = document.querySelectorAll('.stat-card');
@@ -68,7 +68,7 @@ function forceStatCardDimensions() {
     }
 }
 
-// Animate stat cards on load
+// Animate stat cards on load for a smooth entrance effect
 function animateStatCards() {
     const statCards = document.querySelectorAll('.stat-card');
     statCards.forEach((card, index) => {
@@ -84,7 +84,7 @@ function animateStatCards() {
     });
 }
 
-// Handle stat card hover effects
+// Handle stat card hover effects for interactivity
 function handleStatCardHovers() {
     const statCards = document.querySelectorAll('.stat-card');
     statCards.forEach(card => {
@@ -100,7 +100,7 @@ function handleStatCardHovers() {
     });
 }
 
-// Handle product card animations
+// Handle product card hover/leave animations
 function handleProductCardAnimations() {
     const productCards = document.querySelectorAll('.tracked-product-item');
     productCards.forEach(card => {
@@ -130,7 +130,7 @@ function handleProductCardAnimations() {
     });
 }
 
-// Handle price alert form submissions
+// Handle price alert form submissions with validation
 function handleAlertForms() {
     const alertForms = document.querySelectorAll('form[action*="create_price_alert"]');
     alertForms.forEach(form => {
@@ -145,7 +145,7 @@ function handleAlertForms() {
     });
 }
 
-// Handle confirmation dialogs
+// Handle confirmation dialogs for deleting alerts or untracking products
 function handleConfirmationDialogs() {
     // Delete alert confirmations
     const deleteButtons = document.querySelectorAll('a[href*="delete_price_alert"]');
@@ -170,7 +170,7 @@ function handleConfirmationDialogs() {
     });
 }
 
-// Auto-hide success/error messages
+// Auto-hide success/error messages after a delay
 function autoHideMessages() {
     const messages = document.querySelectorAll('.alert');
     messages.forEach(message => {
@@ -183,5 +183,5 @@ function autoHideMessages() {
     });
 }
 
-// Call auto-hide messages
+// Call auto-hide messages on page load
 autoHideMessages();

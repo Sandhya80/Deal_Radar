@@ -24,6 +24,12 @@ def parse_price(price_str):
         return None
 
 def scrape_product_data(url):
+    """
+    Scrape product details (name, price, image, description) from the given URL.
+    Supports Amazon, Argos, Nike, Costco, TheWorks, JDSports, Currys, appliancecity,
+    Atlantic Electrics, John Lewis, eBay, Next, and generic fallback.
+    Raises Exception if site is not supported or info not found.
+    """
     try:
         response = requests.get(url, headers=HEADERS, timeout=10)
         response.raise_for_status()

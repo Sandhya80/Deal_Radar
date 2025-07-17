@@ -1,3 +1,10 @@
+/* 
+Base styles for Deal Radar web app.
+- Layout, typography, header, navigation bar, footer, and responsive design.
+- Navbar and footer use purple gradients for brand consistency.
+- Includes skip link for accessibility.
+*/
+
 /* Beautiful base styles matching your original design */
 body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -345,7 +352,10 @@ body {
     top: 9px;
 }
 
-/* Responsive Navbar */
+/* Responsive Navbar
+   - Collapses navigation and auth links into hamburger menu on small screens.
+   - Adjusts padding and layout for mobile usability.
+*/
 @media (max-width: 900px) {
     body {
         padding-top: 44px; /* Match reduced navbar height */
@@ -400,7 +410,10 @@ body {
     }
 }
 
-/* Professional Footer - Dark Purple Theme */
+/* Professional Footer
+   - Uses gradients and subtle patterns for a modern look.
+   - Contains brand, links, social, and legal info.
+*/
 .footer {
     background: linear-gradient(135deg, #2d1b69 0%, #3a1c71 100%);
     color: white;
@@ -637,7 +650,9 @@ body {
     font-size: 14px;
 }
 
-/* Supported Sites Section */
+/* Supported Sites Section
+   - Displays logos of supported e-commerce sites.
+*/
 .supported-sites {
   padding: 2rem 0;
   background: #dee1f0; /* Light background for contrast */
@@ -734,7 +749,9 @@ body {
     }
 }
 
-/* Skip Link Styles */
+/* Skip Link Styles
+   - Accessibility: allows keyboard users to skip to main content.
+*/
 .skip-link {
   position: absolute;
   left: -999px;
@@ -759,7 +776,9 @@ body {
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
 }
 
-/* My Account Button Styles */
+/* My Account Button Styles
+   - Styles for the "My Account" button shown to logged-in users.
+*/
 .my-account-btn-container {
     display: flex;
     justify-content: flex-end;
@@ -787,7 +806,9 @@ body {
     text-decoration: none;
 }
 
-/* Stylish Dropdowns for Add Product Form */
+/* Stylish Dropdowns for Add Product Form
+   - Custom select styling for category/product forms.
+*/
 .form-select, select {
     background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
     border: 1.5px solid #b993d6;

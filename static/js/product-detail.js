@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Product detail page loaded');
     
-    // Smooth scroll animations
+    // Smooth scroll animations for product detail card
     const productDetail = document.querySelector('.product-detail');
     if (productDetail) {
         productDetail.style.opacity = '0';
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
 
-    // Tracking button interactions
+    // Tracking button interactions (visual feedback on click)
     const trackingButtons = document.querySelectorAll('.tracking-section .btn');
     trackingButtons.forEach(btn => {
         btn.addEventListener('click', function(e) {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Price highlight animation
+    // Price highlight animation on hover
     const price = document.querySelector('.product-price');
     if (price) {
         price.addEventListener('mouseenter', function() {

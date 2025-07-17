@@ -1,8 +1,8 @@
-// Authentication forms functionality
+// Authentication forms functionality (login/signup)
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Auth page loaded');
     
-    // Form validation feedback
+    // Form validation feedback for auth forms
     const inputs = document.querySelectorAll('.form-group input');
     inputs.forEach(input => {
         input.addEventListener('blur', function() {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Password strength indicator for signup
+    // Password strength indicator for signup form
     const passwordField = document.querySelector('input[name="password1"]');
     if (passwordField) {
         passwordField.addEventListener('input', function() {
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const existing = document.querySelector('.password-strength');
             if (existing) existing.remove();
             
-            // Add strength indicator
+            // Add strength indicator below password field
             const indicator = document.createElement('div');
             indicator.className = 'password-strength';
             indicator.style.marginTop = '5px';
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Form submission animation
+    // Form submission animation (loading state)
     const authForm = document.querySelector('.auth-form form');
     if (authForm) {
         authForm.addEventListener('submit', function() {
@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Password strength checker for signup
 function getPasswordStrength(password) {
     let score = 0;
     if (password.length >= 8) score++;

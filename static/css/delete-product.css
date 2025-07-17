@@ -145,3 +145,41 @@
         width: 100%;
     }
 }
+
+/*
+Delete product confirmation page styles.
+- Product info, warning box, and action buttons.
+- Responsive for all devices.
+*/
+
+/* Delete Container
+   - Main wrapper for delete confirmation.
+*/
+
+/* Delete Header
+   - Title and subtitle for delete page.
+*/
+
+/* Product Info
+   - Section for product details.
+*/
+
+/* Price Info
+   - Grid for showing current and previous prices.
+*/
+
+/* Warning Box
+   - Highlighted warning before deletion.
+*/
+
+/* Form Actions
+   - Button group for confirm/cancel.
+*/
+
+/* Back Link
+   - Styled link to return to previous page.
+*/
+
+/* Responsive Design
+   - Adjusts grid and buttons for mobile.
+*/

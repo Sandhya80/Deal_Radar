@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Delete product page loaded');
     
-    // Animation on load
+    // Animation on load for delete container
     const container = document.querySelector('.delete-container');
     if (container) {
         container.style.opacity = '0';
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
 
-    // Confirmation handling
+    // Confirmation handling for delete action
     const deleteForm = document.querySelector('.delete-form');
     const deleteButton = document.querySelector('.btn-danger');
     
@@ -28,14 +28,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
             
-            // Visual feedback
+            // Visual feedback for loading state
             deleteButton.style.opacity = '0.7';
             deleteButton.innerHTML = '⏳ Removing...';
             deleteButton.disabled = true;
         });
     }
 
-    // Enhanced button interactions
+    // Enhanced button hover interactions
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach(btn => {
         btn.addEventListener('mouseenter', function() {

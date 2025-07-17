@@ -33,7 +33,8 @@ logger = logging.getLogger(__name__)
 
 class PriceScraper:
     """
-    Main price scraping class with support for multiple UK retailers
+    Main price scraping class with support for multiple UK retailers.
+    Handles site-specific scraping and generic fallback.
     """
     
     def __init__(self):
@@ -242,8 +243,7 @@ class PriceScraper:
 @shared_task(bind=True, autoretry_for=(Exception,), retry_kwargs={'max_retries': 3})
 def scrape_product_price(self, tracked_product_id):
     """
-    Scrape price for a single tracked product
-    This is the core background task that runs for each product
+    Celery task: Scrape price for a single tracked product and trigger alerts if needed.
     """
     try:
         tracked_product = TrackedProduct.objects.get(id=tracked_product_id)
@@ -301,8 +301,8 @@ def scrape_product_price(self, tracked_product_id):
 @shared_task
 def scrape_all_products():
     """
-    Schedule scraping for all active tracked products
-    Respects subscription tiers (free vs premium frequency)
+    Celery task: Schedule scraping for all active tracked products.
+    Premium users get more frequent checks.
     """
     # Get all active tracked products
     tracked_products = TrackedProduct.objects.filter(is_active=True).select_related('user__profile', 'product')
@@ -341,8 +341,7 @@ def scrape_all_products():
 @shared_task
 def cleanup_old_price_history():
     """
-    Clean up old price history records to manage database size
-    Keep detailed history for 90 days, summarized data for 1 year
+    Celery task: Delete price history records older than 90 days.
     """
     from datetime import timedelta
     
@@ -358,8 +357,7 @@ def cleanup_old_price_history():
 @shared_task
 def update_product_metadata(product_id):
     """
-    Update product metadata like name, image, description from the website
-    This enhances the basic URL-only data users provide
+    Celery task: Update product metadata (name, image, etc.) from the product page.
     """
     try:
         product = Product.objects.get(id=product_id)

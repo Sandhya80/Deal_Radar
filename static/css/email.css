@@ -247,3 +247,40 @@ body {
         margin: 20px 0;
     }
 }
+
+/*
+Email template styles for all outgoing emails.
+- Header, content, buttons, feature boxes, and responsive design.
+*/
+
+/* Email Body & Container
+   - Main wrapper for email content.
+*/
+
+/* Email Header
+   - Gradient header for branding.
+*/
+
+/* Email Content
+   - Main content area for messages.
+*/
+
+/* Email Button
+   - Call-to-action button styling.
+*/
+
+/* Feature Box
+   - Highlighted features in welcome email.
+*/
+
+/* Alert Box & Product Box
+   - Used in daily summary and price alert emails.
+*/
+
+/* Price Box
+   - Highlights price drop in alert emails.
+*/
+
+/* Responsive Design
+   - Ensures emails look good on mobile devices.
+*/

@@ -1,12 +1,12 @@
-// Forms functionality
+// Forms functionality for product add/edit and user profile forms
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Forms page loaded');
     
-    // Form validation and enhancements
+    // Form validation and enhancements for product forms
     const form = document.querySelector('.product-form');
     const inputs = document.querySelectorAll('.product-form input');
     
-    // Enhanced input interactions
+    // Enhanced input interactions (focus/blur/validation)
     inputs.forEach(input => {
         input.addEventListener('focus', function() {
             this.parentNode.style.transform = 'translateY(-2px)';
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Form submission animation
+    // Form submission animation (loading state)
     if (form) {
         form.addEventListener('submit', function() {
             const submitBtn = this.querySelector('button[type="submit"]');
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // URL validation for product URL
+    // URL validation for product URL input
     const urlInput = document.querySelector('input[name="url"]');
     if (urlInput) {
         urlInput.addEventListener('blur', function() {
@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Validate if the product URL is from a supported domain
 function isValidProductURL(url) {
     const validDomains = [
         'amazon.co.uk', 'amazon.com',
@@ -71,6 +72,7 @@ function isValidProductURL(url) {
     }
 }
 
+// Show help message for invalid URLs (can be expanded)
 function showURLHelp() {
     // Could add a dynamic help message here
 }

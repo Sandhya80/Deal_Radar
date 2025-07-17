@@ -97,3 +97,32 @@
 .back-link:hover {
     text-decoration: underline;
 }
+
+/*
+Form styles for product add/edit and user profile forms.
+- Clean, modern look with info boxes and responsive layout.
+*/
+
+/* Form Container
+   - Main wrapper for forms.
+*/
+
+/* Form Header
+   - Title and subtitle for forms.
+*/
+
+/* Product Form
+   - Input, label, and help text styling.
+*/
+
+/* Info Box
+   - Highlighted section for tips or info.
+*/
+
+/* Form Actions
+   - Button group for submit/cancel.
+*/
+
+/* Back Link
+   - Styled link to return to previous page.
+*/

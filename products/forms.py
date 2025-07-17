@@ -8,6 +8,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 class CustomUserCreationForm(UserCreationForm):
+    """
+    Custom user creation form with email field and duplicate email validation.
+    """
     email = forms.EmailField(required=True)
 
     class Meta:
@@ -30,6 +33,9 @@ class CustomUserCreationForm(UserCreationForm):
         return user
 
 class TrackProductForm(forms.Form):
+    """
+    Form for users to set a target price when tracking a product.
+    """
     target_price = forms.DecimalField(
         label="Target Price (£)",
         min_value=0,
@@ -47,6 +53,9 @@ class TrackProductForm(forms.Form):
         return price
 
 class UserProfileForm(forms.ModelForm):
+    """
+    Form for updating user notification preferences and WhatsApp number.
+    """
     class Meta:
         model = UserProfile
         fields = [
@@ -60,6 +69,9 @@ class UserProfileForm(forms.ModelForm):
         }
 
 class ProductForm(forms.ModelForm):
+    """
+    Form for adding or editing a product in the admin or dashboard.
+    """
     class Meta:
         model = Product
         fields = [

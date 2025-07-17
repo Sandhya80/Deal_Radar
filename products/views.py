@@ -29,7 +29,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 logger = logging.getLogger(__name__)
 
 def highlight_search_terms(text, search_query):
-    """Highlight search terms in text"""
+    """Highlight search terms in text for UI display."""
     if not search_query or not text:
         return text
     pattern = re.compile(f'({re.escape(search_query)})', re.IGNORECASE)
@@ -37,7 +37,9 @@ def highlight_search_terms(text, search_query):
     return format_html(highlighted)
 
 def home(request):
-    """Phase 3: Enhanced homepage with user context"""
+    """
+    Homepage view: shows all products, supports search, and highlights tracked products for logged-in users.
+    """
     search_query = request.GET.get('search', '').strip()
     
     if search_query:
@@ -70,7 +72,9 @@ def home(request):
     return render(request, 'products/home.html', context)
 
 def product_detail(request, pk):
-    """Phase 3: Enhanced product detail with tracking option"""
+    """
+    Product detail page: shows product info and tracking status for the user.
+    """
     product = get_object_or_404(Product, pk=pk)
     
     is_tracked = False
@@ -97,6 +101,9 @@ def product_detail(request, pk):
 
 @login_required
 def dashboard(request):
+    """
+    User dashboard: shows tracked products, alert stats, and recent triggered alerts.
+    """
     user = request.user
     
     tracked_products = TrackedProduct.objects.filter(user=user, is_active=True).select_related('product')
@@ -135,6 +142,9 @@ def dashboard(request):
 
 @login_required 
 def add_to_tracking(request, pk):
+    """
+    Add a product to the user's tracking list, respecting subscription plan limits.
+    """
     user_profile = request.user.userprofile
     plan = settings.STRIPE_PLANS[user_profile.subscription_plan]
     product_limit = plan['product_limit']
@@ -166,7 +176,9 @@ def add_to_tracking(request, pk):
 
 @login_required
 def remove_from_tracking(request, pk):
-    """Phase 3: Remove product from user's tracking list"""  
+    """
+    Remove a product from the user's tracking list (sets is_active=False).
+    """  
     product = get_object_or_404(Product, pk=pk)
     try:
         tracked_product = TrackedProduct.objects.get(
@@ -184,7 +196,9 @@ def remove_from_tracking(request, pk):
     return redirect('product_detail', pk=pk)
 
 def signup(request):
-    """Phase 3: User registration with welcome email"""
+    """
+    User registration view: creates user, profile, sends welcome email, and logs in.
+    """
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -201,7 +215,9 @@ def signup(request):
 
 @login_required
 def create_price_alert(request, pk):
-    """Create a price alert for a tracked product"""
+    """
+    Create a price alert for a tracked product at a user-specified target price.
+    """
     tracked_product = get_object_or_404(TrackedProduct, pk=pk, user=request.user)
     if request.method == 'POST':
         target_price = request.POST.get('target_price')
@@ -233,7 +249,9 @@ def create_price_alert(request, pk):
 
 @login_required
 def toggle_price_alert(request, pk):
-    """Toggle price alert on/off"""
+    """
+    Enable or disable a price alert.
+    """
     alert = get_object_or_404(PriceAlert, pk=pk, tracked_product__user=request.user)
     alert.is_enabled = not alert.is_enabled
     alert.save()
@@ -244,7 +262,9 @@ def toggle_price_alert(request, pk):
 
 @login_required
 def delete_price_alert(request, pk):
-    """Delete a price alert"""
+    """
+    Delete a price alert for a tracked product.
+    """
     alert = get_object_or_404(PriceAlert, pk=pk, tracked_product__user=request.user)
     product_name = alert.tracked_product.product.name
     alert.delete()
@@ -254,7 +274,9 @@ def delete_price_alert(request, pk):
 
 @login_required
 def reset_price_alert(request, pk):
-    """Reset a triggered price alert"""
+    """
+    Reset a triggered price alert so it can be triggered again.
+    """
     alert = get_object_or_404(PriceAlert, pk=pk, tracked_product__user=request.user)
     alert.is_triggered = False
     alert.triggered_at = None
@@ -265,7 +287,9 @@ def reset_price_alert(request, pk):
 
 @login_required
 def profile(request):
-    """User profile management page"""
+    """
+    User profile page: shows subscription, notification, and account info.
+    """
     user = request.user
     # Always fetch the latest UserProfile from the database
     profile = UserProfile.objects.get(user=user)
@@ -280,7 +304,9 @@ def profile(request):
 
 @login_required
 def user_settings(request):
-    """Settings page for user preferences"""
+    """
+    Settings page: lets user update notification preferences or clear all data.
+    """
     user = request.user
     profile, created = UserProfile.objects.get_or_create(user=user)
     if request.method == 'POST':
@@ -305,7 +331,9 @@ def user_settings(request):
 
 @login_required
 def export_data(request):
-    """Export user data to Excel CSV"""
+    """
+    Export user's tracked products as a CSV file.
+    """
     user = request.user
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="deal_radar_data_{user.username}.csv"'
@@ -327,7 +355,9 @@ def export_data(request):
 
 @login_required
 def export_json(request):
-    """Export user data to JSON"""
+    """
+    Export user's tracked products as a JSON file.
+    """
     user = request.user
     tracked_products = TrackedProduct.objects.filter(user=user).select_related('product')
     data = {
@@ -352,7 +382,9 @@ def export_json(request):
 
 @login_required
 def delete_account(request):
-    """Delete user account"""
+    """
+    Delete the user's account and all associated data.
+    """
     if request.method == 'POST':
         user = request.user
         logout(request)
@@ -364,6 +396,9 @@ def delete_account(request):
     return render(request, 'registration/delete_account_confirm.html')
 
 def category_products(request, slug):
+    """
+    Show all products in a given category.
+    """
     category_dict = dict(Product.CATEGORY_CHOICES)
     category_name = category_dict.get(slug, slug)
     products = Product.objects.filter(category=slug)
@@ -375,7 +410,9 @@ def category_products(request, slug):
 
 @login_required
 def add_product(request):
-    """Phase 3.1: Add product page with category selection and improved UX"""
+    """
+    Add a new product to tracking, either by scraping a URL or selecting an existing product.
+    """
     user_profile = request.user.userprofile
     plan = settings.STRIPE_PLANS[user_profile.subscription_plan]
     product_limit = plan['product_limit']
@@ -456,6 +493,9 @@ def add_product(request):
 
 @csrf_exempt
 def request_site_support(request):
+    """
+    Allow users to request support for new e-commerce sites.
+    """
     if request.method == 'POST':
         site_url = request.POST.get('site_url')
         # You can save this to a model or send an email to admin
@@ -466,6 +506,9 @@ def request_site_support(request):
 
 @login_required
 def create_checkout_session(request, plan_key):
+    """
+    Create a Stripe Checkout session for the selected subscription plan.
+    """
     plan = settings.STRIPE_PLANS.get(plan_key)
     if not plan or not plan['price_id']:
         return HttpResponseBadRequest("Invalid plan selected.")
@@ -485,6 +528,10 @@ def create_checkout_session(request, plan_key):
 
 @csrf_exempt
 def stripe_webhook(request):
+    """
+    Stripe webhook endpoint: handles subscription events (checkout, update, cancel, payment failed).
+    Updates user profile and subscription status accordingly.
+    """
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
@@ -582,6 +629,9 @@ def stripe_webhook(request):
 @login_required
 @require_POST
 def create_stripe_portal_session(request):
+    """
+    Create a Stripe billing portal session for the user to manage their subscription.
+    """
     user_profile = request.user.userprofile
     if not user_profile.stripe_customer_id:
         return JsonResponse({'error': 'No Stripe customer ID found.'}, status=400)

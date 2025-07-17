@@ -1,6 +1,6 @@
 """
-Email notification utilities for Deal Radar
-Handles all email functionality without affecting the frontend
+Email notification utilities for Deal Radar.
+Handles sending price alerts, welcome emails, and daily summaries.
 """
 
 from django.core.mail import send_mail
@@ -15,7 +15,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 def send_price_alert_email(alert, old_price, new_price):
-    """Send email notification for triggered price alerts"""
+    """
+    Send an email and WhatsApp notification for a triggered price alert.
+    """
     user = alert.user
     product = alert.tracked_product.product
 
@@ -60,7 +62,9 @@ def send_price_alert_email(alert, old_price, new_price):
     return True
 
 def send_welcome_email(user):
-    """Send welcome email to new users"""
+    """
+    Send a welcome email to a new user after registration.
+    """
     subject = '🎯 Welcome to Deal Radar!'
     
     context = {
@@ -87,7 +91,9 @@ def send_welcome_email(user):
         return False
 
 def send_daily_summary_email(user):
-    """Send daily summary of alerts and tracked products"""
+    """
+    Send a daily summary email of triggered alerts and tracked products.
+    """
     try:
         profile = user.userprofile
         if not profile.email_notifications or profile.notification_frequency != 'daily':

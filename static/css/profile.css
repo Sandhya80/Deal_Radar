@@ -1,18 +1,34 @@
-/* Modern profile page tweaks */
+/*
+User profile page styles.
+- Card layout, danger zone, and button tweaks.
+*/
+
+/* Card
+   - Main container for profile info.
+*/
 .card {
     border-radius: 1rem;
     background: #e9e3ee !important; /* Very light purple */
 }
 
+/* Card Header
+   - Top section of profile card.
+*/
 .card-header {
     border-radius: 1rem 1rem 0 0;
 }
 
+/* Danger Zone
+   - Highlighted section for account deletion.
+*/
 .danger-zone {
     background: #e9e3ee !important; /* Even lighter purple for danger zone */
     border: 1px solid #d41746;
 }
 
+/* Danger Button
+   - Styles for delete account button.
+*/
 .btn-danger {
     font-weight: 600;
     letter-spacing: 0.6px;

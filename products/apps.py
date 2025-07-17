@@ -1,3 +1,5 @@
+# App configuration for the products app.
+
 from django.apps import AppConfig
 
 

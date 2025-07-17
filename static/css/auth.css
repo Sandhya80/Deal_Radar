@@ -1,9 +1,21 @@
-/* Authentication forms styling */
+/*
+Authentication forms (login/signup) styles.
+- Clean, modern look for all auth pages.
+*/
+
+/* Auth Container
+   - Main wrapper for login/signup forms.
+*/
+
 .auth-container {
     max-width: 500px;
     margin: 50px auto;
     padding: 20px;
 }
+
+/* Auth Form
+   - Card-style form layout.
+*/
 
 .auth-form {
     background: white;
@@ -11,6 +23,10 @@
     border-radius: 15px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
+
+/* Auth Header
+   - Title and subtitle for auth pages.
+*/
 
 .auth-header {
     text-align: center;
@@ -32,6 +48,10 @@
     color: #666;
     font-size: 16px;
 }
+
+/* Form Group
+   - Label and input styling.
+*/
 
 .form-group {
     margin-bottom: 20px;
@@ -59,6 +79,10 @@
     border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
+
+/* Auth Buttons
+   - Login and signup button styles.
+*/
 
 .auth-btn {
     display: block;
@@ -100,6 +124,10 @@
     background: linear-gradient(90deg, #5a6fd8 0%, #6a4190 100%);
 }
 
+/* Auth Links
+   - Links for switching between login/signup.
+*/
+
 .auth-links {
     text-align: center;
     margin-top: 20px;
@@ -115,12 +143,9 @@
     text-decoration: underline;
 }
 
-.help-text {
-    font-size: 12px;
-    color: #666;
-    margin-top: 5px;
-    line-height: 1.4;
-}
+/* Error List
+   - Styles for form validation errors.
+*/
 
 .errorlist {
     color: #dc3545;
@@ -134,17 +159,10 @@
     margin-bottom: 5px;
 }
 
-.auth-form .messages {
-    margin-bottom: 20px;
-}
+/* Signup Form
+   - Modern signup form with spacing and focus effects.
+*/
 
-.auth-form .messages div {
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-/* Modern signup form styles */
 .signup-form {
     background: #fff;
     border-radius: 16px;

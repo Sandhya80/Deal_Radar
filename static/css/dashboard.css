@@ -1,3 +1,46 @@
+/*
+Dashboard page styles.
+- Stat cards, tracked products, alerts, and responsive layout.
+- Emergency color fixes for stat cards.
+*/
+
+/* Stat Cards
+   - Four colored cards for key user stats.
+   - Uses gradients and white text.
+*/
+
+/* Product Cards
+   - Cards for each tracked product.
+*/
+
+/* Price Display
+   - Styles for price and badges.
+*/
+
+/* Forms
+   - Price alert form and input group styling.
+*/
+
+/* Action Buttons
+   - Styles for alert toggle, reset, and delete buttons.
+*/
+
+/* Empty State
+   - Styles for when no tracked products or alerts exist.
+*/
+
+/* Tracked Products Section
+   - Card styling for each tracked product.
+*/
+
+/* Alert Section
+   - Styles for triggered, active, and disabled alerts.
+*/
+
+/* Responsive Design
+   - Adjusts stat cards and layout for mobile screens.
+*/
+
 /* EMERGENCY COLOR FIX - Add this at the VERY TOP */
 .row.mb-4 .col-md-3:nth-child(1) .card {
     background-color: #72aff0 !important;

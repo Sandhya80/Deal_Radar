@@ -8,6 +8,10 @@
 {% endblock %}
 
 {% block content %}
+    <!-- =========================
+         Header Section
+         Shows animated radar icon and subtitle
+    ========================== -->
     <div class="header">
         <h1>
             <img src="{% static 'images/radar-animation.gif' %}" alt="Deal Radar" class="radar-icon"> 
@@ -16,20 +20,26 @@
         <p class="subtitle">Scanning for the best deals across the web</p>
     </div>
 
-    <!-- How It Works Section -->
+    <!-- =========================
+         How It Works Section
+         Explains app workflow in 3 steps
+    ========================== -->
     <section class="how-it-works-section">
         <h2 class="how-it-works-title">How Deal Radar Works</h2>
         <div class="how-it-works-cards">
+            <!-- Step 1: Add product -->
             <div class="how-it-works-card">
                 <div class="how-it-works-icon">🔗</div>
                 <h3>Add a product</h3>
                 <p>Add a product you'd like to track from the existing products list or products from any of our supported online stores. Click the 'Add Product To Track' button and paste the product URL to the page.</p>
             </div>
+            <!-- Step 2: We track it -->
             <div class="how-it-works-card">
                 <div class="how-it-works-icon">👁️</div>
                 <h3>We track it</h3>
                 <p>You can set your target price and our system will track the price of all products you add and monitor for price drops or changes.</p>
             </div>
+            <!-- Step 3: Get notified -->
             <div class="how-it-works-card">
                 <div class="how-it-works-icon">📧</div>
                 <h3>Get notified</h3>
@@ -38,7 +48,10 @@
         </div>
     </section>
     
-    <!-- Search Products section -->
+    <!-- =========================
+         Search Products Section
+         Allows users to search for products
+    ========================== -->
     <div class="search-products">
         <div class="search-container">
             <h2>🔍 Search Products</h2>
@@ -54,7 +67,10 @@
         </div>
     </div>
 
-    <!-- Add Product Button - Shown on Dashboard or Home for Authenticated Users -->
+    <!-- =========================
+         Add Product Button
+         Only for authenticated users
+    ========================== -->
     {% if user.is_authenticated %}
         <form action="{% url 'add_product' %}" method="get" style="display:inline;">
             <button type="submit" class="btn btn-success mb-3">
@@ -63,7 +79,10 @@
         </form>
     {% endif %}
 
-    <!-- All Products section -->
+    <!-- =========================
+         All Products Section
+         Shows either search results or all products
+    ========================== -->
     <h2>🛍️ {% if search_query %}Search Results{% else %}All Products{% endif %}</h2>
     
     {% if products %}
@@ -104,12 +123,17 @@
             {% endfor %}
         </div>
     {% else %}
+        <!-- Empty state if no products or no search results -->
         <div class="empty-state">
             <h3>{% if search_query %}No Results Found{% else %}No Products Yet{% endif %}</h3>
             <p>{% if search_query %}Try a different search term{% else %}Add products via admin panel{% endif %}</p>
         </div>
     {% endif %}
     
+    <!-- =========================
+         Admin Controls
+         Only visible to staff/superuser
+    ========================== -->
     {% if user.is_superuser or user.is_staff %}
         <div class="admin-controls">
             <h3>🔧 Admin Controls</h3>

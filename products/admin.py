@@ -1,8 +1,11 @@
+# Django admin configuration for Product, TrackedProduct, PriceAlert, and UserProfile.
+
 from django.contrib import admin
 from .models import Product, TrackedProduct, PriceAlert, UserProfile
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    # Admin interface for Product model with custom display, filters, and fieldsets.
     list_display = ['name', 'current_price', 'price', 'category', 'site_name', 'is_active', 'created_at']
     list_filter = ['category', 'site_name', 'is_active', 'created_at']
     search_fields = ['name', 'description']
@@ -30,6 +33,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(TrackedProduct)
 class TrackedProductAdmin(admin.ModelAdmin):
+    # Admin interface for TrackedProduct model.
     list_display = ['user', 'product', 'target_price', 'is_active', 'added_at']
     list_filter = ['is_active', 'added_at']
     search_fields = ['user__username', 'product__name']
@@ -37,6 +41,7 @@ class TrackedProductAdmin(admin.ModelAdmin):
 
 @admin.register(PriceAlert)
 class PriceAlertAdmin(admin.ModelAdmin):
+    # Admin interface for PriceAlert model, showing alert status and related info.
     list_display = (
         'tracked_product',
         'target_price',
@@ -68,6 +73,7 @@ class PriceAlertAdmin(admin.ModelAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
+    # Admin interface for UserProfile model, showing notification and subscription info.
     list_display = (
         'user',
         'email_notifications',
@@ -83,7 +89,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     )
     search_fields = ('user__username', 'whatsapp_number')
 
-# Optional: Custom admin site configuration
+# Optional: Custom admin site branding
 admin.site.site_header = "Deal Radar Administration"
 admin.site.site_title = "Deal Radar Admin"
 admin.site.index_title = "Welcome to Deal Radar Administration"

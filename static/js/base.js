@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Deal Radar - Base JS loaded');
     
-    // Message close functionality
+    // Message close functionality for alert messages
     const messageCloseButtons = document.querySelectorAll('.message-close');
     messageCloseButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
 
-    // Enhanced button interactions
+    // Enhanced button hover interactions
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach(btn => {
         btn.addEventListener('mouseenter', function() {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Smooth scroll for skip links
+    // Smooth scroll for skip links (accessibility)
     const skipLink = document.querySelector('.sr-only-focusable');
     if (skipLink) {
         skipLink.addEventListener('click', function(e) {
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // NEW: Sticky navbar scroll effects
+    // Sticky navbar scroll effects
     const navbar = document.querySelector('.nav-bar');
     let lastScrollTop = 0;
     
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         lastScrollTop = scrollTop;
     });
     
-    // Smooth scroll for navigation links
+    // Smooth scroll for navigation links (anchors)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Keep existing message close functionality
+    // Keep existing message close functionality for messages in dropdown
     const messageCloseButtons = document.querySelectorAll('.message-close');
     messageCloseButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Add slide out animation
+// Add slide out animation for message dismissals
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideOutUp {

@@ -1,3 +1,14 @@
+"""
+Management command to add sample products to the database for testing and demo purposes.
+
+This command creates an admin user (if not present) and populates the Product table
+with a set of predefined sample products. Useful for initial setup, development, and
+showcasing the dashboard UI.
+
+Usage:
+    python manage.py add_sample_products
+"""
+
 from django.core.management.base import BaseCommand
 from products.models import Product
 from django.contrib.auth.models import User
@@ -7,7 +18,7 @@ class Command(BaseCommand):
     help = 'Add sample products to the database'
 
     def handle(self, *args, **options):
-        # Get or create a user for the products
+        # Get or create a superuser for product ownership
         user, created = User.objects.get_or_create(
             username='admin',
             defaults={
@@ -16,8 +27,8 @@ class Command(BaseCommand):
                 'is_superuser': True
             }
         )
-        
-        # Sample products data with correct field names
+
+        # List of sample products to add
         sample_products = [
             {
                 'name': 'Samsung Galaxy S24',
@@ -93,10 +104,10 @@ class Command(BaseCommand):
             },
         ]
 
-        # Clear existing products
+        # Remove all existing products to avoid duplicates
         Product.objects.all().delete()
-        
-        # Add sample products
+
+        # Add each sample product to the database
         for product_data in sample_products:
             try:
                 product = Product.objects.create(**product_data)
@@ -107,7 +118,7 @@ class Command(BaseCommand):
                 self.stdout.write(
                     self.style.ERROR(f'Error adding product {product_data["name"]}: {e}')
                 )
-        
+
         self.stdout.write(
             self.style.SUCCESS(f'Successfully added {len(sample_products)} sample products!')
         )

@@ -12,7 +12,7 @@ from django.shortcuts import render
 logger = logging.getLogger(__name__)
 
 class Product(models.Model):
-    """Product model for tracking items across e-commerce sites"""
+    """Product model for tracking items across e-commerce sites."""
     CATEGORY_CHOICES = [
         ('electronics', '📱 Electronics'),
         ('clothing', '👕 Fashion & Clothing'),
@@ -46,7 +46,7 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        # Keep current_price and price in sync
+        # Keep current_price and price in sync for consistency.
         if self.current_price and not self.price:
             self.price = self.current_price
         elif self.price and not self.current_price:
@@ -58,7 +58,7 @@ class Product(models.Model):
         return dict(self.CATEGORY_CHOICES).get(self.category, self.category)
 
 class UserProfile(models.Model):
-    """User profile for notification preferences"""
+    """User profile for notification preferences and subscription info."""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_notifications = models.BooleanField(default=True)
     whatsapp_notifications = models.BooleanField(default=False)  # Add this
@@ -93,12 +93,14 @@ class UserProfile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
+    # Automatically create a UserProfile when a new User is created.
     if created:
         UserProfile.objects.create(user=instance)
         logger.info(f"Created UserProfile for new user: {instance.username}")
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
+    # Ensure UserProfile is always saved/created with the User.
     try:
         instance.userprofile.save()
         logger.debug(f"Saved UserProfile for user: {instance.username}")
@@ -107,7 +109,7 @@ def save_user_profile(sender, instance, **kwargs):
         logger.warning(f"UserProfile did not exist for user: {instance.username}, created new one.")
 
 class TrackedProduct(models.Model):
-    """Products that users are tracking for price changes"""
+    """Products that users are tracking for price changes."""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tracked_products')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='tracked_by')
     target_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -121,6 +123,7 @@ class TrackedProduct(models.Model):
         return f"{self.user.username} tracking {self.product.name}"
 
 class PriceAlert(models.Model):
+    """Price alert for a tracked product at a user-specified target price."""
     tracked_product = models.ForeignKey('TrackedProduct', on_delete=models.CASCADE)
     target_price = models.DecimalField(max_digits=10, decimal_places=2)
     is_triggered = models.BooleanField(default=False)
@@ -134,11 +137,13 @@ class PriceAlert(models.Model):
         return f"Alert: {self.tracked_product.product.name} - £{self.target_price}"
 
     def check_price_drop(self):
+        # Returns True if the current price is at or below the target price.
         current_price = self.tracked_product.product.current_price
         logger.debug(f"Checking price drop for {self.tracked_product.product.name}: Current {current_price}, Target {self.target_price}")
         return current_price <= self.target_price
 
     def trigger_alert(self, current_price):
+        # Triggers the alert: marks as triggered, sends WhatsApp/email if enabled.
         user_profile = self.tracked_product.user.userprofile
         if not self.is_triggered and self.is_enabled:
             self.is_triggered = True
