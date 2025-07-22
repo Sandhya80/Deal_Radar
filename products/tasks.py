@@ -84,22 +84,30 @@ class PriceScraper:
         return None
     
     def _safe_request(self, url, timeout=10):
-        """Make a safe HTTP request with error handling"""
+        """Make a safe HTTP request with error handling and anti-bot detection"""
         try:
             # Add random delay to avoid rate limiting
             time.sleep(random.uniform(1, 3))
             
             response = self.session.get(url, timeout=timeout)
             response.raise_for_status()
+
+            # Check for anti-bot or CAPTCHA pages (Amazon/eBay)
+            page_text = response.text.lower()
+            if ("captcha" in page_text or "robot check" in page_text or "enter the characters you see below" in page_text):
+                logger.warning(f"Anti-bot page detected for {url}")
+                return None
+
             return response
         except requests.RequestException as e:
             logger.error(f"Request failed for {url}: {e}")
             return None
-    
+
     def scrape_amazon_uk(self, product_url):
         """Scrape price from Amazon UK"""
         response = self._safe_request(product_url)
         if not response:
+            logger.error(f"Failed to fetch Amazon UK page: {product_url}")
             return None
             
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -107,10 +115,12 @@ class PriceScraper:
         # Amazon UK price selectors (ordered by reliability)
         selectors = [
             'span.a-price.a-text-price.a-size-medium.apexPriceToPay span.a-offscreen',
+            'span.a-price .a-offscreen',
             'span.a-price-whole',
-            '.a-price .a-offscreen',
+            '#priceblock_ourprice',
+            '#priceblock_dealprice',
             '#price_inside_buybox',
-            '.a-price-current .a-offscreen',
+            '.a-price .a-offscreen',
             '.a-text-price .a-offscreen'
         ]
         
@@ -161,12 +171,16 @@ class PriceScraper:
         """Scrape price from eBay UK"""
         response = self._safe_request(product_url)
         if not response:
+            logger.error(f"Failed to fetch eBay UK page: {product_url}")
             return None
             
         soup = BeautifulSoup(response.content, 'html.parser')
         
         selectors = [
             '.notranslate[itemprop="price"]',
+            '#prcIsum',
+            '#mm-saleDscPrc',
+            '.display-price',
             '.u-flL.condText .notranslate',
             '.vi-price .notranslate',
             '#prcIsum .notranslate'
