@@ -6,13 +6,22 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/122.0.0.0 Safari/537.36"
-    )
-}
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+]
+
+def get_random_headers():
+    import random
+    return {
+        "User-Agent": random.choice(USER_AGENTS),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-GB,en;q=0.5",
+        "Accept-Encoding": "gzip, deflate",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+    }
 
 def parse_price(price_str):
     """Safely parse a price string to Decimal, return None if invalid."""
@@ -23,6 +32,22 @@ def parse_price(price_str):
         logger.warning(f"Failed to parse price: {price_str}")
         return None
 
+def safe_request(url, timeout=10):
+    """Make a safe HTTP request with anti-bot detection and error logging."""
+    import time, random
+    try:
+        time.sleep(random.uniform(1, 3))  # Rate limiting
+        response = requests.get(url, headers=get_random_headers(), timeout=timeout)
+        response.raise_for_status()
+        page_text = response.text.lower()
+        if ("captcha" in page_text or "robot check" in page_text or "enter the characters you see below" in page_text):
+            logger.warning(f"Anti-bot page detected for {url}")
+            return None
+        return response
+    except Exception as e:
+        logger.error(f"Failed to fetch product page for {url}: {e}")
+        return None
+
 def scrape_product_data(url):
     """
     Scrape product details (name, price, image, description) from the given URL.
@@ -30,19 +55,31 @@ def scrape_product_data(url):
     Atlantic Electrics, John Lewis, eBay, Next, and generic fallback.
     Raises Exception if site is not supported or info not found.
     """
-    try:
-        response = requests.get(url, headers=HEADERS, timeout=10)
-        response.raise_for_status()
-    except Exception as e:
-        logger.error(f"Failed to fetch product page for {url}: {e}")
-        raise Exception("Could not fetch the product page. Please check the URL or your connection.") from e
+    response = safe_request(url)
+    if not response:
+        raise Exception("Could not fetch the product page. Please check the URL or your connection.")
     soup = BeautifulSoup(response.text, 'html.parser')
     domain = urlparse(url).netloc.lower()
 
     # Amazon
     if "amazon" in domain:
         name = soup.select_one("span#productTitle")
-        price = soup.select_one("span.a-offscreen")
+        price = None
+        selectors = [
+            "span.a-price.a-text-price.a-size-medium.apexPriceToPay span.a-offscreen",
+            "span.a-price .a-offscreen",
+            "span.a-price-whole",
+            "#priceblock_ourprice",
+            "#priceblock_dealprice",
+            "#price_inside_buybox",
+            ".a-price .a-offscreen",
+            ".a-text-price .a-offscreen"
+        ]
+        for selector in selectors:
+            price_elem = soup.select_one(selector)
+            if price_elem:
+                price = price_elem
+                break
         image = soup.select_one("#imgTagWrapperId img")
         desc = soup.select_one("#productDescription p")
         if not name or not price:
@@ -222,7 +259,21 @@ def scrape_product_data(url):
     # eBay
     elif "ebay." in domain:
         name = soup.select_one("h1.x-item-title__mainTitle span.ux-textspans--BOLD")
-        price = soup.select_one("div.x-price-primary span.ux-textspans")
+        price = None
+        selectors = [
+            "div.x-price-primary span.ux-textspans",
+            ".notranslate[itemprop='price']",
+            "#prcIsum",
+            "#mm-saleDscPrc",
+            ".display-price",
+            ".vi-price .notranslate",
+            "#prcIsum .notranslate"
+        ]
+        for selector in selectors:
+            price_elem = soup.select_one(selector)
+            if price_elem:
+                price = price_elem
+                break
         image = soup.select_one("img#icImg")
         desc = soup.select_one("div#viTabs_0_is")
         if not name or not price:
