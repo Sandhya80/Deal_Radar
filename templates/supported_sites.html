@@ -20,3 +20,39 @@
     <div class="logo-card"><img src="{% static 'images/logos/next.png' %}" alt="Next"></div>
   </div>
 </section>
+
+<!-- =========================
+     Supported Websites Dropdown for Search Products Section
+========================== -->
+<section class="search-products-dropdown mt-4">
+  <h3>Quick Access to Supported Websites</h3>
+  <div>
+    <label for="site-dropdown" class="form-label"><strong>Choose a website to visit:</strong></label>
+    <select id="site-dropdown" class="form-select" style="max-width:300px;display:inline-block;">
+      <option value="">Select a website...</option>
+      <option value="https://www.amazon.co.uk/">Amazon UK</option>
+      <option value="https://www.ebay.co.uk/">eBay UK</option>
+      <option value="https://www.argos.co.uk/">Argos</option>
+      <option value="https://www.currys.co.uk/">Currys</option>
+      <option value="https://www.johnlewis.com/">John Lewis</option>
+      <option value="https://www.nike.com/gb/">Nike UK</option>
+      <option value="https://www.costco.co.uk/">Costco UK</option>
+      <option value="https://www.theworks.co.uk/">TheWorks.co.uk</option>
+      <option value="https://www.jdsports.co.uk/">JDSports UK</option>
+      <option value="https://www.appliancecity.co.uk/">Appliance City</option>
+      <option value="https://www.next.co.uk/">Next UK</option>
+      <!-- Add more supported sites as needed -->
+    </select>
+    <button id="go-site-btn" class="btn btn-outline-primary ms-2">Go</button>
+  </div>
+</section>
+
+<script>
+  document.getElementById('go-site-btn').addEventListener('click', function() {
+    var dropdown = document.getElementById('site-dropdown');
+    var url = dropdown.value;
+    if (url) {
+      window.open(url, '_blank');
+    }
+  });
+</script>
