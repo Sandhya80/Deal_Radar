@@ -43,4 +43,5 @@ urlpatterns = [
     path('create-checkout-session/<str:plan_key>/', views.create_checkout_session, name='create_checkout_session'),
     path('stripe/webhook/', views.stripe_webhook, name='stripe_webhook'),
     path('billing-portal/', views.create_stripe_portal_session, name='billing_portal'),
+    path('switch-to-free/', views.switch_to_free, name='switch_to_free'),
 ]
