@@ -586,7 +586,6 @@ def subscription_success(request):
     Stripe payment success page.
     Shows a success message to the user.
     """
-    messages.success(request, "Your payment was successful! Thank you for subscribing.")
     return render(request, 'subscriptions/payment_success.html')
 
 @login_required

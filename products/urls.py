@@ -44,4 +44,7 @@ urlpatterns = [
     path('stripe/webhook/', views.stripe_webhook, name='stripe_webhook'),
     path('billing-portal/', views.create_stripe_portal_session, name='billing_portal'),
     path('switch-to-free/', views.switch_to_free, name='switch_to_free'),
+
+    # Subscription success
+    path('subscription/success/', views.subscription_success, name='subscription_success'),
 ]

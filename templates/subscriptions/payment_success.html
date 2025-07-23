@@ -1,15 +1,9 @@
-{% extends "base.html" %}
-
-{% block title %}Payment Success{% endblock %}
-
+{% extends 'base.html' %}
+{% block title %}Payment Successful{% endblock %}
 {% block content %}
-  <h2>Payment Successful</h2>
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-success" role="alert">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-  <p>Your subscription is now active. You can manage your account from the dashboard.</p>
+<div class="container py-5 text-center">
+    <h2 class="text-success mb-4"><i class="fas fa-check-circle"></i> Payment Successful!</h2>
+    <p>Your subscription has been activated. Thank you for upgrading your plan.</p>
+    <a href="{% url 'dashboard' %}" class="btn btn-primary mt-3">Go to Deal Radar Dashboard</a>
+</div>
 {% endblock %}
