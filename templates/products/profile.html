@@ -103,6 +103,13 @@
                     </div>
                 </div>
             </div>
+            {% else %}
+            <div class="card my-4 shadow-sm">
+                <div class="card-body py-4">
+                    <h4 class="mb-3">Your Plan</h4>
+                    <p class="mb-3">You are subscribed to the <strong>{{ profile.subscription_plan|title }}</strong> plan.</p>
+                </div>
+            </div>
             {% endif %}
 
             <!-- =========================
