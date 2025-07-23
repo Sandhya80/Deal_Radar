@@ -532,7 +532,7 @@ def stripe_webhook(request):
 
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
-    except Exception as e:
+    except Exception:
         return HttpResponseBadRequest()
 
     if event['type'] == 'checkout.session.completed':
