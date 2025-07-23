@@ -574,7 +574,7 @@ def stripe_webhook(request):
             user = User.objects.get(email=customer_email)
             profile = user.userprofile
             if plan_key:
-                profile.subscription_plan = plan_key
+                profile.subscription_plan = plan_key  # Update to new plan
             profile.stripe_customer_id = customer_id
             profile.stripe_subscription_id = subscription_id
             profile.subscription_status = 'active'
@@ -587,7 +587,6 @@ def stripe_webhook(request):
         subscription = event['data']['object']
         customer_id = subscription['customer']
         status = subscription['status']
-        from .models import UserProfile
         try:
             profile = UserProfile.objects.get(stripe_customer_id=customer_id)
             profile.subscription_status = status
@@ -599,7 +598,6 @@ def stripe_webhook(request):
     elif event['type'] == 'customer.subscription.deleted':
         subscription = event['data']['object']
         customer_id = subscription['customer']
-        from .models import UserProfile
         try:
             profile = UserProfile.objects.get(stripe_customer_id=customer_id)
             profile.subscription_status = 'canceled'
@@ -613,7 +611,6 @@ def stripe_webhook(request):
         invoice = event['data']['object']
         subscription_id = invoice.get('subscription')
         customer_id = invoice.get('customer')
-        from .models import UserProfile
         try:
             profile = UserProfile.objects.get(stripe_customer_id=customer_id)
             profile.subscription_status = 'past_due'
