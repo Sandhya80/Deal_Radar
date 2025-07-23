@@ -87,30 +87,28 @@
             </div>
 
             <!-- =========================
-                 Upgrade Plan Card
-                 Shown if user is not on premium plan
+                 Plan & Billing Card (combined)
             ========================== -->
-            {% if profile.subscription_plan != 'premium' %}
             <div class="card my-4 shadow-sm">
                 <div class="card-body py-4">
-                    <h4 class="mb-3">Upgrade Your Plan</h4>
-                    <p class="mb-3">Your current plan: <strong>{{ profile.subscription_plan|title }}</strong></p>
-                    <div class="d-flex gap-3">
-                        {% if profile.subscription_plan == 'free' %}
-                            <button id="checkout-basic" class="btn btn-primary">Upgrade to Basic (£2.99/mo)</button>
+                    {% if profile.subscription_plan != 'premium' %}
+                        <h4 class="mb-3">Upgrade Your Plan</h4>
+                        <p class="mb-3">Your current plan: <strong>{{ profile.subscription_plan|title }}</strong></p>
+                        <div class="d-flex gap-3">
+                            {% if profile.subscription_plan == 'free' %}
+                                <button id="checkout-basic" class="btn btn-primary">Upgrade to Basic (£2.99/mo)</button>
+                            {% endif %}
+                            <button id="checkout-premium" class="btn btn-success">Upgrade to Premium (£4.99/mo)</button>
+                        </div>
+                    {% else %}
+                        <h4 class="mb-3">Your Plan & Billing</h4>
+                        <p class="mb-3">You are subscribed to the <strong>{{ profile.subscription_plan|title }}</strong> plan.</p>
+                        {% if profile.stripe_customer_id %}
+                            <button id="manage-billing" class="btn btn-outline-primary mt-2">Manage Billing</button>
                         {% endif %}
-                        <button id="checkout-premium" class="btn btn-success">Upgrade to Premium (£4.99/mo)</button>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
-            {% else %}
-            <div class="card my-4 shadow-sm">
-                <div class="card-body py-4">
-                    <h4 class="mb-3">Your Plan</h4>
-                    <p class="mb-3">You are subscribed to the <strong>{{ profile.subscription_plan|title }}</strong> plan.</p>
-                </div>
-            </div>
-            {% endif %}
 
             <!-- =========================
                  Danger Zone Card
@@ -128,19 +126,6 @@
                     </form>
                 </div>
             </div>
-
-            <!-- =========================
-                 Billing Management Card
-                 Shown if user has a Stripe customer ID
-            ========================== -->
-            {% if profile.stripe_customer_id %}
-            <div class="card my-4 shadow-sm">
-                <div class="card-body py-4">
-                    <h4 class="mb-3">Billing Management</h4>
-                    <button id="manage-billing" class="btn btn-outline-dark mt-2">Manage Billing</button>
-                </div>
-            </div>
-            {% endif %}
 
         </div>
     </div>
