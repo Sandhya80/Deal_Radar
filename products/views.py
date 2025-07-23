@@ -509,22 +509,16 @@ def create_checkout_session(request, plan_key):
     """
     Create a Stripe Checkout session for the selected subscription plan.
     """
-    plan = settings.STRIPE_PLANS.get(plan_key)
-    if not plan or not plan['price_id']:
-        return HttpResponseBadRequest("Invalid plan selected.")
-
-    checkout_session = stripe.checkout.Session.create(
+    price_id = settings.STRIPE_PLANS[plan_key]['price_id']
+    session = stripe.checkout.Session.create(
         payment_method_types=['card'],
-        line_items=[{
-            'price': plan['price_id'],
-            'quantity': 1,
-        }],
         mode='subscription',
+        line_items=[{'price': price_id, 'quantity': 1}],
         customer_email=request.user.email,
         success_url=settings.SITE_DOMAIN + '/subscription/success/',
-        cancel_url=settings.SITE_DOMAIN + '/subscription/cancel/',
+        cancel_url=settings.SITE_DOMAIN + '/profile/',
     )
-    return JsonResponse({'sessionId': checkout_session.id})
+    return JsonResponse({'sessionId': session.id})
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -537,89 +531,38 @@ def stripe_webhook(request):
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
     try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
-    except (ValueError, stripe.error.SignatureVerificationError) as e:
-        logger.error(f"Stripe webhook signature verification failed: {e}")
-        return HttpResponse(status=400)
-
-    logger.info(f"Stripe webhook received: {event['type']}")
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+    except Exception as e:
+        return HttpResponseBadRequest()
 
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         customer_email = session.get('customer_email')
         subscription_id = session.get('subscription')
         customer_id = session.get('customer')
-        session_id = session.get('id')
 
-        # Fetch line items to get the price_id
-        try:
-            line_items = stripe.checkout.Session.list_line_items(session_id, limit=1)
-            price_id = line_items['data'][0]['price']['id']
-        except Exception as e:
-            logger.error(f"Error fetching line items for session {session_id}: {e}")
-            price_id = None
-
-        # Map price_id to plan_key
+        # Get the plan from the line items
+        line_items = stripe.checkout.Session.list_line_items(session['id'], limit=1)
+        price_id = line_items['data'][0]['price']['id']
         plan_key = None
-        for key, plan in settings.STRIPE_PLANS.items():
-            if plan.get('price_id') == price_id:
+        for key, value in settings.STRIPE_PLANS.items():
+            if value['price_id'] == price_id:
                 plan_key = key
                 break
 
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
-        try:
-            user = User.objects.get(email=customer_email)
-            profile = user.userprofile
-            if plan_key:
-                profile.subscription_plan = plan_key  # Update to new plan
-            profile.stripe_customer_id = customer_id
-            profile.stripe_subscription_id = subscription_id
-            profile.subscription_status = 'active'
-            profile.save()
-            logger.info(f"User {user.username} upgraded to {plan_key} plan via Stripe Checkout.")
-        except User.DoesNotExist:
-            logger.warning(f"No user found with email {customer_email} for Stripe session {session_id}")
+        if plan_key and customer_email:
+            try:
+                user = User.objects.get(email=customer_email)
+                profile = user.userprofile
+                profile.subscription_plan = plan_key
+                profile.stripe_customer_id = customer_id
+                profile.stripe_subscription_id = subscription_id
+                profile.subscription_status = 'active'
+                profile.save()
+            except User.DoesNotExist:
+                pass
 
-    elif event['type'] == 'customer.subscription.updated':
-        subscription = event['data']['object']
-        customer_id = subscription['customer']
-        status = subscription['status']
-        try:
-            profile = UserProfile.objects.get(stripe_customer_id=customer_id)
-            profile.subscription_status = status
-            profile.save()
-            logger.info(f"Subscription {subscription['id']} updated for customer {customer_id}: status={status}")
-        except UserProfile.DoesNotExist:
-            logger.warning(f"No UserProfile found for customer {customer_id} on subscription update.")
-
-    elif event['type'] == 'customer.subscription.deleted':
-        subscription = event['data']['object']
-        customer_id = subscription['customer']
-        try:
-            profile = UserProfile.objects.get(stripe_customer_id=customer_id)
-            profile.subscription_status = 'canceled'
-            profile.subscription_plan = 'free'
-            profile.save()
-            logger.info(f"Subscription {subscription['id']} canceled for customer {customer_id}. Downgraded to free plan.")
-        except UserProfile.DoesNotExist:
-            logger.warning(f"No UserProfile found for customer {customer_id} on subscription deletion.")
-
-    elif event['type'] == 'invoice.payment_failed':
-        invoice = event['data']['object']
-        subscription_id = invoice.get('subscription')
-        customer_id = invoice.get('customer')
-        try:
-            profile = UserProfile.objects.get(stripe_customer_id=customer_id)
-            profile.subscription_status = 'past_due'
-            profile.save()
-            logger.warning(f"Payment failed for subscription {subscription_id} (customer {customer_id}). Marked as past_due.")
-        except UserProfile.DoesNotExist:
-            logger.error(f"Payment failed webhook: No UserProfile for customer {customer_id}")
-
-    # Add more event types as needed
+    # Handle other events as needed
 
     return HttpResponse(status=200)
 
@@ -645,3 +588,12 @@ def subscription_success(request):
     """
     messages.success(request, "Your payment was successful! Thank you for subscribing.")
     return render(request, 'subscriptions/payment_success.html')
+
+@login_required
+@require_POST
+def switch_to_free(request):
+    profile = request.user.userprofile
+    profile.subscription_plan = 'free'
+    profile.subscription_status = 'canceled'
+    profile.save()
+    return JsonResponse({'success': True})

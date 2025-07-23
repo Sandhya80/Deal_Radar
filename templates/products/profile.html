@@ -91,21 +91,24 @@
             ========================== -->
             <div class="card my-4 shadow-sm">
                 <div class="card-body py-4">
-                    {% if profile.subscription_plan != 'premium' %}
-                        <h4 class="mb-3">Upgrade Your Plan</h4>
-                        <p class="mb-3">Your current plan: <strong>{{ profile.subscription_plan|title }}</strong></p>
-                        <div class="d-flex gap-3">
-                            {% if profile.subscription_plan == 'free' %}
-                                <button id="checkout-basic" class="btn btn-primary">Upgrade to Basic (£2.99/mo)</button>
-                            {% endif %}
-                            <button id="checkout-premium" class="btn btn-success">Upgrade to Premium (£4.99/mo)</button>
-                        </div>
-                    {% else %}
-                        <h4 class="mb-3">Your Plan & Billing</h4>
-                        <p class="mb-3">You are subscribed to the <strong>{{ profile.subscription_plan|title }}</strong> plan.</p>
-                        {% if profile.stripe_customer_id %}
-                            <button id="manage-billing" class="btn btn-outline-primary mt-2">Manage Billing</button>
-                        {% endif %}
+                    <h4 class="mb-3">Manage Your Subscription</h4>
+                    <p class="mb-3">Your current plan: <strong>{{ profile.subscription_plan|title }}</strong></p>
+                    <div class="d-flex gap-3">
+                        <button id="switch-free" class="btn btn-outline-secondary"
+                            {% if profile.subscription_plan == 'free' %}disabled{% endif %}>
+                            Switch to Free
+                        </button>
+                        <button id="checkout-basic" class="btn btn-primary"
+                            {% if profile.subscription_plan == 'basic' %}disabled{% endif %}>
+                            Switch to Basic (£2.99/mo)
+                        </button>
+                        <button id="checkout-premium" class="btn btn-success"
+                            {% if profile.subscription_plan == 'premium' %}disabled{% endif %}>
+                            Switch to Premium (£4.99/mo)
+                        </button>
+                    </div>
+                    {% if profile.stripe_customer_id %}
+                        <button id="manage-billing" class="btn btn-outline-primary mt-3">Manage Billing</button>
                     {% endif %}
                 </div>
             </div>
@@ -134,7 +137,21 @@
 <!-- Stripe integration for plan upgrades and billing portal -->
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-    {% if profile.subscription_plan == 'free' %}
+    document.getElementById('switch-free')?.addEventListener('click', function () {
+        fetch("{% url 'switch_to_free' %}", {
+            method: 'POST',
+            headers: {'X-CSRFToken': '{{ csrf_token }}'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Could not switch to free plan.');
+            }
+        });
+    });
+
     document.getElementById('checkout-basic')?.addEventListener('click', function () {
         fetch("{% url 'create_checkout_session' 'basic' %}")
             .then(response => response.json())
@@ -143,7 +160,7 @@
                 stripe.redirectToCheckout({ sessionId: data.sessionId });
             });
     });
-    {% endif %}
+
     document.getElementById('checkout-premium')?.addEventListener('click', function () {
         fetch("{% url 'create_checkout_session' 'premium' %}")
             .then(response => response.json())
@@ -152,6 +169,7 @@
                 stripe.redirectToCheckout({ sessionId: data.sessionId });
             });
     });
+
     document.getElementById('manage-billing')?.addEventListener('click', function () {
         fetch("{% url 'billing_portal' %}", {
             method: 'POST',
