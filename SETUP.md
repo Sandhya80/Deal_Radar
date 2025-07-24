@@ -1,139 +1,142 @@
-# Deal Radar - Day 1 Setup Instructions
+# Deal Radar – Setup Guide
 
-## Quick Start Guide
+This guide will help you set up Deal Radar on your local machine and deploy it to Heroku.
 
-### 1. Create Virtual Environment
+---
 
-```bash
-# Windows
-python -m venv deal_radar_env
-deal_radar_env\Scripts\activate
+## Prerequisites
 
-# macOS/Linux
-python3 -m venv deal_radar_env
-source deal_radar_env/bin/activate
-```
+- Python 3.8+
+- pip
+- Git
+- (Optional for local production) PostgreSQL
+- [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+- A free [Heroku](https://heroku.com/) account
 
-### 2. Install Dependencies
+---
 
-```bash
-pip install -r requirements.txt
-```
+## Local Installation Steps
 
-### 3. Setup Environment Variables
+1. **Clone the repository**
 
-```bash
-# Copy example environment file
-copy .env.example .env  # Windows
-# cp .env.example .env  # macOS/Linux
+   ```sh
+   git clone https://github.com/yourusername/deal-radar.git
+   cd deal-radar
+   ```
 
-# Edit .env file with your settings:
-# - Set SECRET_KEY
-# - Configure database settings
-# - Add other API keys as needed
-```
+2. **Create and activate a virtual environment**
 
-### 4. Database Setup
+   ```sh
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-```bash
-# Create migrations
-python manage.py makemigrations
+3. **Install dependencies**
 
-# Apply migrations
-python manage.py migrate
+   ```sh
+   pip install -r requirements.txt
+   ```
 
-# Create superuser
-python manage.py createsuperuser
-```
+4. **Set up environment variables**
+   - Copy `.env.example` to `.env`
+   - Fill in your Stripe, Cloudinary, and other keys
 
-### 5. Run Development Server
+5. **Apply migrations**
 
-```bash
-python manage.py runserver
-```
+   ```sh
+   python manage.py migrate
+   ```
 
-Visit: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+6. **Create a superuser (admin)**
 
-## Development Commands
+   ```sh
+   python manage.py createsuperuser
+   ```
 
-### Create new migrations
+7. **Run the development server**
 
-```bash
-python manage.py makemigrations
-```
+   ```sh
+   python manage.py runserver
+   ```
 
-### Run tests
+8. **Access the app**
+   - Open [http://localhost:8000](http://localhost:8000) in your browser
 
-```bash
-python manage.py test
-```
+---
 
-### Access Django shell
+## Deploying to Heroku
 
-```bash
-python manage.py shell
-```
+1. **Login to Heroku**
 
-### Collect static files (for production)
+   ```sh
+   heroku login
+   ```
 
-```bash
-python manage.py collectstatic
-```
+2. **Create a new Heroku app**
 
-## Project Structure
+   ```sh
+   heroku create your-app-name
+   ```
 
-deal_radar/
-├── manage.py
-├── requirements.txt
-├── .env.example
-├── .gitignore
-├── README.md
-├── deal_radar/
-│   ├── __init__.py
-│   ├── settings.py
-│   ├── urls.py
-│   ├── wsgi.py
-│   ├── asgi.py
-│   └── celery.py
-├── users/
-│   ├── models.py (UserProfile)
-│   ├── views.py (Auth views)
-│   ├── urls.py
-│   └── apps.py
-├── products/
-│   ├── models.py (Product, PriceHistory, TrackedProduct, DealAlert)
-│   └── apps.py
-├── notifications/
-│   └── apps.py
-├── subscriptions/
-│   └── apps.py
-├── templates/
-│   ├── base.html
-│   └── users/
-│       └── home.html
-└── .github/
-    └── workflows/
-        └── ci.yml
+3. **Set up Heroku Postgres (recommended for production)**
 
-## Day 1 Goals Status
+   ```sh
+   heroku addons:create heroku-postgresql:hobby-dev
+   ```
 
-- [x] Django project setup
-- [x] Apps created (users, products, notifications, subscriptions)
-- [x] Database models defined
-- [x] Basic templates created
-- [x] Requirements.txt configured
-- [x] Environment setup
-- [x] GitHub CI/CD pipeline
-- [ ] Virtual environment activated
-- [ ] Dependencies installed
-- [ ] Database migrations run
-- [ ] Development server running
+4. **Set environment variables on Heroku**
+   - You can set each variable using:
 
-## Ready for Day 2
+     ```sh
+     heroku config:set KEY=your_value
+     ```
 
-Once the setup above is completed, we'll be ready to move to Day 2:
+   - Set all required variables (SECRET_KEY, DEBUG, STRIPE keys, CLOUDINARY_URL, etc.)
 
-- User authentication forms
-- Product CRUD operations
-- Dashboard improvements
-- Admin interface setup
+5. **Push your code to Heroku**
+
+   ```sh
+   git push heroku main
+   ```
+
+   *(or `git push heroku master` if your default branch is master)*
+
+6. **Run migrations on Heroku**
+
+   ```sh
+   heroku run python manage.py migrate
+   ```
+
+7. **Create a superuser on Heroku**
+
+   ```sh
+   heroku run python manage.py createsuperuser
+   ```
+
+8. **Collect static files**
+
+   ```sh
+   heroku run python manage.py collectstatic --noinput
+   ```
+
+9. **Open your deployed app**
+
+   ```sh
+   heroku open
+   ```
+
+---
+
+## Troubleshooting
+
+- If you encounter issues, check your environment variables and dependencies.
+- For Stripe or Cloudinary errors, verify your API keys and dashboard settings.
+- For Heroku deployment issues, check logs with:
+
+  ```sh
+  heroku logs --tail
+  ```
+
+---
+
+For further help, open an issue or contact the maintainer.
