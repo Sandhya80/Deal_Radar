@@ -5,140 +5,39 @@ Deal Radar is a robust Django-based web application that empowers users to track
 
 ---
 
-## 🔄 App Workflow Overview
+## 📑 Table of Contents
 
-1. **Add Products to Track:**  
-   Add products by pasting a URL from a supported e-commerce site or by selecting from existing products in the database.
-
-2. **Set Target Price:**  
-   Specify a target price for each product. You’ll be notified when the product reaches or drops below this price.
-
-3. **Automated Price Tracking:**  
-   The system regularly scrapes product pages using background Celery tasks to check for price changes.
-
-4. **Receive Alerts:**  
-   When a product’s price drops to or below your target, Deal Radar sends real-time alerts via email, WhatsApp, or SMS (based on your preferences).
-
-5. **Dashboard & Management:**  
-   View all tracked products, manage alerts, and see your savings and triggered alerts on a personalized dashboard.
-
-6. **Subscription & Billing:**  
-   Unlock premium features (like more frequent checks or additional notification channels) via Stripe-powered subscriptions.
+- [Live Demo](#-live-demo)
+- [Screenshots](#-screenshots)
+- [ERD (Entity Relationship Diagram)](#-erd-entity-relationship-diagram)
+- [Tech Stack](#-tech-stack)
+- [Libraries & Tools](#-libraries--tools)
+- [External APIs & Integrations](#-external-apis--integrations)
+- [Features](#-features)
+- [Project Structure](#-project-structure)
+- [Setup & Installation](#-setup--installation)
+- [Future Enhancements](#-future-enhancements)
+- [License](#-license)
+- [Contact](#-contact)
 
 ---
 
-## 🚦 Project Status
+## 🚀 Live Demo
 
-- **Phase 1: Foundation & Authentication** ✅ Complete  
-- **Phase 2: MVP Functionality** ✅ Complete  
-- **Phase 3: Automation & Alerts** ✅ Complete  
-- **Phase 4: Polish & Monetization** ✅ Complete  
+- [Live Site](https://your-dealradar-demo-link.com)
+- [Admin Panel](https://your-dealradar-demo-link.com/admin)
 
 ---
 
-## ✅ Completed Features by Phase
+## 📸 Screenshots
 
-### Phase 1: Foundation & Authentication
-
-- Modular Django apps: `users`, `products`, `notifications`, `subscriptions`
-- Comprehensive code documentation and comments
-- Dependency management (`requirements.txt`, `.env.example`, `.gitignore`)
-- Database models for users, products, price history, and alerts
-- User authentication (registration, login, logout) with Django AllAuth
-- Profile management with notification preferences and subscription tiers
-- Responsive Bootstrap 5 UI with base, dashboard, and CRUD templates
-
-### Phase 2: MVP Functionality
-
-- Automated web scraping for supported e-commerce sites (Amazon, eBay, Argos, etc.)
-- Celery background task system for scheduled scraping and notifications
-- Redis integration for task queue management
-- Enhanced dashboard with real-time scraping status and product updates
-- Admin tools for manual scraping and product management
-- Product search, category browsing, and filtering
-
-### Phase 3: Automation & Alerts
-
-- Email notifications for price drops and triggered alerts
-- SMS/WhatsApp integration via Twilio for instant alerts
-- Celery task scheduling for periodic scraping and alert delivery
-- User-configurable alert preferences (frequency, channels)
-- Daily/weekly summary emails for tracked products and triggered alerts
-
-### Phase 4: Polish & Monetization
-
-- Stripe subscription system for premium features
-- Billing management and upgrade/downgrade flows
-- Unit and integration testing for core features
-- Security hardening (environment variables, HTTPS, input validation)
-- Final deployment to Heroku (or similar cloud platform)
-- Cloudinary integration for product image storage
-- UI/UX polish and accessibility improvements
+| Home Page (Responsive) | SEO & Accessibility | Performance (Lighthouse) |
+|------------------------|---------------------|--------------------------|
+| ![Responsive Screenshot](screenshots/responsive.png) | ![SEO Screenshot](screenshots/seo.png) | ![Lighthouse Screenshot](screenshots/lighthouse.png) |
 
 ---
 
-## 🚀 Getting Started
-
-### 1. Install Dependencies & Setup Environment
-
-```bash
-# Create virtual environment
-python -m venv deal_radar_env
-deal_radar_env\Scripts\activate  # Windows
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Setup environment
-copy .env.example .env
-# Edit .env with your database and API credentials
-```
-
-### 2. Database Setup
-
-```bash
-# Create and run migrations
-python manage.py makemigrations
-python manage.py migrate
-
-# Create superuser
-python manage.py createsuperuser
-```
-
-### 3. Run Development Server
-
-```bash
-python manage.py runserver
-```
-
-### 4. Start Celery Worker (for background tasks)
-
-```bash
-celery -A deal_radar worker -l info
-celery -A deal_radar beat -l info
-```
-
-### 5. (Optional) Start Redis Server
-
-- Ensure Redis is running for Celery task queue.
-
----
-
-## 🐞 Debugging Methods Used
-
-- **Django Debug Toolbar**: For inspecting SQL queries, cache usage, and template context.
-- **Python Logging**: Configured in `settings.py` for error, warning, and info logs.
-- **Custom Error Pages**: User-friendly error templates for 404/500.
-- **Unit Tests**: Django’s test framework for core logic and integration.
-- **Manual Testing**: Django shell (`python manage.py shell`) and admin panel for data validation.
-- **Celery Task Monitoring**: Celery logs and Flower (optional) for background task debugging.
-- **AI Assistance**: GitHub Copilot for code review, suggestions, and troubleshooting.
-
----
-
-## 🗄️ Database Schema
-
-Below is a simplified schema of the main tables and relationships in Deal Radar:
+## 🗂️ ERD (Entity Relationship Diagram)
 
 ```mermaid
 erDiagram
@@ -215,85 +114,169 @@ erDiagram
     }
 ```
 
-### 📑 Database Schema Explained
+---
 
-- **USER**: Stores user account information (username, email, password).
-- **USER_PROFILE**: Extends user info with notification preferences, WhatsApp number, and subscription plan.
-- **SUBSCRIPTION_PLAN**: Lists available subscription plans (name, price, Stripe plan ID).
-- **PRODUCT**: Contains product details (name, URL, site, image, category, timestamps).
-- **CATEGORY**: Defines product categories (name, emoji).
-- **PRODUCT_TRACKING**: Links users to products they are tracking, with target price and notes.
-- **PRICE_HISTORY**: Records historical prices for each product over time.
-- **PRICE_ALERT**: Stores alerts for users when a product hits their target price, including status
+## 🛠️ Tech Stack
+
+- **Backend:** Django, Python 3
+- **Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript (ES6)
+- **Database:** SQLite (development), PostgreSQL (production-ready)
+- **Cloud Storage:** Cloudinary (for product images)
+- **Task Queue:** Celery, Redis
 
 ---
 
-## 🗂️ Files Involved & Workflow
+## 📦 Libraries & Tools
 
-**How the database schema maps to your project files and workflow:**
+- **Django** (core framework)
+- **Stripe** (subscription & payment integration)
+- **Cloudinary** (image hosting)
+- **Bootstrap** (UI framework)
+- **FontAwesome** (icons)
+- **Requests** (web scraping)
+- **BeautifulSoup** (web scraping)
+- **Celery** (background tasks, optional)
+- **Redis** (task/message broker, optional)
+- **gunicorn** (production server)
+- **whitenoise** (static files in production)
+- **pytest** (testing)
+- **dotenv** (environment variables)
+- **Git** (version control)
+- **GitHub Actions** (CI/CD)
 
-- **Models (Database Tables)**
-  - `products/models.py`: `Product`, `Category`, `ProductTracking`, `PriceHistory`, `PriceAlert`
-  - `users/models.py`: `UserProfile`
-  - `subscriptions/models.py`: `SubscriptionPlan`
-  - Django’s built-in `User` model: from `django.contrib.auth.models`
+---
 
-- **Views (Business Logic & Workflow)**
-  - `products/views.py`: Add/track products, dashboard, product detail, price history, alerts
-  - `users/views.py`: Profile management, authentication, notification preferences
-  - `subscriptions/views.py`: Subscription and billing management
+## 🌐 External APIs & Integrations
 
-- **Forms (User Input)**
-  - `products/forms.py`: Product add/edit, tracking, alert forms
-  - `users/forms.py`: Profile update, notification settings
-  - `subscriptions/forms.py`: Subscription plan selection
+- **Stripe API:** For subscription management, billing, and webhooks.
+- **Cloudinary API:** For image upload and delivery.
+- **WhatsApp API (Twilio or similar):** For WhatsApp notifications (if enabled).
+- **Email Providers:** SMTP (Gmail, SendGrid, etc.) for email notifications.
 
-- **Templates (Frontend/UI)**
-  - `templates/products/`: `add_product.html`, `dashboard.html`, `product_detail.html`, `home.html`, etc.
-  - `templates/users/`: `profile.html`, `login.html`, `signup.html`
-  - `templates/subscriptions/`: `billing.html`, `upgrade.html`
-  - `templates/base.html`: Main layout and navigation
+---
 
-- **Celery Tasks (Background Processing)**
-  - `products/tasks.py`: Price scraping, alert sending
+## ✨ Features
 
-**Typical Workflow:**
+- **Product Search:** Search and filter products from multiple e-commerce sites.
+- **Product Tracking:** Track price changes and get notified.
+- **Price Alerts:** Set target prices and receive alerts via email/WhatsApp.
+- **User Profiles:** Manage personal info, notification preferences, and tracked products.
+- **Subscription Plans:** Free, Basic, and Premium plans with Stripe integration.
+- **Billing Management:** Upgrade/downgrade plans, manage billing via Stripe portal.
+- **Responsive Design:** Fully responsive for mobile, tablet, and desktop.
+- **SEO Optimized:** Meta tags, semantic HTML, and fast load times.
+- **Admin Panel:** Manage products, users, and site content.
+- **Supported Sites:** Amazon, eBay, Argos, Currys, John Lewis, Nike, Costco, TheWorks, JDSports, Appliance City, Next, and more.
+- **Security:** CSRF protection, secure authentication, and environment variable management.
 
-1. **User Registration/Login**  
-   - `users/views.py`, `users/forms.py`, `templates/registration/signup.html`, `login.html`
-   - Uses Django’s `User` model and `UserProfile`
+---
 
-2. **Add Product to Track**  
-   - `products/views.py` (`add_product` view), `products/forms.py` (`AddProductForm`), `templates/products/add_product.html`
-   - Models: `Product`, `ProductTracking`, `Category`
+## 📂 Project Structure
 
-3. **Set Target Price & Preferences**  
-   - `products/forms.py`, `users/forms.py`
-   - Models: `ProductTracking`, `UserProfile`
+```
+deal_radar/
+├── products/                # Django app for product logic
+├── templates/               # HTML templates
+│   ├── products/
+│   ├── subscriptions/
+│   └── supported_sites.html
+├── static/                  # Static files (CSS, JS, images)
+├── media/                   # Uploaded media (Cloudinary)
+├── manage.py
+└── deal_radar/              # Project settings
+```
 
-4. **Automated Price Tracking**  
-   - `products/tasks.py` (Celery)
-   - Updates `PriceHistory`, checks for `PriceAlert` triggers
+---
 
-5. **Receive Alerts**  
-   - `products/tasks.py` (Celery)
-   - Sends notifications via Twilio/SMIP
-   - Updates `PriceAlert`
+## ⚙️ Setup & Installation
 
-6. **Dashboard & Management**  
-   - `products/views.py` (`dashboard` view), `templates/products/dashboard.html`
-   - Shows tracked products, price history, alerts
+1. **Clone the repo:**
+   ```sh
+   git clone https://github.com/yourusername/deal-radar.git
+   cd deal-radar
+   ```
 
-7. **Subscription & Billing**  
-   - `subscriptions/views.py`, `subscriptions/forms.py`
-   - Models: `SubscriptionPlan`, `UserProfile`
-   - `templates/subscriptions/billing.html`
+2. **Create a virtual environment and install dependencies:**
+   ```sh
+   python -m venv venv
+   source venv/bin/activate  # or venv\Scripts\activate on Windows
+   pip install -r requirements.txt
+   ```
 
-**Example File Paths:**
+3. **Set up environment variables:**
+   - Copy `.env.example` to `.env` and fill in your keys (Stripe, Cloudinary, etc.)
 
-- `d:\Sandhya_H\Deal_Radar\products\models.py`
-- `d:\Sandhya_H\Deal_Radar\users\models.py`
-- `d:\Sandhya_H\Deal_Radar\subscriptions\models.py`
-- `d:\Sandhya_H\Deal_Radar\products\views.py`
-- `d:\Sandhya_H\Deal_Radar\templates\products\add_product.html`
-- `d:\Sandhya_H\Deal_Radar\products\tasks.py`
+4. **Run migrations and start the server:**
+   ```sh
+   python manage.py migrate
+   python manage.py runserver
+   ```
+
+5. **Access the app:**
+   - Visit [https://my-dealradar-app-61098a40edc6.herokuapp.com/](https://my-dealradar-app-61098a40edc6.herokuapp.com/)
+
+---
+
+## 🚧 Future Enhancements
+
+- **Browser Extension:**  
+  Allow users to add products to Deal Radar directly from supported e-commerce sites via a Chrome/Firefox extension.
+
+- **Mobile App:**  
+  Native iOS and Android apps for on-the-go deal tracking and notifications.
+
+- **Social Sharing:**  
+  Enable users to share deals or tracked products on social media platforms.
+
+- **Deal Community & Comments:**  
+  Add a community section for users to discuss deals, leave reviews, and comment on products.
+
+- **Personalized Recommendations:**  
+  Suggest products or deals based on user preferences and tracking history.
+
+- **Advanced Analytics Dashboard:**  
+  Visualize price trends, savings, and user activity with charts and graphs.
+
+- **Bulk Product Import:**  
+  Allow users to import a list of products (CSV/Excel) for bulk tracking.
+
+- **Multi-Currency & Localization:**  
+  Support for multiple currencies and languages for international users.
+
+- **Push Notifications:**  
+  Real-time browser and mobile push notifications for instant deal alerts.
+
+- **Wishlist Integration:**  
+  Sync with users’ wishlists from Amazon, eBay, etc., for automatic tracking.
+
+- **Affiliate Link Support:**  
+  Integrate affiliate links to monetize tracked deals.
+
+- **AI-Powered Deal Insights:**  
+  Use AI to predict future price drops or recommend the best time to buy.
+
+- **Price Comparison Engine:**  
+  Compare prices for the same product across all supported sites in real time.
+
+- **User Badges & Gamification:**  
+  Reward active users with badges, leaderboards, or points for engagement.
+
+- **Dark Mode:**  
+  Add a toggle for dark/light theme support.
+
+- **API for Developers:**  
+  Public API for third-party integrations and custom apps.
+
+---
+
+## 📝 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 📬 Contact
+
+- **Project Maintainer:** [Sandhya Harshakumar](mailto: sandhyaharsh@gmail.com)
+- **GitHub:** [Sandhya80](https://github.com/Sandhya80)
+- **LinkedIn:** [Sandhya Harshakumar](www.linkedin.com/in/sandhya-harshakumar)
