@@ -31,9 +31,9 @@ Deal Radar is a robust Django-based web application that empowers users to track
 
 ## Screenshots
 
-| Home Page (Responsive) | SEO & Accessibility | Performance (Lighthouse) |
-|------------------------|---------------------|--------------------------|
-| ![Responsive Screenshot](screenshots/responsive.png) | ![SEO Screenshot](screenshots/seo.png) | ![Lighthouse Screenshot](screenshots/lighthouse.png) |
+| Home Page (Responsive) | Best Practice & Accessibility | SEO | Performance (Lighthouse) |
+|------------------------|---------------------|--------------------------|-------------------------|
+| ![Responsive Screenshot](screenshots/responsive.png) | ![Accessibility Screenshot](screenshots/Accessibility.png) | ![SEO](SEO.png) | ![Lighthouse Screenshot](screenshots/lighthouse.png) |
 
 ---
 
