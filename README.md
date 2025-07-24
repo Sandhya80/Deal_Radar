@@ -25,7 +25,7 @@ Deal Radar is a robust Django-based web application that empowers users to track
 ## Live Demo
 
 - [Live Site](https://my-dealradar-app-61098a40edc6.herokuapp.com/)
-- [Admin Panel](https://my-dealradar-app-61098a40edc6.herokuapp.com/admin/login/?next=/admin/)
+- [Admin Panel](https://my-dealradar-app-61098a40edc6.herokuapp.com/admin/)
 
 ---
 
